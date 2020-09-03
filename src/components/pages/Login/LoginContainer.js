@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import OktaSignIn from '@okta/okta-signin-widget';
 import '@okta/okta-signin-widget/dist/css/okta-sign-in.min.css';
 
@@ -46,6 +46,26 @@ const LoginContainer = () => {
       }
     );
   }, []);
+
+  const [stateLogin, setStateLogin] = useState({
+    credentials:{
+      username:'',
+      password:''
+    }
+  })
+
+  const handleChange = event =>{
+    setStateLogin({
+      credentials:{
+        ...stateLogin.credentials,
+        [event.target.name]:event.target.value
+      }
+    });
+  }
+
+  const loginSubmit = event =>{
+    event.preventDefault();
+  }
 
   return (
   <div id="sign-in-widget">
