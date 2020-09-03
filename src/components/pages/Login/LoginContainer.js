@@ -47,7 +47,27 @@ const LoginContainer = () => {
     );
   }, []);
 
-  return <div id="sign-in-widget" />;
+  return (
+  <div id="sign-in-widget">
+    <form onSubmit={loginSubmit}>
+      <input 
+        type = "text"
+        name = "username"
+        placeholder = "username"
+        value = {stateLogin.credentials.username}
+        onChange = {handleChange}
+      />
+      <input 
+        type = "password"
+        name = "password"
+        placeholder = "password"
+        value = {stateLogin.credentials.password}
+        onChange = {handleChange}
+      />
+      <button>Log-in</button>
+    </form>
+  </div>
+  )
 };
 
 export default LoginContainer;
