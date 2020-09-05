@@ -19,6 +19,7 @@ import { HomePage } from "./components/pages/Home";
 import { LandingPage } from "./components/pages/Landing";
 import { config } from "./utils/oktaConfig";
 import { LoadingComponent } from "./components/common";
+import NavBar from "./components/common/NavBar";
 
 ReactDOM.render(
   <Router>
@@ -41,21 +42,24 @@ function App() {
   };
 
   return (
-    <Security {...config} onAuthRequired={authHandler}>
-      <Switch>
-        <Route exact path="/" component={LandingPage} />
-        <Route path="/signup" component={SignUpPage} />
-        <Route path="/login" component={LoginPage} />
-        <Route path="/implicit/callback" component={LoginCallback} />
-        {/* any of the routes you need secured should be registered as SecureRoutes */}
-        <SecureRoute
-          path="/dashboard"
-          component={() => <HomePage LoadingComponent={LoadingComponent} />}
-        />
-        <SecureRoute path="/example-list" component={ExampleListPage} />
-        <SecureRoute path="/profile-list" component={ProfileListPage} />
-        <Route component={NotFoundPage} />
-      </Switch>
-    </Security>
+    <>
+      <NavBar />
+      <Security {...config} onAuthRequired={authHandler}>
+        <Switch>
+          <Route exact path="/" component={LandingPage} />
+          <Route path="/signup" component={SignUpPage} />
+          <Route path="/login" component={LoginPage} />
+          <Route path="/implicit/callback" component={LoginCallback} />
+          {/* any of the routes you need secured should be registered as SecureRoutes */}
+          <SecureRoute
+            path="/dashboard"
+            component={() => <HomePage LoadingComponent={LoadingComponent} />}
+          />
+          <SecureRoute path="/example-list" component={ExampleListPage} />
+          <SecureRoute path="/profile-list" component={ProfileListPage} />
+          <Route component={NotFoundPage} />
+        </Switch>
+      </Security>
+    </>
   );
 }
