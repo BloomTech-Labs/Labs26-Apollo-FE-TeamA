@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { useHistory } from "react-router-dom";
 import axios from "axios";
+import { Form, Input, Button } from "antd";
 
 // TO-DO's:
 // - handle POST request to backend API for registration
@@ -16,17 +17,42 @@ const SignUp = () => {
 
   const [user, setUser] = useState(newUser);
   const history = useHistory();
+  const [form] = Form.useForm();
 
-  const handleInput = e => {
-    setUser({
-      ...user,
-      [e.target.name]: e.target.value
-    });
+  const layout = {
+    labelCol: {
+      xs: {
+        span: 24
+      },
+      sm: {
+        span: 8
+      }
+    },
+    wrapperCol: {
+      xs: {
+        span: 24
+      },
+      sm: {
+        span: 16
+      }
+    }
   };
 
-  const handleSubmit = e => {
-    e.preventDefault();
+  const tailFormItemLayout = {
+    wrapperCol: {
+      xs: {
+        span: 24,
+        offset: 0
+      },
+      sm: {
+        span: 16,
+        offset: 8
+      }
+    }
+  };
 
+  const handleSubmit = values => {
+    console.log(values);
     axios
       .post("http://localhost:3000", user)
       .then(res => {
@@ -38,57 +64,111 @@ const SignUp = () => {
         console.log(err);
         alert("There was an error creating an account. Please try again.");
       });
-
-    setUser(newUser);
   };
 
   return (
     <div>
       <h1>Sign Up</h1>
 
-      <form onSubmit={handleSubmit}>
-        <label htmlFor="firstName"></label>
-        <input
-          id="firstName"
-          type="text"
+      <Form
+        {...layout}
+        form={form}
+        name="register"
+        initialValues={newUser}
+        scrollToFirstError
+        onFinish={handleSubmit}
+      >
+        <Form.Item
           name="firstName"
-          value={user.firstName}
-          onChange={handleInput}
-          placeholder="First Name"
-        />
+          label="First Name"
+          required
+          rules={[
+            {
+              required: true,
+              message: "Please input your first name!"
+            }
+          ]}
+        >
+          <Input />
+        </Form.Item>
 
-        <label htmlFor="lastName"></label>
-        <input
-          id="lastName"
-          type="text"
+        <Form.Item
           name="lastName"
-          value={user.lastName}
-          onChange={handleInput}
-          placeholder="Last Name"
-        />
+          label="Last Name"
+          required
+          rules={[
+            {
+              required: true,
+              message: "Please input your last name!"
+            }
+          ]}
+        >
+          <Input />
+        </Form.Item>
 
-        <label htmlFor="email"></label>
-        <input
-          id="email"
-          type="text"
+        <Form.Item
           name="email"
-          value={user.email}
-          onChange={handleInput}
-          placeholder="Email"
-        />
+          label="Email"
+          rules={[
+            {
+              type: "email",
+              message: "The input is not valid E-mail!"
+            },
+            {
+              required: true,
+              message: "Please input your E-mail!"
+            }
+          ]}
+        >
+          <Input />
+        </Form.Item>
 
-        <label htmlFor="password"></label>
-        <input
-          id="password"
-          type="text"
+        <Form.Item
           name="password"
-          value={user.password}
-          onChange={handleInput}
-          placeholder="Password"
-        />
+          label="Password"
+          rules={[
+            {
+              required: true,
+              message: "Please input your password!"
+            }
+          ]}
+          hasFeedback
+        >
+          <Input.Password />
+        </Form.Item>
 
-        <button type="submit">Create Account</button>
-      </form>
+        <Form.Item
+          name="confirm"
+          label="Confirm Password"
+          dependencies={["password"]}
+          hasFeedback
+          rules={[
+            {
+              required: true,
+              message: "Please confirm your password!"
+            },
+            ({ getFieldValue }) => ({
+              validator(rule, value) {
+                if (!value || getFieldValue("password") === value) {
+                  return Promise.resolve();
+                }
+
+                return Promise.reject(
+                  "The two passwords that you entered do not match!"
+                );
+              }
+            })
+          ]}
+        >
+          <Input.Password />
+        </Form.Item>
+
+        <Form.Item {...tailFormItemLayout}>
+          <Button type="primary" htmlType="submit">
+            Register
+          </Button>
+        </Form.Item>
+      </Form>
     </div>
   );
 };
