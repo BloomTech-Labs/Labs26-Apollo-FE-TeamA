@@ -14,22 +14,25 @@ function RenderLandingPage(props) {
   };
 
   return (
-    <div>
-      <h1>Apollo</h1>
-      <div>
-        <p>
-          This is an example of how we'd like for you to approach page/routable
-          components.
-        </p>
+    <div className="landing">
+      <div className="welcome">
+        <h1>Apollo</h1>
 
         <p>
-          <Button type="secondary" onClick={signup}>
-            Sign Up
-          </Button>
-          <Button type="primary" onClick={login}>
-            Log In
-          </Button>
+          Automate your stand ups with Apollo. Create a topic and define a
+          context to align your team towards a unified goal. Reply to topic
+          responses to remove blockers and streamline your team efficiency.
         </p>
+      </div>
+
+      <div className="user-buttons">
+        <Button type="primary" onClick={signup}>
+          Sign Up
+        </Button>
+
+        <Button type="secondary" onClick={login}>
+          Log In
+        </Button>
       </div>
     </div>
   );

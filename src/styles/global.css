@@ -19,6 +19,36 @@ nav a{
   font-weight: bold;
 }
 
+.landing {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  top: 50%;
+  left: 50%;
+  transform: translate(0%, 50%);
+}
+
+.welcome {
+  text-align: center;
+  width: 40%;
+}
+
+.welcome p {
+  font-size: 24px;
+}
+
+.user-buttons {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-evenly;
+}
+
+.user-buttons button {
+  margin: 0 40px;
+  width: 100px;
+}
+
 .signup-container {
   display: flex;
   justify-content: space-evenly;

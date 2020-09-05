@@ -44,7 +44,7 @@ const SignUp = () => {
 
   return (
     <div className="signup-container">
-      <img src={join}></img>
+      <img src={join} alt="sign up svg with three creatures"></img>
 
       <div className="signup-form">
         <h1>Sign Up</h1>
