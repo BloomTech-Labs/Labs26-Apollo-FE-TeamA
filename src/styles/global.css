@@ -1,5 +1,7 @@
+/* FONT IMPORT */
 @import url('https://fonts.googleapis.com/css2?family=Raleway:wght@400;500;700&display=swap');
 
+/* GLOBAL STYLES */
 body {
   font-family: 'Raleway', sans-serif;
 }
@@ -9,6 +11,7 @@ h1 {
   font-weight: bold;
 }
 
+/* NAV STYLES */
 nav {
   padding-top: 20px;
 }
@@ -19,19 +22,19 @@ nav a{
   font-weight: bold;
 }
 
+/* LANDING PAGE STYLES */
 .landing {
   display: flex;
-  flex-direction: column;
+  flex-direction: row;
   justify-content: center;
   align-items: center;
-  top: 50%;
-  left: 50%;
-  transform: translate(0%, 50%);
+  margin: 0 auto;
 }
 
 .welcome {
-  text-align: center;
-  width: 40%;
+  text-align: left;
+  width: 30%;
+  margin-left: 5%;
 }
 
 .welcome p {
@@ -41,14 +44,19 @@ nav a{
 .user-buttons {
   display: flex;
   flex-direction: row;
-  justify-content: space-evenly;
+  justify-content: flex-start;
 }
 
 .user-buttons button {
-  margin: 0 40px;
+  margin-right: 20px;
   width: 100px;
 }
 
+.header-img {
+  width: 600px;
+}
+
+/* SIGN UP PAGE STYLES */
 .signup-container {
   display: flex;
   justify-content: space-evenly;
