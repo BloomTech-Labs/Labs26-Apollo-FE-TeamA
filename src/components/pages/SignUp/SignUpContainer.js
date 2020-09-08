@@ -19,6 +19,7 @@ const SignUp = () => {
   const history = useHistory();
   const [form] = Form.useForm();
 
+  // ant design form styling
   const layout = {
     wrapperCol: { span: 24 }
   };
@@ -27,13 +28,13 @@ const SignUp = () => {
     col: { span: 24 }
   };
 
+  // submitting form values
   const handleSubmit = values => {
     console.log(values);
     axios
       .post("http://localhost:3000", values)
       .then(res => {
         console.log(res);
-        // push to dashboard using credentials provided from `user`
         history.push("./dashboard");
       })
       .catch(err => {

@@ -38,6 +38,8 @@ function RenderLandingPage(props) {
       </div>
 
       <img
+        data-aos="flip-down"
+        data-aos-delay="300"
         className="header-img"
         src={header}
         alt="apollo features preview"

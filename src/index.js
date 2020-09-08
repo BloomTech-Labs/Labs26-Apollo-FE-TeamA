@@ -8,7 +8,12 @@ import {
 } from "react-router-dom";
 import { Security, LoginCallback, SecureRoute } from "@okta/okta-react";
 
+// ant design library
 import "antd/dist/antd.less";
+
+// AOS animation library
+import AOS from "aos";
+import "aos/dist/aos.css";
 
 import { NotFoundPage } from "./components/pages/NotFound";
 import { ExampleListPage } from "./components/pages/ExampleList";
@@ -31,6 +36,7 @@ ReactDOM.render(
 );
 
 function App() {
+  AOS.init();
   // The reason to declare App this way is so that we can use any helper functions we'd need for business logic, in our case auth.
   // React Router has a nifty useHistory hook we can use at this level to ensure we have security around our routes.
   const history = useHistory();
