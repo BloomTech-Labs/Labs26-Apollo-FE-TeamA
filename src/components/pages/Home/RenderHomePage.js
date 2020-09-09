@@ -1,11 +1,13 @@
-import React from 'react';
-import { Link } from 'react-router-dom';
-import { Button } from '../../common';
+import React from "react";
+import { Link } from "react-router-dom";
+import { Button } from "antd";
+import NewTopicForm from "../NewTopic/RenderNewTopicForm";
 
 function RenderHomePage(props) {
   const { userInfo, authService } = props;
   return (
     <div>
+      <NewTopicForm />
       <h1>Hi {userInfo.name} Welcome to Labs Basic SPA</h1>
       <div>
         <p>
@@ -22,10 +24,9 @@ function RenderHomePage(props) {
           <Link to="/datavis">Data Visualizations Example</Link>
         </p>
         <p>
-          <Button
-            handleClick={() => authService.logout()}
-            buttonText="Logout"
-          />
+          <Button type="secondary" onClick={() => authService.logout()}>
+            Log Out
+          </Button>
         </p>
       </div>
     </div>
