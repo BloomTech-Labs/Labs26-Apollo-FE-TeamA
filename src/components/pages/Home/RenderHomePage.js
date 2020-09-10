@@ -1,14 +1,16 @@
 import React from "react";
 import { Link } from "react-router-dom";
 import { Button } from "antd";
-import NewTopicForm from "../NewTopic/RenderNewTopicForm";
+import NewTopicForm from "../NewTopic/NewTopicContainer";
 
 function RenderHomePage(props) {
   const { userInfo, authService } = props;
   return (
-    <div>
+    <div className="home">
+      {/* PASS IN USER ID TO LINK TOPIC LEADER TO USER */}
       <NewTopicForm />
-      <h1>Hi {userInfo.name} Welcome to Labs Basic SPA</h1>
+
+      <h1>Hi {userInfo.name}, Welcome to Apollo!</h1>
       <div>
         <p>
           This is an example of a common example of how we'd like for you to

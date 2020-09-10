@@ -67,3 +67,11 @@ nav a{
 .signup-container img {
   width: 350px;
 }
+
+/* HOME PAGE STYLES */
+.home {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}

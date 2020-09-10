@@ -1,1 +1,1 @@
-export { default as NewTopicForm } from "./RenderNewTopicForm";
+export { default as NewTopicForm } from "./NewTopicContainer";

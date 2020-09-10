@@ -7,13 +7,17 @@ import join from "../../../media/join.svg";
 
 // TO-DO's:
 // - handle POST request to backend API for registration
+// - implement API for storing user profile image
 
 const SignUp = () => {
   const newUser = {
-    firstName: "",
-    lastName: "",
+    firstname: "",
+    lastname: "",
     email: "",
-    password: ""
+    avatarUrl: "",
+    password: "",
+    created_at: new Date(),
+    updated_at: new Date()
   };
 
   const history = useHistory();
@@ -32,7 +36,7 @@ const SignUp = () => {
   const handleSubmit = values => {
     console.log(values);
     axios
-      .post("http://localhost:3000", values)
+      .post("https://apollo-a-api.herokuapp.com/profile", values)
       .then(res => {
         console.log(res);
         history.push("./dashboard");
@@ -55,7 +59,10 @@ const SignUp = () => {
           form={form}
           className="signup-form"
           name="register"
-          initialValues={newUser}
+          initialValues={{
+            created_at: new Date(),
+            updated_at: new Date()
+          }}
           scrollToFirstError
           onFinish={handleSubmit}
         >
@@ -144,6 +151,9 @@ const SignUp = () => {
               Register
             </Button>
           </Form.Item>
+
+          <Form.Item name="created_at" />
+          <Form.Item name="updated_at" />
         </Form>
 
         <p>
