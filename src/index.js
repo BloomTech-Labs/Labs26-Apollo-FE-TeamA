@@ -16,8 +16,6 @@ import AOS from "aos";
 import "aos/dist/aos.css";
 
 import { NotFoundPage } from "./components/pages/NotFound";
-import { ExampleListPage } from "./components/pages/ExampleList";
-import { ProfileListPage } from "./components/pages/ProfileList";
 import { SignUpPage } from "./components/pages/SignUp";
 import { LoginPage } from "./components/pages/Login";
 import { HomePage } from "./components/pages/Home";
@@ -63,8 +61,6 @@ function App() {
             exact
             component={() => <HomePage LoadingComponent={LoadingComponent} />}
           />
-          <SecureRoute path="/example-list" component={ExampleListPage} />
-          <SecureRoute path="/profile-list" component={ProfileListPage} />
           <Route component={NotFoundPage} />
         </Switch>
       </Security>
