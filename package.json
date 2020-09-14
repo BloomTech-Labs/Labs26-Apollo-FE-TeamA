@@ -12,12 +12,15 @@
     "aos": "^2.3.4",
     "axios": "^0.19.2",
     "craco-less": "^1.17.0",
+    "generate-password": "^1.5.1",
     "plotly.js": "^1.54.6",
     "react": "^16.13.1",
     "react-dom": "^16.13.1",
+    "react-moment": "^0.9.7",
     "react-plotly.js": "^2.4.0",
     "react-router-dom": "^5.2.0",
-    "react-scripts": "3.4.1"
+    "react-scripts": "3.4.1",
+    "reactjs-popup": "^2.0.3"
   },
   "scripts": {
     "start": "craco start",

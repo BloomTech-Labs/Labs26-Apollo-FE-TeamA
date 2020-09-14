@@ -2,6 +2,8 @@ import React from "react";
 import { Link } from "react-router-dom";
 import { Button } from "../../common";
 import { TopicsList } from "../../home_components/TopicsList";
+import { Button } from "antd";
+import NewTopicContainer from "../NewTopic/NewTopicContainer";
 
 function RenderHomePage(props) {
   const { userInfo, authService } = props;
@@ -17,6 +19,7 @@ function RenderHomePage(props) {
           />
         </p>
       </div>
+
     </div>
   );
 }
