@@ -2,6 +2,7 @@ import React from "react";
 import { Button } from "antd";
 import NewTopicContainer from "../NewTopic/NewTopicContainer";
 
+
 function RenderHomePage(props) {
   const { userInfo, authService } = props;
   return (
