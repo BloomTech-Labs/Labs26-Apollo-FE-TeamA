@@ -9,7 +9,8 @@ const TopicsList = props => {
       {topics.map(item => (
         <div>
           <h1>
-            {item.topicName} {item.frequency}
+            <p>{item.topicName}</p>
+            <p>{item.frequency}</p>
           </h1>
           <h4>{item.updated_at}</h4>
         </div>
