@@ -10,15 +10,15 @@ import join from "../../../media/join.svg";
 // - implement API for storing user profile image
 
 const SignUp = () => {
-  const newUser = {
-    firstname: "",
-    lastname: "",
-    email: "",
-    avatarUrl: "",
-    password: "",
-    created_at: new Date(),
-    updated_at: new Date()
-  };
+  // const newUser = {
+  //   firstname: "",
+  //   lastname: "",
+  //   email: "",
+  //   avatarUrl: "",
+  //   password: "",
+  //   created_at: new Date(),
+  //   updated_at: new Date()
+  // };
 
   const history = useHistory();
   const [form] = Form.useForm();
