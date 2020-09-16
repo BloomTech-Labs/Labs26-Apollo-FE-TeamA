@@ -3,7 +3,7 @@ import { Select, Form } from "antd";
 
 const Frequency = props => {
   const handleTopicInput = frequency => {
-    props.onChange("topic_frequency", frequency);
+    props.onChange("topicfrequency", frequency);
   };
 
   return (
@@ -11,14 +11,14 @@ const Frequency = props => {
       <h2>Topic Frequency</h2>
 
       <Form.Item
-        name="topic_frequency"
+        name="topicfrequency"
         label="How often should the topic surveys occur?"
         required
         rules={[{ required: true, message: "Please set a topic frequency." }]}
       >
         <Select
           placeholder="Select a frequency"
-          value={props.topic_frequency}
+          value={props.topicfrequency}
           onChange={value => {
             handleTopicInput(value);
           }}

@@ -49,21 +49,4 @@ const getProfileData = authState => {
   }
 };
 
-const getContextTypes = contextURL => {
-  const idToken = JSON.parse(localStorage.getItem("okta-token-storage")).idToken
-    .idToken;
-
-  axios
-    .get(contextURL, {
-      headers: {
-        Authorization: "Bearer " + idToken
-      }
-    })
-    .then(res => {
-      console.log(res.data);
-      return res.data;
-    })
-    .catch(err => console.log(`GET to {contextURL}:`, err));
-};
-
-export { sleep, getExampleData, getProfileData, getDSData, getContextTypes };
+export { sleep, getExampleData, getProfileData, getDSData };

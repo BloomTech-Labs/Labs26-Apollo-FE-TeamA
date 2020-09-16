@@ -11,7 +11,7 @@ const ContextQuestions = props => {
 
     axios
       .get("https://apollo-a-api.herokuapp.com/question", {
-        headers: { Authorization: "Bearer " + idToken }
+        headers: { Authorization: `Bearer ${idToken}` }
       })
       .then(res => {
         handleContextQuestions(res.data);
@@ -24,7 +24,7 @@ const ContextQuestions = props => {
 
     for (let i = 0; i < cq.length; i++) {
       if (
-        cq[i].contextid === props.value.contextid &&
+        // cq[i].contextid === props.value.contextid &&
         cq[i].type === "Context Questions"
       ) {
         options.push(cq[i]);

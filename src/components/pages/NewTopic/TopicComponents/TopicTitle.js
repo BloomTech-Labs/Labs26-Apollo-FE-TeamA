@@ -4,7 +4,7 @@ import { Form, Input } from "antd";
 const TopicTitle = props => {
   const handleTopicInput = e => {
     let title = e.target.value;
-    props.onChange("topic_name", title);
+    props.onChange("topicname", title);
   };
 
   return (
@@ -20,7 +20,7 @@ const TopicTitle = props => {
         <Input
           name="topic_name"
           type="text"
-          value={props.topic_name}
+          value={props.topicname}
           onChange={e => {
             handleTopicInput(e);
           }}

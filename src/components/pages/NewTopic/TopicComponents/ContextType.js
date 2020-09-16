@@ -12,7 +12,7 @@ const ContextType = props => {
 
     axios
       .get("https://apollo-a-api.herokuapp.com/context", {
-        headers: { Authorization: "Bearer " + idToken }
+        headers: { Authorization: `Bearer ${idToken}` }
       })
       .then(res => {
         setContexts(res.data);

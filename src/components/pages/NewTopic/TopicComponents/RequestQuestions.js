@@ -11,20 +11,20 @@ const RequestQuestions = props => {
 
     axios
       .get("https://apollo-a-api.herokuapp.com/question", {
-        headers: { Authorization: "Bearer " + idToken }
+        headers: { Authorization: `Bearer ${idToken}` }
       })
       .then(res => {
-        handleContextQuestions(res.data);
+        handleRequestQuestions(res.data);
       })
       .catch(err => console.log(`GET to /question:`, err));
   }, []);
 
-  const handleContextQuestions = cq => {
+  const handleRequestQuestions = cq => {
     let options = [];
 
     for (let i = 0; i < cq.length; i++) {
       if (
-        cq[i].contextid === props.value.contextid &&
+        // cq[i].contextid === props.value.contextid &&
         cq[i].type === "Request Questions"
       ) {
         options.push(cq[i]);

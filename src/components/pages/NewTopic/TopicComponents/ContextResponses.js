@@ -1,18 +1,41 @@
-import React, { useState, useEffect } from "react";
-import { Select, Form, Space, Input, Button } from "antd";
-import { MinusCircleOutlined, PlusOutlined } from "@ant-design/icons";
-import axios from "axios";
-import ContextQuestions from "./ContextQuestions";
+import React, { useState } from "react";
+import { Form, Input, Button } from "antd";
 
 const ContextResponses = props => {
+  const { form } = Form.useForm();
+
+  const saveResponses = responses => {
+    props.onChange(Object.values(responses));
+  };
+
+  const getFields = () => {
+    const count = props.value.contextQ.length;
+    const children = [];
+    for (let i = 0; i < count; i++) {
+      children.push(
+        <div key={i}>
+          <Form.Item
+            name={props.value.contextQ[i].id}
+            label={props.value.contextQ[i].question}
+            rules={[{ required: true, message: "Input something!" }]}
+          >
+            <Input placeholder="Answer context question" />
+          </Form.Item>
+        </div>
+      );
+    }
+    return children;
+  };
+
   return (
     <div>
-      <Form.Item
-        name="response"
-        rules={[{ required: true, message: "Please respond to the question" }]}
-      >
-        <Input placeholder="Your Response" />
-      </Form.Item>
+      <Form form={form} name="context_responses" onFinish={saveResponses}>
+        {getFields()}
+
+        <Button type="primary" htmlType="submit">
+          Save Responses
+        </Button>
+      </Form>
     </div>
   );
 };
