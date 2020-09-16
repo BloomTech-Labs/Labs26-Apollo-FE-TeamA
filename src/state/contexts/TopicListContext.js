@@ -1,3 +1,3 @@
-import React, {useContext} from 'react'
+import React, { createContext } from "react";
 
-export const TopicListContext = useContext();
+export const TopicListContext = createContext();
