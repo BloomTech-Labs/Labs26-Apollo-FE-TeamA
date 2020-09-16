@@ -1,10 +1,11 @@
 import React, { useState } from "react";
-import { Form, Input, Button } from "antd";
+import { Form, Input, Button, message } from "antd";
 
 const ContextResponses = props => {
   const { form } = Form.useForm();
 
   const saveResponses = responses => {
+    message.info("Your responses were saved");
     props.onChange(Object.values(responses));
   };
 
@@ -32,6 +33,9 @@ const ContextResponses = props => {
       <Form form={form} name="context_responses" onFinish={saveResponses}>
         {getFields()}
 
+        <h4 className="save-warning">
+          Please make sure to save your responses before moving on.
+        </h4>
         <Button type="primary" htmlType="submit">
           Save Responses
         </Button>

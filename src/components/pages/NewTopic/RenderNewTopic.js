@@ -12,9 +12,8 @@ import axios from "axios";
 
 // TO DO's ----------------
 // - IMPLEMENT SELECTING RESPONSE TYPE FUNCTIONALITY
-// - CONNECT LEADERID to USERID (PASSED AS PROP/CONTEXT)
 
-const RenderNewTopic = () => {
+const RenderNewTopic = props => {
   // set the JOIN CODE
   const joinCode = generator.generate({
     length: 6,
@@ -27,7 +26,7 @@ const RenderNewTopic = () => {
     topicname: "",
     topicfrequency: "",
     contextid: "",
-    leaderid: "00ulthapbErVUwVJy4x6",
+    leaderid: props.user.sub,
     joincode: joinCode
   };
 
@@ -115,7 +114,7 @@ const RenderNewTopic = () => {
     return Modal.confirm({
       title: "Here is your join code: ",
       icon: <InfoCircleTwoTone />,
-      content: topic.joincode,
+      content: <h3>topic.joincode</h3>,
       okText: "Ok"
     });
   };

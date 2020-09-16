@@ -80,3 +80,7 @@ nav a{
   display: flex;
   flex-direction: column;
 }
+
+.save-warning {
+  color: red;
+}
