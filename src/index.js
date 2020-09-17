@@ -16,7 +16,6 @@ import AOS from "aos";
 import "aos/dist/aos.css";
 
 import { NotFoundPage } from "./components/pages/NotFound";
-import { SignUpPage } from "./components/pages/SignUp";
 import { LoginPage } from "./components/pages/Login";
 import { HomePage } from "./components/pages/Home";
 import { LandingPage } from "./components/pages/Landing";
@@ -52,7 +51,6 @@ function App() {
       <Security {...config} onAuthRequired={authHandler}>
         <Switch>
           <Route path="/landing" component={LandingPage} />
-          <Route path="/signup" component={SignUpPage} />
           <Route path="/login" component={LoginPage} />
           <Route path="/implicit/callback" component={LoginCallback} />
           {/* any of the routes you need secured should be registered as SecureRoutes */}
