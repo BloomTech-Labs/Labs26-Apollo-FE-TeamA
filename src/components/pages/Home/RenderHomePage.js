@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { Link } from "react-router-dom";
-
+import Requests from "../../home_components/Requests";
+import { RequestsContext } from "../../../state/contexts/RequestsContext";
 import TopicsList from "../../home_components/TopicsList";
 import { Button } from "antd";
 import NewTopicContainer from "../NewTopic/NewTopicContainer";
@@ -10,6 +11,7 @@ import axios from "axios";
 function RenderHomePage(props) {
   const { userInfo, authService } = props;
   const [topics, setTopics] = useState([]);
+  const [requests, setRequests] = useState([]);
   const idToken = JSON.parse(localStorage.getItem("okta-token-storage")).idToken
     .idToken;
 
@@ -25,6 +27,17 @@ function RenderHomePage(props) {
       console.log(err);
     });
 
+  axios
+    .get("https://apollo-a-api.herokuapp.com/", {
+      headers: { Authorization: `Bearer ${idToken}` }
+    })
+    .then(res => {
+      console.log(res);
+    })
+    .catch(err => {
+      console.log(err);
+    });
+
   return (
     <div className="home">
       <h1>Hi {userInfo.name}, Welcome to Apollo.</h1>
@@ -32,8 +45,12 @@ function RenderHomePage(props) {
       <div>
         <TopicListContext.Provider value={{ topics }}>
           <TopicsList />
+          <NewTopicContainer userInfo={userInfo} />
         </TopicListContext.Provider>
-        <NewTopicContainer userInfo={userInfo} />
+
+        <RequestsContext.Provider value={{ requests }}>
+          <Requests />
+        </RequestsContext.Provider>
 
         <p>
           <Button onClick={() => authService.logout()}>Log Out</Button>
