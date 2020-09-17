@@ -75,3 +75,12 @@ nav a{
   justify-content: center;
   align-items: center;
 }
+
+.context_options {
+  display: flex;
+  flex-direction: column;
+}
+
+.save-warning {
+  color: red;
+}
