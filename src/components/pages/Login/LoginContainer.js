@@ -1,10 +1,13 @@
-import React, { useEffect } from "react";
+import React, { useState, useEffect } from "react";
 import OktaSignIn from "@okta/okta-signin-widget";
+import { Modal, Button } from "antd";
 import "@okta/okta-signin-widget/dist/css/okta-sign-in.min.css";
-
 import { config } from "../../../utils/oktaConfig";
+import header from "../../../media/header.png";
 
 const LoginContainer = () => {
+  const [visible, setVisible] = useState(false);
+
   useEffect(() => {
     const { pkce, issuer, clientId, redirectUri, scopes } = config;
     // de-structure your config so that you can pass it into the required fields in your widget.
@@ -37,20 +40,51 @@ const LoginContainer = () => {
       widget.remove();
       widget.renderEl(
         { el: "#sign-in-widget" },
-        () => {
-          /**
-           * In this flow, the success handler will not be called because we redirect
-           * to the Okta org for the authentication workflow.
-           */
-        },
+        () => {},
         err => {
           throw err;
         }
       );
     }
-  }, []);
+  }, [visible]);
 
-  return <div id="sign-in-widget"></div>;
+  return (
+    <>
+      <div className="landing">
+        <div className="welcome">
+          <h1>Apollo</h1>
+
+          <p>
+            Automate your stand ups with Apollo. Create a topic and define a{" "}
+            <span style={{ color: "#7F64FF", fontWeight: "bold" }}>
+              context
+            </span>{" "}
+            to align your team towards a unified goal. Reply to topic responses
+            to remove blockers and streamline your team efficiency.
+          </p>
+
+          <Button
+            type="primary"
+            onClick={() => {
+              setVisible(true);
+            }}
+          >
+            Log In
+          </Button>
+        </div>
+
+        <img
+          data-aos="flip-down"
+          data-aos-delay="300"
+          className="header-img"
+          src={header}
+          alt="apollo features preview"
+        ></img>
+      </div>
+
+      {visible ? <div id="sign-in-widget" /> : null}
+    </>
+  );
 };
 
 export default LoginContainer;
