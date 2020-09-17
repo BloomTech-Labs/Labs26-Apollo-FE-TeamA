@@ -1,13 +1,11 @@
-
 import React, { useState } from "react";
 import { Link } from "react-router-dom";
 
 import TopicsList from "../../home_components/TopicsList";
 import { Button } from "antd";
-// import NewTopicContainer from "../NewTopic/NewTopicContainer";
+import NewTopicContainer from "../NewTopic/NewTopicContainer";
 import { TopicListContext } from "../../../state/contexts/TopicListContext";
 import axios from "axios";
-
 
 function RenderHomePage(props) {
   const { userInfo, authService } = props;
@@ -15,17 +13,17 @@ function RenderHomePage(props) {
   const idToken = JSON.parse(localStorage.getItem("okta-token-storage")).idToken
     .idToken;
 
-  axios
-    .get("https://apollo-a-api.herokuapp.com/topic", {
-      headers: { Authorization: `Bearer ${idToken}` }
-    })
-    .then(res => {
-      console.log(res.data);
-      setTopics(res.data);
-    })
-    .catch(err => {
-      console.log(err);
-    });
+  // axios
+  //   .get("https://apollo-a-api.herokuapp.com/topic", {
+  //     headers: { Authorization: `Bearer ${idToken}` }
+  //   })
+  //   .then(res => {
+  //     console.log(res.data);
+  //     setTopics(res.data);
+  //   })
+  //   .catch(err => {
+  //     console.log(err);
+  //   });
 
   return (
     <div className="home">
@@ -35,12 +33,14 @@ function RenderHomePage(props) {
         <TopicListContext.Provider value={{ topics }}>
           <TopicsList />
         </TopicListContext.Provider>
+
         <NewTopicContainer userInfo={userInfo} />
-        <p>
-          <Button onClick={() => authService.logout()}>Log Out</Button>
-        </p>
+
+        <Button type="secondary" onClick={() => authService.logout()}>
+          Log Out
+        </Button>
       </div>
     </div>
   );
-};
+}
 export default RenderHomePage;
