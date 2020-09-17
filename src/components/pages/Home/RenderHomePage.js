@@ -11,9 +11,9 @@ const RenderHomePage = ({ userInfo, authService }) => {
       <div>
         <NewTopicContainer userInfo={userInfo} />
 
-        <p>
-          <Button onClick={() => authService.logout()}>Log Out</Button>
-        </p>
+        <Button type="secondary" onClick={() => authService.logout()}>
+          Log Out
+        </Button>
       </div>
     </div>
   );

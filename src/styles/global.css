@@ -84,3 +84,12 @@ nav a{
 .save-warning {
   color: red;
 }
+
+.form-question {
+  margin-bottom: 10px;
+}
+
+.save-button {
+  border: none;
+  margin-bottom: 10px;
+}

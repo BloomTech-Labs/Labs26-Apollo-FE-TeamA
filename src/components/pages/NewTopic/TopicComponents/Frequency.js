@@ -11,14 +11,14 @@ const Frequency = props => {
       <h2>Topic Frequency</h2>
 
       <Form.Item
-        name="topicfrequency"
+        name="topic_frequency"
         label="How often should the topic surveys occur?"
         required
         rules={[{ required: true, message: "Please set a topic frequency." }]}
       >
         <Select
           placeholder="Select a frequency"
-          value={props.topicfrequency}
+          value={props.topic_frequency}
           onChange={value => {
             handleTopicInput(value);
           }}
