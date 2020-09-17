@@ -1,7 +1,6 @@
 import React, { useContext, useState } from "react";
 import { TopicListContext } from "../../state/contexts/TopicListContext";
 import axios from "axios";
-
 const TopicsList = () => {
   const { topics } = useContext(TopicListContext);
 
