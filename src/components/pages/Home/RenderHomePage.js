@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import Requests from "../../home_components/Requests";
 import { RequestsContext } from "../../../state/contexts/RequestsContext";
@@ -15,28 +15,31 @@ function RenderHomePage(props) {
   const idToken = JSON.parse(localStorage.getItem("okta-token-storage")).idToken
     .idToken;
 
-  axios
-    .get("https://apollo-a-api.herokuapp.com/topic", {
-      headers: { Authorization: `Bearer ${idToken}` }
-    })
-    .then(res => {
-      console.log(res.data);
-      setTopics(res.data);
-    })
-    .catch(err => {
-      console.log(err);
-    });
+  useEffect(() => {
+    axios
+      .get("https://apollo-a-api.herokuapp.com/topic", {
+        headers: { Authorization: `Bearer ${idToken}` }
+      })
+      .then(res => {
+        console.log(res.data);
+        setTopics(res.data);
+      })
+      .catch(err => {
+        console.log(err);
+      });
 
-  axios
-    .get("https://apollo-a-api.herokuapp.com/", {
-      headers: { Authorization: `Bearer ${idToken}` }
-    })
-    .then(res => {
-      console.log(res);
-    })
-    .catch(err => {
-      console.log(err);
-    });
+    axios
+      .get("https://apollo-a-api.herokuapp.com/response", {
+        headers: { Authorization: `Bearer ${idToken}` }
+      })
+      .then(res => {
+        console.log(res);
+        setRequests(res.data);
+      })
+      .catch(err => {
+        console.log(err);
+      });
+  }, []);
 
   return (
     <div className="home">
@@ -45,9 +48,8 @@ function RenderHomePage(props) {
       <div>
         <TopicListContext.Provider value={{ topics }}>
           <TopicsList />
-          <NewTopicContainer userInfo={userInfo} />
         </TopicListContext.Provider>
-
+        <NewTopicContainer userInfo={userInfo} />
         <RequestsContext.Provider value={{ requests }}>
           <Requests />
         </RequestsContext.Provider>
