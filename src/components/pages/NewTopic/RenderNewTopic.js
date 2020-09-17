@@ -63,6 +63,11 @@ const RenderNewTopic = props => {
   let allTopicQuestions = [];
   let allResponses = [];
 
+  // axios authentication
+  const idToken = JSON.parse(localStorage.getItem("okta-token-storage")).idToken
+    .idToken;
+  const auth = { headers: { Authorization: `Bearer ${idToken}` } };
+
   // handle state for topic
   const handleTopicInput = (name, value) => {
     setTopic({
@@ -97,7 +102,6 @@ const RenderNewTopic = props => {
 
   // map all context responses to response state
   const handleAllResponses = topic => {
-    console.log("responses in handle f(x)", responses);
     return responses.map((r, index) => {
       let temp = Object.assign({}, response);
       temp.topicid = topic.id;
@@ -114,22 +118,18 @@ const RenderNewTopic = props => {
     return Modal.confirm({
       title: "Here is your join code: ",
       icon: <InfoCircleTwoTone />,
-      content: <h3>topic.joincode</h3>,
+      content: topic.joincode,
       okText: "Ok"
     });
   };
 
   // submitting topics
   const createTopic = () => {
-    const idToken = JSON.parse(localStorage.getItem("okta-token-storage"))
-      .idToken.idToken;
     allQuestions = topicQuestions.contextQ.concat(topicQuestions.requestQ);
     console.log("allQuestions:", allQuestions);
 
     axios
-      .post("https://apollo-a-api.herokuapp.com/topic", topic, {
-        headers: { Authorization: `Bearer ${idToken}` }
-      })
+      .post("https://apollo-a-api.herokuapp.com/topic", topic, auth)
       .then(res => {
         console.log("POST to /topic", res.data.topic);
         let createdTopic = res.data.topic;
@@ -142,24 +142,23 @@ const RenderNewTopic = props => {
               axios.post(
                 "https://apollo-a-api.herokuapp.com/topicquestion",
                 q,
-                {
-                  headers: { Authorization: `Bearer ${idToken}` }
-                }
+                auth
               )
             )
           )
           .then(res => {
             console.log("POST to /topicquestion", res);
-            console.log("Created Topic:", createdTopic);
             handleAllResponses(createdTopic);
             console.log("allResponses:", allResponses);
 
             axios
               .all(
                 allResponses.map(r =>
-                  axios.post("https://apollo-a-api.herokuapp.com/response", r, {
-                    headers: { Authorization: `Bearer ${idToken}` }
-                  })
+                  axios.post(
+                    "https://apollo-a-api.herokuapp.com/response",
+                    r,
+                    auth
+                  )
                 )
               )
               .then(res => {
@@ -191,6 +190,10 @@ const RenderNewTopic = props => {
     setPage(0);
   };
 
+  const paginate = p => {
+    setPage(p);
+  };
+
   return (
     <div>
       <Button
@@ -210,6 +213,7 @@ const RenderNewTopic = props => {
         cancelText="Cancel"
         onCancel={cancelTopic}
         onOk={createTopic}
+        maskClosable={false}
         footer={
           <>
             {page === 0 ? null : (
@@ -251,21 +255,36 @@ const RenderNewTopic = props => {
           {page === 0 ? (
             <div>
               <TopicTitle value={topic} onChange={handleTopicInput} />
-              <Frequency value={topic} onChange={handleTopicInput} />
+              <Frequency
+                page={paginate}
+                value={topic}
+                onChange={handleTopicInput}
+              />
             </div>
           ) : null}
           {page === 1 ? (
-            <ContextType value={topic} onChange={handleTopicInput} />
+            <ContextType
+              page={paginate}
+              value={topic}
+              onChange={handleTopicInput}
+            />
           ) : null}
-          {page === 2 ? <ContextQuestions onChange={handleQuestions} /> : null}
+          {page === 2 ? (
+            <ContextQuestions page={paginate} onChange={handleQuestions} />
+          ) : null}
           {page === 3 ? (
             <ContextResponses
+              page={paginate}
               value={topicQuestions}
               onChange={handleResponses}
             />
           ) : null}
           {page === 4 ? (
-            <RequestQuestions value={topic} onChange={handleQuestions} />
+            <RequestQuestions
+              page={paginate}
+              value={topic}
+              onChange={handleQuestions}
+            />
           ) : null}
         </Form>
       </Modal>

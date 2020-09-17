@@ -49,14 +49,16 @@ function RenderHomePage(props) {
         <TopicListContext.Provider value={{ topics }}>
           <TopicsList />
         </TopicListContext.Provider>
+
         <NewTopicContainer userInfo={userInfo} />
+
         <RequestsContext.Provider value={{ requests }}>
           <Requests />
         </RequestsContext.Provider>
 
-        <p>
-          <Button onClick={() => authService.logout()}>Log Out</Button>
-        </p>
+        <Button type="secondary" onClick={() => authService.logout()}>
+          Log Out
+        </Button>
       </div>
     </div>
   );

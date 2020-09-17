@@ -26,9 +26,19 @@ nav a{
 .landing {
   display: flex;
   flex-direction: row;
-  justify-content: center;
+  justify-content: space-evenly;
   align-items: center;
   margin: 0 auto;
+}
+
+#sign-in-widget {
+  position: fixed;
+  top: 0;  
+  left: 0;  
+  right: 0;  
+  bottom: 0;  
+  margin: auto;
+  background-color: rgba(0,0,0, 0.5);
 }
 
 .welcome {
@@ -56,18 +66,6 @@ nav a{
   width: 600px;
 }
 
-/* SIGN UP PAGE STYLES */
-.signup-container {
-  display: flex;
-  justify-content: space-evenly;
-  align-items: center;
-  margin: 5rem auto 0;
-}
-
-.signup-container img {
-  width: 350px;
-}
-
 /* HOME PAGE STYLES */
 .home {
   display: flex;
@@ -83,4 +81,13 @@ nav a{
 
 .save-warning {
   color: red;
+}
+
+.form-question {
+  margin-bottom: 10px;
+}
+
+.save-button {
+  border: none;
+  margin-bottom: 10px;
 }

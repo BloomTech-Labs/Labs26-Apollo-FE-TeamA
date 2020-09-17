@@ -6,14 +6,6 @@ import header from "../../../media/header.png";
 function RenderLandingPage(props) {
   const history = useHistory();
 
-  const signup = () => {
-    history.push("/signup");
-  };
-
-  const login = () => {
-    history.push("/login");
-  };
-
   return (
     <div className="landing">
       <div className="welcome">
@@ -27,13 +19,9 @@ function RenderLandingPage(props) {
         </p>
 
         <div className="user-buttons">
-          <Button type="primary" onClick={signup}>
-            Sign Up
-          </Button>
+          <Button type="primary">Sign Up</Button>
 
-          <Button type="secondary" onClick={login}>
-            Log In
-          </Button>
+          <Button type="secondary">Log In</Button>
         </div>
       </div>
 

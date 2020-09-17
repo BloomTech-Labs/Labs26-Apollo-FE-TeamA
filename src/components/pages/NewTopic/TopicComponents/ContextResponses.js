@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React from "react";
 import { Form, Input, Button, message } from "antd";
 
 const ContextResponses = props => {
@@ -20,7 +20,7 @@ const ContextResponses = props => {
             label={props.value.contextQ[i].question}
             rules={[{ required: true, message: "Input something!" }]}
           >
-            <Input placeholder="Answer context question" />
+            <Input placeholder="Answer your context question." />
           </Form.Item>
         </div>
       );
