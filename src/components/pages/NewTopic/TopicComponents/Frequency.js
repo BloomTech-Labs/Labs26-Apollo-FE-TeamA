@@ -2,28 +2,34 @@ import React from "react";
 import { Select, Form } from "antd";
 
 const Frequency = props => {
-  const handleTopicFrequency = frequency => {
-    props.onChange(frequency);
+  const handleTopicInput = frequency => {
+    props.onChange("topicfrequency", frequency);
   };
 
   return (
-    <Form.Item
-      name="topic_frequency"
-      label="How often should the topic surveys occur?"
-      required
-      rules={[{ required: true, message: "Please set a topic frequency." }]}
-    >
-      <Select
-        placeholder="Select a frequency"
-        value={props.topic_frequency}
-        onChange={handleTopicFrequency}
+    <div>
+      <h2>Topic Frequency</h2>
+
+      <Form.Item
+        name="topicfrequency"
+        label="How often should the topic surveys occur?"
+        required
+        rules={[{ required: true, message: "Please set a topic frequency." }]}
       >
-        <Select.Option value="Off">Off</Select.Option>
-        <Select.Option value="Daily">Daily</Select.Option>
-        <Select.Option value="Weekly">Weekly</Select.Option>
-        <Select.Option value="Monthly">Monthly</Select.Option>
-      </Select>
-    </Form.Item>
+        <Select
+          placeholder="Select a frequency"
+          value={props.topicfrequency}
+          onChange={value => {
+            handleTopicInput(value);
+          }}
+        >
+          <Select.Option value="Off">Off</Select.Option>
+          <Select.Option value="Daily">Daily</Select.Option>
+          <Select.Option value="Weekly">Weekly</Select.Option>
+          <Select.Option value="Monthly">Monthly</Select.Option>
+        </Select>
+      </Form.Item>
+    </div>
   );
 };
 

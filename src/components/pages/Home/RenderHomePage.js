@@ -1,26 +1,21 @@
 import React from "react";
-import { Link } from "react-router-dom";
-import { Button } from "../../common";
-import { TopicsList } from "../../home_components/TopicsList";
+import TopicsList from "../../home_components/TopicsList";
 import { Button } from "antd";
 import NewTopicContainer from "../NewTopic/NewTopicContainer";
 
-function RenderHomePage(props) {
-  const { userInfo, authService } = props;
+const RenderHomePage = ({ userInfo, authService }) => {
   return (
-    <div>
-      <h1>Hi {userInfo.name} Welcome to Labs Basic SPA</h1>
+    <div className="home">
+      <h1>Hi {userInfo.name}, Welcome to Apollo.</h1>
+
       <div>
-        <TopicsList />
+        <NewTopicContainer userInfo={userInfo} />
+
         <p>
-          <Button
-            handleClick={() => authService.logout()}
-            buttonText="Logout"
-          />
+          <Button onClick={() => authService.logout()}>Log Out</Button>
         </p>
       </div>
-
     </div>
   );
-}
+};
 export default RenderHomePage;

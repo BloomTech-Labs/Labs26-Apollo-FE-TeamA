@@ -3,7 +3,7 @@ import { TopicListContext } from "../../state/contexts/TopicListContext";
 import axios from "axios";
 
 const TopicsList = props => {
-  const { topics } = useContext(TopicListContext);
+  // const { topics } = useContext(TopicListContext);
 
   const [topiclist, settopiclist] = useState([]);
 
@@ -29,3 +29,5 @@ const TopicsList = props => {
     </>
   );
 };
+
+export default TopicsList;
