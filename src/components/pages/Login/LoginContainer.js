@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import OktaSignIn from "@okta/okta-signin-widget";
-import { Modal, Button } from "antd";
+import { Button } from "antd";
 import "@okta/okta-signin-widget/dist/css/okta-sign-in.min.css";
 import { config } from "../../../utils/oktaConfig";
 import header from "../../../media/header.png";

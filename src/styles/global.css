@@ -11,17 +11,6 @@ h1 {
   font-weight: bold;
 }
 
-/* NAV STYLES */
-nav {
-  padding-top: 20px;
-}
-
-nav a{
-  font-size: 24px;
-  margin-left: 40px;
-  font-weight: bold;
-}
-
 /* LANDING PAGE STYLES */
 .landing {
   display: flex;
@@ -72,6 +61,43 @@ nav a{
   flex-direction: column;
   justify-content: center;
   align-items: center;
+  padding-top: 2rem;
+}
+
+.nav {
+  display: flex;
+  justify-content: space-between;
+  width: 95%;
+}
+
+.logo {
+  font-size: 24px;
+  margin-left: 40px;
+  font-weight: bold;
+  color: #7F64FF;
+}
+
+.topics-container {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  width: 100%;
+  padding: 2rem 0 0 4rem;
+}
+
+.topics-list {
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  align-items: flex-start;
+  width: 35%;
+}
+
+.main-topic {
+  display: flex;
+  justify-items: center;
+  align-items: flex-start;
+  width: 65%;
 }
 
 .context_options {
@@ -90,4 +116,18 @@ nav a{
 .save-button {
   border: none;
   margin-bottom: 10px;
+}
+
+/* TOPICS LIST STYLES */
+.topic-name { 
+  width: 300px;
+  background: rgb(196, 196, 196);
+  margin: 1rem 0;
+  padding: 1rem;
+  border-radius: 20px;
+}
+
+.topic-name h3 {
+  color: #7F64FF;
+  font-weight: bold;
 }

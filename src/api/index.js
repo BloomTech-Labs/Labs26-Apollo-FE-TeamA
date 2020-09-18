@@ -1,52 +1,102 @@
 import axios from "axios";
 
+// axios auth
+const idToken = JSON.parse(localStorage.getItem("okta-token-storage")).idToken
+  .idToken;
+const authHeader = {
+  headers: { Authorization: `Bearer ${idToken}` }
+};
+
 // we will define a bunch of API calls here.
-const apiUrl = `${process.env.REACT_APP_API_URI}/profiles`;
+const apiUrl = `${process.env.REACT_APP_API_URI}/profile/`;
+const topics = `${process.env.REACT_APP_API_URI}/topic/`;
+const topicQuestions = `${process.env.REACT_APP_API_URI}/topicquestion/`;
+const questions = `${process.env.REACT_APP_API_URI}/question/`;
+const responses = `${process.env.REACT_APP_API_URI}/response/`;
 
-const sleep = time =>
-  new Promise(resolve => {
-    setTimeout(resolve, time);
-  });
-
-const getExampleData = () => {
+// get topic by topic id
+const getTopics = topicID => {
   return axios
-    .get(`https://jsonplaceholder.typicode.com/photos?albumId=1`)
-    .then(response => response.data);
+    .get(`${process.env.REACT_APP_API_URI}/topic/${topicID}`, authHeader)
+    .then(res => {
+      console.log("GET /topic/:id", res);
+      return res.data;
+    })
+    .catch(err => console.log("GET /topic/:id", err));
 };
 
-const getAuthHeader = authState => {
-  if (!authState.isAuthenticated) {
-    throw new Error("Not authenticated");
-  }
-  return { Authorization: `Bearer ${authState.idToken}` };
-};
-
-const getDSData = (url, authState) => {
-  // here's another way you can compose together your API calls.
-  // Note the use of GetAuthHeader here is a little different than in the getProfileData call.
-  const headers = getAuthHeader(authState);
-  if (!url) {
-    throw new Error("No URL provided");
-  }
+// get context by context id
+const getContext = contextID => {
   return axios
-    .get(url, { headers })
-    .then(res => JSON.parse(res.data))
-    .catch(err => err);
+    .get(`${process.env.REACT_APP_API_URI}/context/${contextID}`, authHeader)
+    .then(res => {
+      console.log("GET /context/:id", res);
+      return res.data;
+    })
+    .catch(err => console.log("GeT /context/:id", err));
 };
 
-const apiAuthGet = authHeader => {
-  return axios.get(apiUrl, { headers: authHeader });
+// get all questions
+const getAllQuestions = () => {
+  return axios
+    .get(topicQuestions, authHeader)
+    .then(res => {
+      console.log("GET /topicquestions", res);
+      return res.data;
+    })
+    .catch(err => console.log("GeT /topicquestions", err));
 };
 
-const getProfileData = authState => {
-  try {
-    return apiAuthGet(getAuthHeader(authState)).then(response => response.data);
-  } catch (error) {
-    return new Promise(() => {
-      console.log(error);
-      return [];
-    });
+// get all questions by topic id
+const getAllTopicQuestions = questions => {
+  return axios
+    .all(
+      questions.map(q =>
+        axios.get(
+          `https://apollo-a-api.herokuapp.com/question/${q.questionid}`,
+          authHeader
+        )
+      )
+    )
+    .then(res => {
+      console.log("GET /question/:id", res);
+      return res;
+    })
+    .catch(err => console.log("GET question/:id", err));
+};
+
+const getAllResponses = () => {
+  return axios
+    .get(responses, authHeader)
+    .then(res => {
+      console.log("GET /response", res);
+      return res.data;
+    })
+    .catch(err => console.log("GET /response", err));
+};
+
+export {
+  getTopics,
+  getContext,
+  getAllQuestions,
+  getAllTopicQuestions,
+  getAllResponses
+};
+
+let data = {
+  response: {
+    id: 1,
+    questionid: 1,
+    respondedby: "00ulthapbErVUwVJy4x6",
+    response: "This is my response.",
+    topicid: 1,
+    __proto__: Object
+  },
+  replies: {
+    0: {
+      id: 1,
+      repliedby: "00ulthapbErVUwVJy4x6",
+      reply: "This reply is for your responsein my topic"
+    }
   }
 };
-
-export { sleep, getExampleData, getProfileData, getDSData };
