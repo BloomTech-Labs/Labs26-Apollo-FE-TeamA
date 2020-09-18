@@ -1,3 +1,3 @@
-import React, { CreateContext } from "react";
+import React, { createContext } from "react";
 
-export const RequestsContext = CreateContext();
+export const RequestsContext = createContext();
