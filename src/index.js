@@ -16,13 +16,11 @@ import AOS from "aos";
 import "aos/dist/aos.css";
 
 import { NotFoundPage } from "./components/pages/NotFound";
-import { SignUpPage } from "./components/pages/SignUp";
 import { LoginPage } from "./components/pages/Login";
 import { HomePage } from "./components/pages/Home";
-import { LandingPage } from "./components/pages/Landing";
 import { config } from "./utils/oktaConfig";
 import { LoadingComponent } from "./components/common";
-import NavBar from "./components/common/NavBar";
+import "../src/styles/global.css";
 
 ReactDOM.render(
   <Router>
@@ -47,25 +45,20 @@ function App() {
   };
 
   return (
-    <>
-      <NavBar />
-      <Security {...config} onAuthRequired={authHandler}>
-        <Switch>
-          <Route path="/landing" component={LandingPage} />
-          <Route path="/signup" component={SignUpPage} />
-          <Route path="/login" component={LoginPage} />
-          <Route path="/implicit/callback" component={LoginCallback} />
-          {/* any of the routes you need secured should be registered as SecureRoutes */}
+    <Security {...config} onAuthRequired={authHandler}>
+      <Switch>
+        <Route path="/login" component={LoginPage} />
+        <Route path="/implicit/callback" component={LoginCallback} />
+        {/* any of the routes you need secured should be registered as SecureRoutes */}
 
-          <SecureRoute
-            path="/"
-            exact
-            component={() => <HomePage LoadingComponent={LoadingComponent} />}
-          />
+        <SecureRoute
+          path="/"
+          exact
+          component={() => <HomePage LoadingComponent={LoadingComponent} />}
+        />
 
-          <Route component={NotFoundPage} />
-        </Switch>
-      </Security>
-    </>
+        <Route component={NotFoundPage} />
+      </Switch>
+    </Security>
   );
 }
