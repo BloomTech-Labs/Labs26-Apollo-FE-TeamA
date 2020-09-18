@@ -9,12 +9,15 @@ import { TopicListContext } from "../../../state/contexts/TopicListContext";
 import axios from "axios";
 import Responses from "../../home_components/Responses";
 import { ResponsesContext } from "../../../state/contexts/ResponsesContext";
+import { ThreadsContext } from "../../../state/contexts/ThreadsContext";
+import ThreadsList from "../../home_components/ThreadsList";
 
 function RenderHomePage(props) {
   const { userInfo, authService } = props;
   const [topics, setTopics] = useState([]);
   const [requestList, setRequests] = useState([]);
   const [responseList, setResponses] = useState([]);
+  const [threads, setThreads] = useState([]);
   const idToken = JSON.parse(localStorage.getItem("okta-token-storage")).idToken
     .idToken;
 
@@ -54,6 +57,18 @@ function RenderHomePage(props) {
       .catch(err => {
         console.log(err);
       });
+
+    axios
+      .get("https://apollo-a-api.herokuapp.com/thread", {
+        headers: { Authorization: `Bearer ${idToken}` }
+      })
+      .then(res => {
+        console.log(res);
+        setThreads(res);
+      })
+      .catch(err => {
+        console.log(err);
+      });
   }, []);
 
   return (
@@ -74,6 +89,10 @@ function RenderHomePage(props) {
         <ResponsesContext.Provider value={{ responseList }}>
           <Responses />
         </ResponsesContext.Provider>
+
+        <ThreadsContext.Provider value={{ threads }}>
+          <ThreadsList />
+        </ThreadsContext.Provider>
 
         <Button type="secondary" onClick={() => authService.logout()}>
           Log Out
