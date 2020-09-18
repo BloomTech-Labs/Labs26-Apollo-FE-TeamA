@@ -1,11 +1,17 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
 import { Button } from "antd";
-
+import { Link } from "react-router-dom";
+import Requests from "../../home_components/Requests";
+import { RequestsContext } from "../../../state/contexts/RequestsContext";
 import TopicsList from "../../home_components/TopicsList";
 import NewTopicContainer from "../NewTopic/NewTopicContainer";
 import MainTopic from "../MainTopic/MainTopicContainer";
 import { TopicListContext } from "../../../state/contexts/TopicListContext";
+import Responses from "../../home_components/Responses";
+import { ResponsesContext } from "../../../state/contexts/ResponsesContext";
+import { ThreadsContext } from "../../../state/contexts/ThreadsContext";
+import ThreadsList from "../../home_components/ThreadsList";
 
 function RenderHomePage(props) {
   // state handlers
@@ -13,6 +19,9 @@ function RenderHomePage(props) {
   const [topics, setTopics] = useState([]);
   const [topicID, setTopicID] = useState(0);
   const userTopics = [];
+  const [requestList, setRequests] = useState([]);
+  const [responseList, setResponses] = useState([]);
+  const [threads, setThreads] = useState([]);
 
   // axios auth
   const idToken = JSON.parse(localStorage.getItem("okta-token-storage")).idToken
@@ -27,6 +36,39 @@ function RenderHomePage(props) {
       .then(res => {
         console.log(res.data);
         getUserTopics(res.data);
+      })
+
+    axios
+      .get("https://apollo-a-api.herokuapp.com/response", {
+        headers: { Authorization: `Bearer ${idToken}` }
+      })
+      .then(res => {
+        console.log(res);
+        setRequests(res.data);
+      })
+      .catch(err => {
+        console.log(err);
+      });
+
+    axios
+      .get("https://apollo-a-api.herokuapp.com/response", {
+        headers: { Authorization: `Bearer ${idToken}` }
+      })
+      .then(res => {
+        console.log(res);
+        setResponses(res.data);
+      })
+      .catch(err => {
+        console.log(err);
+      });
+
+    axios
+      .get("https://apollo-a-api.herokuapp.com/thread", {
+        headers: { Authorization: `Bearer ${idToken}` }
+      })
+      .then(res => {
+        console.log(res);
+        setThreads(res);
       })
       .catch(err => {
         console.log(err);
@@ -51,6 +93,18 @@ function RenderHomePage(props) {
     <div className="home">
       <div className="nav">
         <h2 className="logo">Apollo</h2>
+
+        <RequestsContext.Provider value={{ requestList }}>
+          <Requests />
+        </RequestsContext.Provider>
+
+        <ResponsesContext.Provider value={{ responseList }}>
+          <Responses />
+        </ResponsesContext.Provider>
+
+        <ThreadsContext.Provider value={{ threads }}>
+          <ThreadsList />
+        </ThreadsContext.Provider>
 
         <Button type="secondary" onClick={() => authService.logout()}>
           Log Out

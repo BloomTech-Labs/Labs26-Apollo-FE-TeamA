@@ -4,21 +4,10 @@ import axios from "axios";
 
 const ThreadsList = props => {
   const { threads } = useContext(ThreadsContext);
-  const [list, setList] = useState([]);
-
-  axios
-    .get("https://apollo-a-api.herokuapp.com/thread")
-    .then(res => {
-      console.log(res);
-      setList(res.data);
-    })
-    .catch(err => {
-      console.log(err.response);
-    });
 
   return (
     <>
-      {list.map(item => (
+      {threads.map(item => (
         <div>
           <p>{item.replies}</p>
         </div>
@@ -26,4 +15,4 @@ const ThreadsList = props => {
     </>
   );
 };
-export default ThreadsContext;
+export default ThreadsList;
