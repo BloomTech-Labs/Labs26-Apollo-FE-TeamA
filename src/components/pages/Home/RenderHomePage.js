@@ -42,6 +42,18 @@ function RenderHomePage(props) {
       .catch(err => {
         console.log(err);
       });
+
+    axios
+      .get("https://apollo-a-api.herokuapp.com/response", {
+        headers: { Authorization: `Bearer ${idToken}` }
+      })
+      .then(res => {
+        console.log(res);
+        setResponses(res.data);
+      })
+      .catch(err => {
+        console.log(err);
+      });
   }, []);
 
   return (
@@ -58,6 +70,10 @@ function RenderHomePage(props) {
         <RequestsContext.Provider value={{ requestList }}>
           <Requests />
         </RequestsContext.Provider>
+
+        <ResponsesContext.Provider value={{ responseList }}>
+          <Responses />
+        </ResponsesContext.Provider>
 
         <Button type="secondary" onClick={() => authService.logout()}>
           Log Out
