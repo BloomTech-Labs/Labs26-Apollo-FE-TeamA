@@ -2,16 +2,19 @@ import React, { useContext, useState } from "react";
 import axios from "axios";
 import { ResponsesContext } from "../../state/contexts/ResponsesContext";
 
-const Responses = props => {
+const Responses = () => {
   const { responsesList } = useContext(ResponsesContext);
-  const [list, setList] = useState([]);
-
-  axios
-    .get("https://apollo-a-api.herokuapp.com/responses")
-    .then(res => {
-      console.log(res);
-      setList(res.data);
-    })
-    .catch(err => console.log(err));
-  return <></>;
+  return (
+    <>
+      {responsesList
+        ? responsesList.map(item => (
+            <div>
+              <h4>{item.question_id}</h4>
+              <p>{item.responses}</p>
+            </div>
+          ))
+        : null}
+    </>
+  );
 };
+export default Responses;

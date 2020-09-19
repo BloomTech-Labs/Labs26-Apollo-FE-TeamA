@@ -13,6 +13,18 @@ const topics = `${process.env.REACT_APP_API_URI}/topic/`;
 const topicQuestions = `${process.env.REACT_APP_API_URI}/topicquestion/`;
 const questions = `${process.env.REACT_APP_API_URI}/question/`;
 const responses = `${process.env.REACT_APP_API_URI}/response/`;
+const threads = `${process.env.REACT_APP_API_URI}/thread/`;
+
+// get all topics
+const getAllTopics = () => {
+  return axios
+    .get(topics, authHeader)
+    .then(res => {
+      console.log("GET /topic", res);
+      return res.data;
+    })
+    .catch(err => console.log("GET /topic", err));
+};
 
 // get topic by topic id
 const getTopic = topicID => {
@@ -87,6 +99,16 @@ const getAllResponses = () => {
     .catch(err => console.log("GET /response", err));
 };
 
+const getAllThreads = () => {
+  return axios
+    .get(threads, authHeader)
+    .then(res => {
+      console.log("GET /thread", res);
+      return res;
+    })
+    .catch(err => console.log("GET /thread", err));
+};
+
 // delete topic by topic id
 const deleteTopic = topicID => {
   return axios
@@ -99,11 +121,13 @@ const deleteTopic = topicID => {
 };
 
 export {
+  getAllTopics,
   getTopic,
   getContext,
   getQuestions,
   getAllQuestions,
   getAllTopicQuestions,
   getAllResponses,
+  getAllThreads,
   deleteTopic
 };

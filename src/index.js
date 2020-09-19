@@ -50,14 +50,21 @@ function App() {
         <Route path="/login" component={LoginPage} />
         <Route path="/implicit/callback" component={LoginCallback} />
         {/* any of the routes you need secured should be registered as SecureRoutes */}
+        <Security {...config} onAuthRequired={authHandler}>
+          <Switch>
+            <Route path="/login" component={LoginPage} />
+            <Route path="/implicit/callback" component={LoginCallback} />
+            {/* any of the routes you need secured should be registered as SecureRoutes */}
 
-        <SecureRoute
-          path="/"
-          exact
-          component={() => <HomePage LoadingComponent={LoadingComponent} />}
-        />
+            <SecureRoute
+              path="/"
+              exact
+              component={() => <HomePage LoadingComponent={LoadingComponent} />}
+            />
 
-        <Route component={NotFoundPage} />
+            <Route component={NotFoundPage} />
+          </Switch>
+        </Security>
       </Switch>
     </Security>
   );

@@ -1,52 +1,56 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
 import { Button } from "antd";
-
+import { Link } from "react-router-dom";
+import Requests from "../../home_components/Requests";
+import { RequestsContext } from "../../../state/contexts/RequestsContext";
 import TopicsList from "../../home_components/TopicsList";
 import NewTopicContainer from "../NewTopic/NewTopicContainer";
 import MainTopic from "../MainTopic/MainTopicContainer";
 import { TopicListContext } from "../../../state/contexts/TopicListContext";
+import Responses from "../../home_components/Responses";
+import { ResponsesContext } from "../../../state/contexts/ResponsesContext";
+import { ThreadsContext } from "../../../state/contexts/ThreadsContext";
+import ThreadsList from "../../home_components/ThreadsList";
+import { getAllResponses, getAllTopics, getAllThreads } from "../../../api";
 
 function RenderHomePage(props) {
   // state handlers
   const { userInfo, authService } = props;
   const [topics, setTopics] = useState([]);
   const [topicID, setTopicID] = useState(0);
-  const userTopics = [];
-
-  // axios auth
-  const idToken = JSON.parse(localStorage.getItem("okta-token-storage")).idToken
-    .idToken;
-  const auth = {
-    headers: { Authorization: `Bearer ${idToken}` }
-  };
+  const [requestList, setRequests] = useState([]);
+  const [responseList, setResponses] = useState([]);
+  const [threads, setThreads] = useState([]);
 
   useEffect(() => {
-    axios
-      .get("https://apollo-a-api.herokuapp.com/topic", auth)
+    getAllTopics()
       .then(res => {
-        console.log(res.data);
-        getUserTopics(res.data);
+        let userTopics = res.filter(topic => topic.leaderid == userInfo.sub);
+        setTopics(userTopics);
       })
-      .catch(err => {
-        console.log(err);
-      });
+      .catch(err => console.log(err));
+
+    getAllResponses()
+      .then(res => {
+        setResponses(res);
+        setRequests(res);
+      })
+      .catch(err => console.log(err));
+
+    getAllThreads()
+      .then(res => {
+        setThreads(res);
+      })
+      .catch(err => console.log(err));
   }, []);
 
-  const getUserTopics = topics => {
-    topics.forEach(t => {
-      if (t.leaderid === userInfo.sub) {
-        userTopics.push(t);
-      }
-    });
-
-    setTopics(userTopics);
-  };
-
+  // for selecting a specific topic
   const getTopicID = id => {
     setTopicID(id);
   };
 
+  // used when deleting a topic
   const resetTopicID = () => {
     setTopicID(0);
   };
@@ -55,6 +59,18 @@ function RenderHomePage(props) {
     <div className="home">
       <div className="nav">
         <h2 className="logo">Apollo</h2>
+
+        <RequestsContext.Provider value={{ requestList }}>
+          <Requests />
+        </RequestsContext.Provider>
+
+        <ResponsesContext.Provider value={{ responseList }}>
+          <Responses />
+        </ResponsesContext.Provider>
+
+        <ThreadsContext.Provider value={{ threads }}>
+          <ThreadsList />
+        </ThreadsContext.Provider>
 
         <Button type="secondary" onClick={() => authService.logout()}>
           Log Out
