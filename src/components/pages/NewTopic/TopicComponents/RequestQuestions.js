@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { Form, Button, Select, message } from "antd";
 import { MinusCircleOutlined, PlusOutlined } from "@ant-design/icons";
-import axios from "axios";
+import { getQuestions } from "../../../../api/index";
 
 const RequestQuestions = props => {
   const [initialQuestions, setInitialQuestions] = useState([]);
@@ -10,17 +10,11 @@ const RequestQuestions = props => {
 
   // retrieve all questions from the API /question
   useEffect(() => {
-    const idToken = JSON.parse(localStorage.getItem("okta-token-storage"))
-      .idToken.idToken;
-
-    axios
-      .get("https://apollo-a-api.herokuapp.com/question", {
-        headers: { Authorization: `Bearer ${idToken}` }
-      })
+    getQuestions()
       .then(res => {
-        handleRequestQuestions(res.data);
+        handleRequestQuestions(res);
       })
-      .catch(err => console.log(`GET to /question:`, err));
+      .catch(err => console.log(err));
   }, []);
 
   // filter questions to display on questions of type: "request"

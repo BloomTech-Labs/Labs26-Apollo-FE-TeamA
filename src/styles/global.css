@@ -82,18 +82,26 @@ h1 {
   justify-content: space-between;
   align-items: flex-start;
   width: 100%;
-  padding: 2rem 0 0 4rem;
+  padding: 2rem 0 2rem 4rem;
 }
 
 .topics-list {
   display: flex;
   flex-direction: column;
   justify-content: flex-start;
-  align-items: flex-start;
-  width: 35%;
+  align-items: center;
+  width: 30%;
+  padding: 1rem 0 1rem 0;
+  background: #7F64FF;
+  border-radius: 20px;
 }
 
-.main-topic {
+.topics-list-title {
+  color: #FFFFFF;
+  font-weight: bold;
+}
+
+.main-topic-container {
   display: flex;
   justify-items: center;
   align-items: flex-start;
@@ -119,15 +127,48 @@ h1 {
 }
 
 /* TOPICS LIST STYLES */
-.topic-name { 
+.topic-list-item {
   width: 300px;
-  background: rgb(196, 196, 196);
+  background: #FFFFFF;
   margin: 1rem 0;
   padding: 1rem;
   border-radius: 20px;
 }
 
+
+/* MAIN TOPIC STYLES */
+.main-topic textarea {
+  border: none;
+  height: 20px;
+  padding-left: 1rem;
+}
+
+.topic-title-content {
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+}
+
+.settings-button {
+  border: none;
+  padding-left: 1rem;
+  padding-bottom: .8rem;
+  background: none;
+  font-size: 1.4rem;
+}
+
+.settings-menu button {
+  border: none;
+  background: none;
+  font-size: 1rem;
+}
+
 .topic-name h3 {
+  color: #7F64FF;
+  font-weight: bold;
+}
+
+.topic-name { 
   color: #7F64FF;
   font-weight: bold;
 }

@@ -6,12 +6,14 @@ const Responses = () => {
   const { responsesList } = useContext(ResponsesContext);
   return (
     <>
-      {responsesList.map(item => (
-        <div>
-          <h4>{item.question_id}</h4>
-          <p>{item.responses}</p>
-        </div>
-      ))}
+      {responsesList
+        ? responsesList.map(item => (
+            <div>
+              <h4>{item.question_id}</h4>
+              <p>{item.responses}</p>
+            </div>
+          ))
+        : null}
     </>
   );
 };

@@ -13,9 +13,21 @@ const topics = `${process.env.REACT_APP_API_URI}/topic/`;
 const topicQuestions = `${process.env.REACT_APP_API_URI}/topicquestion/`;
 const questions = `${process.env.REACT_APP_API_URI}/question/`;
 const responses = `${process.env.REACT_APP_API_URI}/response/`;
+const threads = `${process.env.REACT_APP_API_URI}/thread/`;
+
+// get all topics
+const getAllTopics = () => {
+  return axios
+    .get(topics, authHeader)
+    .then(res => {
+      console.log("GET /topic", res);
+      return res.data;
+    })
+    .catch(err => console.log("GET /topic", err));
+};
 
 // get topic by topic id
-const getTopics = topicID => {
+const getTopic = topicID => {
   return axios
     .get(`${process.env.REACT_APP_API_URI}/topic/${topicID}`, authHeader)
     .then(res => {
@@ -36,7 +48,18 @@ const getContext = contextID => {
     .catch(err => console.log("GeT /context/:id", err));
 };
 
-// get all questions
+// get all preset questions
+const getQuestions = () => {
+  return axios
+    .get(questions, authHeader)
+    .then(res => {
+      console.log("GET /context/:id", res);
+      return res.data;
+    })
+    .catch(err => console.log("GeT /context/:id", err));
+};
+
+// get all topic questions
 const getAllQuestions = () => {
   return axios
     .get(topicQuestions, authHeader)
@@ -65,6 +88,7 @@ const getAllTopicQuestions = questions => {
     .catch(err => console.log("GET question/:id", err));
 };
 
+// get all responses
 const getAllResponses = () => {
   return axios
     .get(responses, authHeader)
@@ -75,28 +99,35 @@ const getAllResponses = () => {
     .catch(err => console.log("GET /response", err));
 };
 
-export {
-  getTopics,
-  getContext,
-  getAllQuestions,
-  getAllTopicQuestions,
-  getAllResponses
+const getAllThreads = () => {
+  return axios
+    .get(threads, authHeader)
+    .then(res => {
+      console.log("GET /thread", res);
+      return res;
+    })
+    .catch(err => console.log("GET /thread", err));
 };
 
-let data = {
-  response: {
-    id: 1,
-    questionid: 1,
-    respondedby: "00ulthapbErVUwVJy4x6",
-    response: "This is my response.",
-    topicid: 1,
-    __proto__: Object
-  },
-  replies: {
-    0: {
-      id: 1,
-      repliedby: "00ulthapbErVUwVJy4x6",
-      reply: "This reply is for your responsein my topic"
-    }
-  }
+// delete topic by topic id
+const deleteTopic = topicID => {
+  return axios
+    .delete(`${process.env.REACT_APP_API_URI}/topic/${topicID}`, authHeader)
+    .then(res => {
+      console.log("DELETE /topic/:id", res);
+      return res.data;
+    })
+    .catch(err => console.log("DELETE /topic/:id", err));
+};
+
+export {
+  getAllTopics,
+  getTopic,
+  getContext,
+  getQuestions,
+  getAllQuestions,
+  getAllTopicQuestions,
+  getAllResponses,
+  getAllThreads,
+  deleteTopic
 };
