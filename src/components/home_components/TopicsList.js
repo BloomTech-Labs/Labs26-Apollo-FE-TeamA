@@ -14,7 +14,7 @@ const TopicsList = props => {
     <>
       {topics.map(item => (
         <div
-          className="topic-name"
+          className="topic-list-item"
           onClick={() => {
             setTopicID(item.id);
           }}

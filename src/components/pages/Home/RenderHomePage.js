@@ -47,6 +47,10 @@ function RenderHomePage(props) {
     setTopicID(id);
   };
 
+  const resetTopicID = () => {
+    setTopicID(0);
+  };
+
   return (
     <div className="home">
       <div className="nav">
@@ -64,14 +68,15 @@ function RenderHomePage(props) {
       <TopicListContext.Provider value={{ topics }}>
         <div className="topics-container">
           <div className="topics-list">
+            <h2 className="topics-list-title">Your Topics</h2>
             <TopicsList topicID={getTopicID} />
           </div>
 
-          <div className="main-topic">
+          <div className="main-topic-container">
             {topicID === 0 ? (
-              <h1>Select a topic from the topics list.</h1>
+              <h2>Select a topic from the topics list.</h2>
             ) : (
-              <MainTopic topicID={topicID} />
+              <MainTopic topicID={topicID} reset={resetTopicID} />
             )}
           </div>
         </div>
