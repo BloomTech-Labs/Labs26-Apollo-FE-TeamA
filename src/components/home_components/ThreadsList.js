@@ -7,11 +7,13 @@ const ThreadsList = props => {
 
   return (
     <>
-      {threads.map(item => (
-        <div>
-          <p>{item.replies}</p>
-        </div>
-      ))}
+      {threads
+        ? threads.map(item => (
+            <div>
+              <p>{item.replies}</p>
+            </div>
+          ))
+        : null}
     </>
   );
 };

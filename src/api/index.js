@@ -1,13 +1,17 @@
 import axios from "axios";
 
 // axios auth
-const idToken = JSON.parse(localStorage.getItem("okta-token-storage")).idToken
-  .idToken;
-const authHeader = {
-  headers: { Authorization: `Bearer ${idToken}` }
+const getToken = () => {
+  const idToken = JSON.parse(localStorage.getItem("okta-token-storage")).idToken
+    .idToken;
+
+  const authHeader = {
+    headers: { Authorization: `Bearer ${idToken}` }
+  };
+
+  return authHeader;
 };
 
-// we will define a bunch of API calls here.
 const apiUrl = `${process.env.REACT_APP_API_URI}/profile/`;
 const topics = `${process.env.REACT_APP_API_URI}/topic/`;
 const topicQuestions = `${process.env.REACT_APP_API_URI}/topicquestion/`;
@@ -18,7 +22,7 @@ const threads = `${process.env.REACT_APP_API_URI}/thread/`;
 // get all topics
 const getAllTopics = () => {
   return axios
-    .get(topics, authHeader)
+    .get(topics, getToken())
     .then(res => {
       console.log("GET /topic", res);
       return res.data;
@@ -29,7 +33,7 @@ const getAllTopics = () => {
 // get topic by topic id
 const getTopic = topicID => {
   return axios
-    .get(`${process.env.REACT_APP_API_URI}/topic/${topicID}`, authHeader)
+    .get(`${process.env.REACT_APP_API_URI}/topic/${topicID}`, getToken())
     .then(res => {
       console.log("GET /topic/:id", res);
       return res.data;
@@ -40,7 +44,7 @@ const getTopic = topicID => {
 // get context by context id
 const getContext = contextID => {
   return axios
-    .get(`${process.env.REACT_APP_API_URI}/context/${contextID}`, authHeader)
+    .get(`${process.env.REACT_APP_API_URI}/context/${contextID}`, getToken())
     .then(res => {
       console.log("GET /context/:id", res);
       return res.data;
@@ -51,7 +55,7 @@ const getContext = contextID => {
 // get all preset questions
 const getQuestions = () => {
   return axios
-    .get(questions, authHeader)
+    .get(questions, getToken())
     .then(res => {
       console.log("GET /context/:id", res);
       return res.data;
@@ -62,7 +66,7 @@ const getQuestions = () => {
 // get all topic questions
 const getAllQuestions = () => {
   return axios
-    .get(topicQuestions, authHeader)
+    .get(topicQuestions, getToken())
     .then(res => {
       console.log("GET /topicquestions", res);
       return res.data;
@@ -77,7 +81,7 @@ const getAllTopicQuestions = questions => {
       questions.map(q =>
         axios.get(
           `https://apollo-a-api.herokuapp.com/question/${q.questionid}`,
-          authHeader
+          getToken()
         )
       )
     )
@@ -91,7 +95,7 @@ const getAllTopicQuestions = questions => {
 // get all responses
 const getAllResponses = () => {
   return axios
-    .get(responses, authHeader)
+    .get(responses, getToken())
     .then(res => {
       console.log("GET /response", res);
       return res.data;
@@ -99,20 +103,52 @@ const getAllResponses = () => {
     .catch(err => console.log("GET /response", err));
 };
 
+// get all threads
 const getAllThreads = () => {
   return axios
-    .get(threads, authHeader)
+    .get(threads, getToken())
     .then(res => {
       console.log("GET /thread", res);
-      return res;
+      return res.data;
     })
     .catch(err => console.log("GET /thread", err));
+};
+
+// create a topic
+const createTopic = topic => {
+  return axios
+    .post(topics, topic, getToken())
+    .then(res => {
+      console.log("POST to /topic", res);
+      return res.data;
+    })
+    .catch(err => console.log("POST to /topic", err));
+};
+
+const createTopicQuestion = question => {
+  return axios
+    .post(topicQuestions, question, getToken())
+    .then(res => {
+      console.log("POST to /topicquestion", res);
+      return res.data;
+    })
+    .catch(err => console.log("POST to /topicquestion", err));
+};
+
+const createResponse = response => {
+  return axios
+    .post(responses, response, getToken())
+    .then(res => {
+      console.log("POST to /response", res);
+      return res.data;
+    })
+    .catch(err => console.log("POST to /response", err));
 };
 
 // delete topic by topic id
 const deleteTopic = topicID => {
   return axios
-    .delete(`${process.env.REACT_APP_API_URI}/topic/${topicID}`, authHeader)
+    .delete(`${process.env.REACT_APP_API_URI}/topic/${topicID}`, getToken())
     .then(res => {
       console.log("DELETE /topic/:id", res);
       return res.data;
@@ -129,5 +165,8 @@ export {
   getAllTopicQuestions,
   getAllResponses,
   getAllThreads,
+  createTopic,
+  createTopicQuestion,
+  createResponse,
   deleteTopic
 };
