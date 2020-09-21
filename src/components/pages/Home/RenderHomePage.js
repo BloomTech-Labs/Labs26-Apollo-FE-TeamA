@@ -10,8 +10,8 @@ import MainTopic from "../MainTopic/MainTopicContainer";
 import { TopicListContext } from "../../../state/contexts/TopicListContext";
 import Responses from "../../home_components/Responses";
 import { ResponsesContext } from "../../../state/contexts/ResponsesContext";
-import { ThreadsContext } from "../../../state/contexts/ThreadsContext";
 import ThreadsList from "../../home_components/ThreadsList";
+import { ThreadsContext } from "../../../state/contexts/ThreadsContext";
 
 function RenderHomePage(props) {
   // state handlers
@@ -31,12 +31,10 @@ function RenderHomePage(props) {
   };
 
   useEffect(() => {
-    axios
-      .get("https://apollo-a-api.herokuapp.com/topic", auth)
-      .then(res => {
-        console.log(res.data);
-        getUserTopics(res.data);
-      })
+    axios.get("https://apollo-a-api.herokuapp.com/topic", auth).then(res => {
+      console.log(res.data);
+      getUserTopics(res.data);
+    });
 
     axios
       .get("https://apollo-a-api.herokuapp.com/response", {
