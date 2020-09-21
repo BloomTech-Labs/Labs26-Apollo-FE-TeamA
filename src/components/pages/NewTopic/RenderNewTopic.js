@@ -8,6 +8,11 @@ import ContextQuestions from "./TopicComponents/ContextQuestions";
 import ContextResponses from "./TopicComponents/ContextResponses";
 import RequestQuestions from "./TopicComponents/RequestQuestions";
 import generator from "generate-password";
+import {
+  createTopic,
+  createTopicQuestion,
+  createResponse
+} from "../../../api/index";
 import axios from "axios";
 
 // TO DO's ----------------
@@ -124,63 +129,40 @@ const RenderNewTopic = props => {
   };
 
   // submitting topics
-  const createTopic = () => {
+  const createNewTopic = () => {
     allQuestions = topicQuestions.contextQ.concat(topicQuestions.requestQ);
-    console.log("allQuestions:", allQuestions);
 
-    axios
-      .post("https://apollo-a-api.herokuapp.com/topic", topic, auth)
+    createTopic(topic)
       .then(res => {
-        console.log("POST to /topic", res.data.topic);
-        let createdTopic = res.data.topic;
+        let createdTopic = res.topic;
         handleAllQuestions(createdTopic);
-        console.log("allTopicQuestions:", allTopicQuestions);
 
         axios
           .all(
-            allTopicQuestions.map(q =>
-              axios.post(
-                "https://apollo-a-api.herokuapp.com/topicquestion",
-                q,
-                auth
-              )
-            )
+            allTopicQuestions.map(q => {
+              createTopicQuestion(q);
+            })
           )
           .then(res => {
-            console.log("POST to /topicquestion", res);
             handleAllResponses(createdTopic);
-            console.log("allResponses:", allResponses);
 
             axios
               .all(
-                allResponses.map(r =>
-                  axios.post(
-                    "https://apollo-a-api.herokuapp.com/response",
-                    r,
-                    auth
-                  )
-                )
+                allResponses.map(r => {
+                  createResponse(r);
+                })
               )
               .then(res => {
-                console.log("POST to /response", res);
                 setTopic(newTopicValues);
                 setVisible(false);
                 setPage(0);
                 showJoinCode();
               })
-              .catch(err => {
-                console.log("POST to /response", err, topic);
-                alert(
-                  "There was an error creating the topic. Please try again."
-                );
-              });
+              .catch(err => console.log(err));
           })
-          .catch(err => {
-            console.log("POST to /topicquestion", err, topic);
-            alert("There was an error creating the topic. Please try again.");
-          });
+          .catch(err => console.log(err));
       })
-      .catch(err => console.log("POST to /topic: ", err, topic));
+      .catch(err => console.log(err));
   };
 
   // cancel topic creation
@@ -212,7 +194,7 @@ const RenderNewTopic = props => {
         okText="Create Topic"
         cancelText="Cancel"
         onCancel={cancelTopic}
-        onOk={createTopic}
+        onOk={createNewTopic}
         maskClosable={false}
         footer={
           <>
