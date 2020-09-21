@@ -6,11 +6,13 @@ const Requests = () => {
 
   return (
     <>
-      {requestsList.map(item => (
-        <div>
-          <h3>{item.created_at}</h3>
-        </div>
-      ))}
+      {requestsList
+        ? requestsList.map(item => (
+            <div>
+              <h3>{item.created_at}</h3>
+            </div>
+          ))
+        : null}
     </>
   );
 };

@@ -1,23 +1,17 @@
 import React, { useState, useEffect } from "react";
 import { Form, Select } from "antd";
-import axios from "axios";
+import { getContext } from "../../../../api";
 
 const ContextType = props => {
   const [contexts, setContexts] = useState([]); // load in contexts from API
   const { Option } = Select;
 
   useEffect(() => {
-    const idToken = JSON.parse(localStorage.getItem("okta-token-storage"))
-      .idToken.idToken;
-
-    axios
-      .get("https://apollo-a-api.herokuapp.com/context", {
-        headers: { Authorization: `Bearer ${idToken}` }
-      })
+    getContext()
       .then(res => {
-        setContexts(res.data);
+        setContexts(res);
       })
-      .catch(err => console.log(`GET to /context:`, err));
+      .catch(err => console.log(err));
   }, []);
 
   const handleTopicInput = type => {
