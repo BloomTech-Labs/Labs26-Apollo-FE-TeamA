@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { Form, Button, Select, message } from "antd";
+import { Form, Button, Select, Divider } from "antd";
 import { MinusCircleOutlined, PlusOutlined } from "@ant-design/icons";
 import { getQuestions } from "../../../../api/index";
 
@@ -39,108 +39,80 @@ const ContextQuestions = props => {
   };
 
   // creating an Option for each question in state
-  const getQuestions = () => {
+  const loadQuestions = () => {
     const count = initialQuestions.length;
     const children = [];
-
     for (let i = 0; i < count; i++) {
       children.push(
-        <Option key={i} value={initialQuestions[i].id}>
+        <Option
+          key={i}
+          value={[initialQuestions[i].question, initialQuestions[i].id]}
+        >
           {initialQuestions[i].question}
         </Option>
       );
     }
-
     return children;
   };
 
-  // submitting values back to RenderNewTopic component
-  const onFinish = values => {
-    let selectedIDs = values.questions.map(q => Object.values(q)[0]);
-
-    initialQuestions.forEach((q, index) => {
-      if (q.id === selectedIDs[index]) {
-        allContextQuestions.push(q);
-      }
-    });
-
-    message.info("Your questions were saved");
-    props.onChange("contextQ", allContextQuestions);
-  };
-
   return (
-    <Form name="nest-messages" onFinish={onFinish}>
-      <Form.List name="questions">
-        {(fields, { add, remove }) => {
-          return (
-            <div>
-              {fields.map((field, index) => (
-                <>
-                  <Form.Item
-                    {...field}
-                    key={index}
-                    className="form-question"
-                    name={[field.name, `q${index}`]}
-                    label={`Question ${index + 1}`}
-                    rules={[{ required: true }]}
-                  >
-                    <Select placeholder="Select a response question.">
-                      {getQuestions()}
-                    </Select>
-                  </Form.Item>
+    <Form.List name="contextQuestions">
+      {(fields, { add, remove }) => {
+        return (
+          <div>
+            {fields.map((field, index) => (
+              <div key={field.key}>
+                <Divider>Context Question {index + 1}</Divider>
+                <Form.Item
+                  className="closed"
+                  name={[index, "type"]}
+                  initialValue={"Context Questions"}
+                ></Form.Item>
 
-                  <Button
-                    className="save-button"
-                    type="secondary"
-                    onClick={() => {
-                      remove(field.name);
-                    }}
-                  >
-                    <MinusCircleOutlined /> Remove Question
-                  </Button>
-                </>
-              ))}
+                <Form.Item
+                  className="closed"
+                  name={[index, "style"]}
+                  initialValue={"Text"}
+                ></Form.Item>
 
-              <Form.Item>
-                <Button
-                  type="dashed"
-                  onClick={() => {
-                    add();
-                  }}
-                  style={{ width: "100%" }}
+                <Form.Item
+                  name={[index, "question"]}
+                  rules={[{ required: true }]}
                 >
-                  <PlusOutlined /> Add Question
-                </Button>
-              </Form.Item>
-            </div>
-          );
-        }}
-      </Form.List>
+                  <Select placeholder="Select a context question.">
+                    {loadQuestions()}
+                  </Select>
+                </Form.Item>
 
-      <Form.Item>
-        <h4 className="save-warning">
-          Please make sure to save your context questions before moving on.
-        </h4>
-        <Button type="primary" htmlType="submit">
-          Save Questions
-        </Button>
-      </Form.Item>
-    </Form>
+                {fields.length > 1 ? (
+                  <Button
+                    type="danger"
+                    className="dynamic-delete-button"
+                    onClick={() => remove(field.name)}
+                    icon={<MinusCircleOutlined />}
+                  >
+                    Remove Question
+                  </Button>
+                ) : null}
+              </div>
+            ))}
+
+            <Divider />
+
+            <Form.Item>
+              <Button
+                type="dashed"
+                onClick={() => add()}
+                style={{ width: "60%" }}
+              >
+                <PlusOutlined /> Add Question
+              </Button>
+            </Form.Item>
+          </div>
+        );
+      }}
+    </Form.List>
   );
 };
 
 export default ContextQuestions;
-
-// return (
-//   <div>
-//     <h2>Context Questions</h2>
-
-//     <Form.Item name="radio-group" label="Choose your context questions:">
-//       <Checkbox.Group className="context_options" onChange={handleCheckbox}>
-//         {initialQuestions.map(q => {
-//           return <Checkbox value={q}>{q.question}</Checkbox>;
-//         })}
-//       </Checkbox.Group>
-//     </Form.Item>
-//   </div>
-// );

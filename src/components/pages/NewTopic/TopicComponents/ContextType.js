@@ -1,40 +1,30 @@
 import React, { useState, useEffect } from "react";
 import { Form, Select } from "antd";
-import { getContext } from "../../../../api";
+import { getAllContexts } from "../../../../api";
 
 const ContextType = props => {
   const [contexts, setContexts] = useState([]); // load in contexts from API
   const { Option } = Select;
 
   useEffect(() => {
-    getContext()
+    getAllContexts()
       .then(res => {
-        setContexts(res);
+        setContexts(res.slice(0, 6));
       })
       .catch(err => console.log(err));
   }, []);
-
-  const handleTopicInput = type => {
-    props.onChange("contextid", type);
-  };
 
   return (
     <div>
       <h2>Topic Context</h2>
 
       <Form.Item
-        name="contextid"
+        name={["topic", "contextid"]}
         label="What is the context of this topic?"
         required
         rules={[{ required: true, message: "Please select the context type." }]}
       >
-        <Select
-          placeholder="Select a context type"
-          value={props.contextid}
-          onChange={value => {
-            handleTopicInput(value);
-          }}
-        >
+        <Select placeholder="Select a context type">
           {contexts.map((c, index) => {
             return (
               <Option key={index} value={index}>
