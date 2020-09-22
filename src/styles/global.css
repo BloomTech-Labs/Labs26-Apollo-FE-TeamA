@@ -172,3 +172,8 @@ h1 {
   color: #7F64FF;
   font-weight: bold;
 }
+
+/* NEW TOPIC STYLES */
+.closed {
+  display: none;
+}

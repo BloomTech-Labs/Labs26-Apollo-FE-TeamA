@@ -3,7 +3,7 @@ import { Button, message, Dropdown, Menu, Modal } from "antd";
 import { SettingFilled } from "@ant-design/icons";
 import {
   getTopic,
-  getContext,
+  getContextByID,
   getAllQuestions,
   getAllTopicQuestions,
   getAllResponses,
@@ -23,7 +23,7 @@ const RenderMainTopic = ({ topicID, reset }) => {
     getTopic(topicID)
       .then(res => {
         setTopic(res);
-        getContext(res.contextid)
+        getContextByID(res.contextid)
           .then(res => {
             setContext(res);
             getAllQuestions()

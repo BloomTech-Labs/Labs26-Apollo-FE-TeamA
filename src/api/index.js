@@ -14,6 +14,7 @@ const getToken = () => {
 
 const apiUrl = `${process.env.REACT_APP_API_URI}/profile/`;
 const topics = `${process.env.REACT_APP_API_URI}/topic/`;
+const contexts = `${process.env.REACT_APP_API_URI}/context/`;
 const topicQuestions = `${process.env.REACT_APP_API_URI}/topicquestion/`;
 const questions = `${process.env.REACT_APP_API_URI}/question/`;
 const responses = `${process.env.REACT_APP_API_URI}/response/`;
@@ -41,8 +42,18 @@ const getTopic = topicID => {
     .catch(err => console.log("GET /topic/:id", err));
 };
 
+const getAllContexts = () => {
+  return axios
+    .get(contexts, getToken())
+    .then(res => {
+      console.log("GET /context/", res);
+      return res.data;
+    })
+    .catch(err => console.log("GeT /context/", err));
+};
+
 // get context by context id
-const getContext = contextID => {
+const getContextByID = contextID => {
   return axios
     .get(`${process.env.REACT_APP_API_URI}/context/${contextID}`, getToken())
     .then(res => {
@@ -57,10 +68,10 @@ const getQuestions = () => {
   return axios
     .get(questions, getToken())
     .then(res => {
-      console.log("GET /context/:id", res);
+      console.log("GET /question", res);
       return res.data;
     })
-    .catch(err => console.log("GeT /context/:id", err));
+    .catch(err => console.log("GeT /question", err));
 };
 
 // get all topic questions
@@ -116,6 +127,7 @@ const getAllThreads = () => {
 
 // create a topic
 const createTopic = topic => {
+  console.log(topic);
   return axios
     .post(topics, topic, getToken())
     .then(res => {
@@ -123,6 +135,16 @@ const createTopic = topic => {
       return res.data;
     })
     .catch(err => console.log("POST to /topic", err));
+};
+
+const createQuestion = question => {
+  return axios
+    .post(questions, question, getToken())
+    .then(res => {
+      console.log("POST to /question", res);
+      return res.data;
+    })
+    .catch(err => console.log("POST to /question", err));
 };
 
 const createTopicQuestion = question => {
@@ -159,13 +181,15 @@ const deleteTopic = topicID => {
 export {
   getAllTopics,
   getTopic,
-  getContext,
+  getAllContexts,
+  getContextByID,
   getQuestions,
   getAllQuestions,
   getAllTopicQuestions,
   getAllResponses,
   getAllThreads,
   createTopic,
+  createQuestion,
   createTopicQuestion,
   createResponse,
   deleteTopic
