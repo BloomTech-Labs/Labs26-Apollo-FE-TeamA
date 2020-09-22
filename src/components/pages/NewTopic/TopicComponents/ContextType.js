@@ -1,6 +1,14 @@
 import React, { useState, useEffect } from "react";
 import { Form, Select } from "antd";
-import { getAllContexts } from "../../../../api";
+import {
+  getAllContexts,
+  createTopic,
+  createQuestion,
+  getAllTopicQuestions,
+  createTopicQuestion,
+  createResponse
+} from "../../../../api";
+import axios from "axios";
 
 const ContextType = props => {
   const [contexts, setContexts] = useState([]); // load in contexts from API
@@ -27,7 +35,7 @@ const ContextType = props => {
         <Select placeholder="Select a context type">
           {contexts.map((c, index) => {
             return (
-              <Option key={index} value={index}>
+              <Option key={index} value={index + 1}>
                 {c.contextoption}
               </Option>
             );

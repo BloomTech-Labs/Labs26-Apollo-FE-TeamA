@@ -10,7 +10,6 @@ import { getQuestions } from "../../../../api/index";
 
 const ContextQuestions = props => {
   const [initialQuestions, setInitialQuestions] = useState([]);
-  const allContextQuestions = [];
   const { Option } = Select;
 
   // retrieve all context questions from the API /question

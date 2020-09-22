@@ -9,7 +9,6 @@ import RequestQuestions from "./TopicComponents/RequestQuestions";
 import generator from "generate-password";
 import {
   createTopic,
-  createQuestion,
   createTopicQuestion,
   createResponse
 } from "../../../api/index";
@@ -29,13 +28,6 @@ const RenderNewTopic = props => {
     questionid: ""
   };
 
-  const newQuestion = {
-    id: "",
-    type: "",
-    style: "",
-    question: ""
-  };
-
   // initialize a response object
   const newResponse = {
     questionid: "",
@@ -46,14 +38,10 @@ const RenderNewTopic = props => {
 
   // state variables
   const [form] = Form.useForm();
-  const [question, setQuestion] = useState(newQuestion);
   const [topicQuestion, setTopicQuestion] = useState(newTopicQuestion);
   const [response, setResponse] = useState(newResponse);
   const [visible, setVisible] = useState(false);
   const [page, setPage] = useState(0);
-  const contextQuestions = [];
-  let requestIDs = [];
-  let allTopicIDs = [];
   let allTopicQuestions = [];
   let allResponses = [];
 
@@ -62,11 +50,6 @@ const RenderNewTopic = props => {
     form.resetFields();
     setVisible(false);
     setPage(0);
-  };
-
-  // handling pagination
-  const paginate = p => {
-    setPage(p);
   };
 
   // display Join code on submit
@@ -79,97 +62,77 @@ const RenderNewTopic = props => {
     });
   };
 
+  // submit handler for new topic form
   const onCreate = () => {
     form
       .validateFields()
       .then(values => {
-        console.log("Received values of form: ", values);
+        // create a new topic
         createTopic(values.topic)
           .then(res => {
-            let createdTopic = res.topic;
-            handleContextQuestions(values);
-            axios
-              .all(
-                values.requestQuestions.map(rq => {
-                  console.log(rq);
-                  createQuestion(rq)
-                    .then(res => {
-                      console.log("RES:", res);
-                      requestIDs.push(res.id);
-                    })
-                    .catch(err =>
-                      console.log("getting request question ids", err)
-                    );
-                })
-              )
-              .then(res => {
-                handleTopicQuestions(createdTopic.id);
-                axios
-                  .all(
-                    allTopicQuestions.map(q => {
-                      createTopicQuestion(q);
-                    })
-                  )
-                  .then(res => {
-                    handleResponses(createdTopic.id, values);
-                    axios.all(
-                      allResponses.map(r => {
-                        createResponse(r).then(res => {
-                          form.resetFields();
-                          setVisible(false);
-                          showJoinCode(values);
-                        });
-                      })
-                    );
-                  })
-                  .catch(err => console.log("creating topic questions", err));
+            let topicID = res.topic.id;
+            handleTopicQuestions(values, topicID);
+            // create topic questions
+            submitTopicQuestions(allTopicQuestions)
+              .then(() => {
+                handleResponses(topicID, values);
+                // create responses
+                submitResponses(allResponses);
               })
-              .catch(err => console.log("Creating questions", err));
+              .then(() => {
+                form.resetFields();
+                setVisible(false);
+                showJoinCode(values);
+              });
           })
-          .catch(err => console.log("Creating a topic", err));
+          .catch(err => console.log("Creating topic error", err));
       })
-      .catch(info => {
-        console.log("Validating the form:", info);
-      });
+      .catch(info => console.log("Validating the form:", info));
   };
 
-  // creating context questions
-  const handleContextQuestions = values => {
+  // creating topic questions for all selected questions
+  const handleTopicQuestions = (values, topicID) => {
     values.contextQuestions.map(q => {
-      let temp = Object.assign({}, question);
-      temp.id = q.question[1];
-      temp.type = q.type;
-      temp.style = q.style;
-      temp.question = q.question[0];
-      contextQuestions.push(temp);
-    });
-  };
-
-  // creating all topic questions
-  const handleTopicQuestions = topicID => {
-    console.log("cQ:", contextQuestions);
-    console.log("rID:", requestIDs);
-    allTopicIDs = contextQuestions.map(q => q.id).concat(requestIDs);
-    console.log("aT:", allTopicIDs);
-
-    allTopicIDs.map(id => {
       let temp = Object.assign({}, topicQuestion);
       temp.topicid = topicID;
-      temp.questionid = id;
+      temp.questionid = q.question[1];
+      allTopicQuestions.push(temp);
+    });
+
+    values.requestQuestions.map(q => {
+      let temp = Object.assign({}, topicQuestion);
+      temp.topicid = topicID;
+      temp.questionid = q.question;
       allTopicQuestions.push(temp);
     });
   };
 
+  const submitTopicQuestions = questions => {
+    return axios.all(
+      questions.map(q => {
+        createTopicQuestion(q);
+      })
+    );
+  };
+
   // creating responses to context questions
   const handleResponses = (topicID, values) => {
-    contextQuestions.map(q => {
+    values.contextQuestions.map(q => {
       let temp = Object.assign({}, response);
-      temp.questionid = q.id;
-      temp.response = values.responses[q.id];
+      temp.questionid = q.question[1];
+      temp.response = values.responses[q.question[1]];
       temp.respondedby = props.user.sub;
       temp.topicid = topicID;
       allResponses.push(temp);
     });
+  };
+
+  const submitResponses = responses => {
+    return axios.all(
+      responses.map(r => {
+        createResponse(r);
+      })
+    );
   };
 
   return (
@@ -191,6 +154,7 @@ const RenderNewTopic = props => {
         cancelText="Cancel"
         onCancel={onCancel}
         onOk={onCreate}
+        maskClosable={false}
         footer={
           <>
             {page === 0 ? null : (

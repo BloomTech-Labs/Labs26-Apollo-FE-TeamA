@@ -39,7 +39,7 @@ const RequestQuestions = props => {
     const children = [];
     for (let i = 0; i < count; i++) {
       children.push(
-        <Option value={initialQuestions[i].question}>
+        <Option value={initialQuestions[i].id}>
           {initialQuestions[i].question}
         </Option>
       );
@@ -63,6 +63,12 @@ const RequestQuestions = props => {
                 ></Form.Item>
 
                 <Form.Item
+                  className="closed"
+                  name={[index, "style"]}
+                  initialValue={"Text"}
+                ></Form.Item>
+
+                <Form.Item
                   name={[index, "question"]}
                   rules={[{ required: true }]}
                 >
@@ -71,7 +77,7 @@ const RequestQuestions = props => {
                   </Select>
                 </Form.Item>
 
-                <Form.Item
+                {/* <Form.Item
                   className="form-question"
                   name={[index, "style"]}
                   label={`Response Type for Question ${index + 1}`}
@@ -84,7 +90,7 @@ const RequestQuestions = props => {
                     <Option value={"Multiple Choice"}>Multiple Choice</Option>
                     <Option value={"URL"}>URL</Option>
                   </Select>
-                </Form.Item>
+                </Form.Item> */}
 
                 {fields.length > 1 ? (
                   <Button
