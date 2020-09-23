@@ -57,7 +57,7 @@ function RenderMemberPage(props) {
     <div className="home">
       <div className="nav">
         <h2 className="logo">Apollo</h2>
-        <Button type="text" to="/">
+        <Button type="text" href="/">
           Owner
         </Button>
 
@@ -70,7 +70,7 @@ function RenderMemberPage(props) {
 
       <h1>Hi {userInfo.name}, Welcome to Apollo.</h1>
 
-      <NewTopicContainer userInfo={userInfo} />
+      {/* <NewTopicContainer userInfo={userInfo} /> */}
 
       <TopicListContext.Provider value={{ topics }}>
         <div className="topics-container">
