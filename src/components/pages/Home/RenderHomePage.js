@@ -41,13 +41,24 @@ function RenderHomePage(props) {
     setTopicID(0);
   };
 
+  const viewRequestsList = id => {
+    console.log("viewRequestsList called");
+    getAllResponses()
+      .then(res => {
+        let requestInfo = res.filter(req => req.topicid == id);
+        setRequests(requestInfo);
+        console.log("res", res);
+      })
+      .catch(err => console.log(err));
+  };
+
   return (
     <div className="home">
       <div className="nav">
         <h2 className="logo">Apollo</h2>
         <Button type="primary">Owner</Button>
 
-        <Button type="text" to="/member">
+        <Button type="text" href="/member">
           Member
         </Button>
 
@@ -64,28 +75,32 @@ function RenderHomePage(props) {
         <div className="topics-container">
           <div className="topics-list">
             <h2 className="topics-list-title">Your Topics</h2>
-            <TopicsList topicID={getTopicID} />
+            <TopicsList
+              topicID={getTopicID}
+              viewRequestsList={viewRequestsList}
+            />
           </div>
 
           <div className="main-topic-container">
             {topicID === 0 ? (
               <h2>Select a topic from the topics list.</h2>
             ) : (
-              <MainTopic topicID={topicID} reset={resetTopicID} />
+              <MainTopic topicID={topicID} reset={resetTopicID}>
+                <RequestsContext.Provider value={{ requestList }}>
+                  <div className="requests-container">
+                    <div className="requests-list">
+                      <h2 className="requests-list-title">
+                        Responses made from the topic {topics.name}
+                      </h2>
+                      <Requests />
+                    </div>
+                  </div>
+                </RequestsContext.Provider>
+              </MainTopic>
             )}
           </div>
         </div>
       </TopicListContext.Provider>
-      <RequestsContext.Provider value={{ requestList }}>
-        <div className="requests-container">
-          <div className="requests-list">
-            <h2 className="requests-list-title">
-              Responses made from the topic {topics.name}
-            </h2>
-            <Requests />
-          </div>
-        </div>
-      </RequestsContext.Provider>
       <ResponsesContext.Provider value={{ responseList }}>
         <Responses />
       </ResponsesContext.Provider>
