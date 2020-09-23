@@ -20,6 +20,7 @@ import { LoginPage } from "./components/pages/Login";
 import { HomePage } from "./components/pages/Home";
 import { config } from "./utils/oktaConfig";
 import { LoadingComponent } from "./components/common";
+import { MemberPage } from "./components/pages/MemberPage";
 import "../src/styles/global.css";
 
 ReactDOM.render(
@@ -61,6 +62,13 @@ function App() {
               path="/"
               exact
               component={() => <HomePage LoadingComponent={LoadingComponent} />}
+            />
+            <SecureRoute
+              path="/member"
+              exact
+              component={() => (
+                <MemberPage LoadingComponent={LoadingComponent} />
+              )}
             />
 
             <Route component={NotFoundPage} />
