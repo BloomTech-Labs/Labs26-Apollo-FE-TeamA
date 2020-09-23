@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
 import { Button } from "antd";
-import { Link, Route } from "react-router-dom";
+import { Link } from "react-router-dom";
 import Requests from "../../home_components/Requests";
 import { RequestsContext } from "../../../state/contexts/RequestsContext";
 import TopicsList from "../../home_components/TopicsList";
@@ -14,7 +14,7 @@ import ThreadsList from "../../home_components/ThreadsList";
 import { ThreadsContext } from "../../../state/contexts/ThreadsContext";
 import { getAllResponses, getAllTopics, getAllThreads } from "../../../api";
 
-function RenderHomePage(props) {
+function RenderMemberPage(props) {
   // state handlers
   const { userInfo, authService } = props;
   const [topics, setTopics] = useState([]);
@@ -24,12 +24,24 @@ function RenderHomePage(props) {
   const [threads, setThreads] = useState([]);
 
   useEffect(() => {
-    getAllTopics()
+    getAllResponses()
       .then(res => {
-        let userTopics = res.filter(topic => topic.leaderid == userInfo.sub);
-        setTopics(userTopics);
+        setRequests(res);
+        let userTopicsId = res.topicID.filter(
+          resp => resp.respondedby == userInfo.sub
+        );
+        getAllTopics()
+          .then(res => {
+            let userTopics = res.filter(topic =>
+              userTopicsId.includes(topic.topicID)
+            );
+            setTopics(userTopics);
+          })
+          .catch(err => console.log(err));
       })
-      .catch(err => console.log(err));
+      .catch(err => {
+        console.log(err);
+      });
   }, []);
   // for selecting a specific topic
   const getTopicID = id => {
@@ -45,11 +57,11 @@ function RenderHomePage(props) {
     <div className="home">
       <div className="nav">
         <h2 className="logo">Apollo</h2>
-        <Button type="primary">Owner</Button>
-
-        <Button type="text" to="/member">
-          Member
+        <Button type="text" to="/">
+          Owner
         </Button>
+
+        <Button type="primary">Member</Button>
 
         <Button type="secondary" onClick={() => authService.logout()}>
           Log Out
@@ -95,4 +107,4 @@ function RenderHomePage(props) {
     </div>
   );
 }
-export default RenderHomePage;
+export default RenderMemberPage;
