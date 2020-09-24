@@ -1,10 +1,10 @@
 import React from "react";
 import RenderNewTopic from "./RenderNewTopic";
 
-function NewTopicContainer({ userInfo }) {
+function NewTopicContainer({ userInfo, reset }) {
   return (
     <>
-      <RenderNewTopic user={userInfo} />
+      <RenderNewTopic reset={reset} user={userInfo} />
     </>
   );
 }

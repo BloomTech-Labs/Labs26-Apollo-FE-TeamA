@@ -18,6 +18,7 @@ h1 {
   justify-content: space-evenly;
   align-items: center;
   margin: 0 auto;
+  padding-top: 6rem;
 }
 
 #sign-in-widget {
@@ -91,13 +92,13 @@ h1 {
   justify-content: flex-start;
   align-items: center;
   width: 30%;
-  padding: 1rem 0 1rem 0;
-  background: #7F64FF;
+  padding: .1rem 0 1rem 0;
+  /* background: #7F64FF; */
   border-radius: 20px;
 }
 
 .topics-list-title {
-  color: #FFFFFF;
+  color: #7F64FF;
   font-weight: bold;
 }
 
@@ -130,17 +131,37 @@ h1 {
 .topic-list-item {
   width: 300px;
   background: #FFFFFF;
+  border: 4px solid #7F64FF;
   margin: 1rem 0;
   padding: 1rem;
   border-radius: 20px;
 }
 
+.topic-list-item h3 {
+  font-weight: bold;
+}
+
+.topic-list-item:hover {
+  cursor: pointer;
+}
+
 
 /* MAIN TOPIC STYLES */
-.main-topic textarea {
+.join-code {
+  display: flex;
+  align-items: center;
+}
+
+.join-code textarea {
   border: none;
-  height: 20px;
-  padding-left: 1rem;
+  margin-top: 1.5rem;
+  margin-left: 1rem;
+  resize: none;
+  color: #7F64FF;
+}
+
+.join-code span {
+  font-weight: bold;
 }
 
 .topic-title-content {
@@ -155,6 +176,25 @@ h1 {
   padding-bottom: .8rem;
   background: none;
   font-size: 1.4rem;
+}
+
+:focus {
+  outline: none;
+}
+
+.ant-dropdown-menu {
+  background: white;
+  border: 1px solid #7F64FF;
+}
+
+.ant-dropdown-menu li {
+  color: #7F64FF;
+}
+
+.ant-dropdown-menu-item button:hover,
+.ant-dropdown-menu-item-only-child button:hover {
+  color: #3f337e;
+  cursor: pointer;
 }
 
 .settings-menu button {

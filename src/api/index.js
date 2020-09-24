@@ -49,7 +49,7 @@ const getAllContexts = () => {
       console.log("GET /context/", res);
       return res.data;
     })
-    .catch(err => console.log("GeT /context/", err));
+    .catch(err => console.log("GET /context/", err));
 };
 
 // get context by context id
@@ -60,7 +60,7 @@ const getContextByID = contextID => {
       console.log("GET /context/:id", res);
       return res.data;
     })
-    .catch(err => console.log("GeT /context/:id", err));
+    .catch(err => console.log("GET /context/:id", err));
 };
 
 // get all preset questions
@@ -71,7 +71,7 @@ const getQuestions = () => {
       console.log("GET /question", res);
       return res.data;
     })
-    .catch(err => console.log("GeT /question", err));
+    .catch(err => console.log("GET /question", err));
 };
 
 // get all topic questions
@@ -82,7 +82,7 @@ const getAllQuestions = () => {
       console.log("GET /topicquestions", res);
       return res.data;
     })
-    .catch(err => console.log("GeT /topicquestions", err));
+    .catch(err => console.log("GET /topicquestions", err));
 };
 
 // get all questions by topic id
@@ -167,6 +167,39 @@ const createResponse = response => {
     .catch(err => console.log("POST to /response", err));
 };
 
+// edit topic
+const editTopic = topic => {
+  return axios
+    .put(topics, topic, getToken())
+    .then(res => {
+      console.log("PUT to /topic/", res);
+      return res.data;
+    })
+    .catch(err => console.log("PUT to /topic/", err));
+};
+
+// edit topic question
+const editTopicQuestion = topicquestion => {
+  return axios
+    .put(topicQuestions, topicquestion, getToken())
+    .then(res => {
+      console.log("PUT to /topicquestion/", res);
+      return res.data;
+    })
+    .catch(err => console.log("PUT to /topicquestion/", err));
+};
+
+// edit topic response
+const editResponse = response => {
+  return axios
+    .put(responses, response, getToken())
+    .then(res => {
+      console.log("PUT to /response/", res);
+      return res.data;
+    })
+    .catch(err => console.log("PUT to /response/", err));
+};
+
 // delete topic by topic id
 const deleteTopic = topicID => {
   return axios
@@ -176,6 +209,34 @@ const deleteTopic = topicID => {
       return res.data;
     })
     .catch(err => console.log("DELETE /topic/:id", err));
+};
+
+// delete topic by topic id
+const deleteTopicQuestion = question => {
+  return axios
+    .delete(
+      `${process.env.REACT_APP_API_URI}/topicquestion/${question.id}`,
+      getToken()
+    )
+    .then(res => {
+      console.log("DELETE /topicquestion/:id", res);
+      return res.data;
+    })
+    .catch(err => console.log("DELETE /topicquestion/:id", err));
+};
+
+// delete topic by topic id
+const deleteResponse = response => {
+  return axios
+    .delete(
+      `${process.env.REACT_APP_API_URI}/response/${response.id}`,
+      getToken()
+    )
+    .then(res => {
+      console.log("DELETE /response/:id", res);
+      return res.data;
+    })
+    .catch(err => console.log("DELETE /response/:id", err));
 };
 
 export {
@@ -192,5 +253,10 @@ export {
   createQuestion,
   createTopicQuestion,
   createResponse,
-  deleteTopic
+  editTopic,
+  editTopicQuestion,
+  editResponse,
+  deleteTopic,
+  deleteTopicQuestion,
+  deleteResponse
 };
