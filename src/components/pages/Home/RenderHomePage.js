@@ -33,6 +33,7 @@ function RenderHomePage(props) {
   const [requestList, setRequests] = useState([]);
   const [responseList, setResponses] = useState([]);
   const [threads, setThreads] = useState([]);
+  localStorage.setItem("page_view", '{"value":"owner"}');
 
   // for selecting a specific topic
   const getTopicID = id => {
@@ -66,6 +67,7 @@ function RenderHomePage(props) {
 
     getAllResponses()
       .then(res => {
+        console.log(res);
         setResponses(res);
         setRequests(res);
       })
@@ -78,17 +80,30 @@ function RenderHomePage(props) {
       .catch(err => console.log(err));
   }, [topicID]);
 
+  const pageView = JSON.parse(localStorage.getItem("page_view")).value;
+
   return (
     <div className="home">
       <div className="nav">
         <h2 className="logo">Apollo</h2>
 
+        <Button
+          type={pageView === "owner" ? "primary" : "text"}
+          name="ownerButton"
+          onClick={() => {
+            localStorage.setItem("page_view", "owner");
+            console.log("owner button pressed, pageview: ", pageView);
+          }}
+        >
+          Owner
+        </Button>
+
+        <NewTopicContainer reset={resetTopicID} userInfo={userInfo} />
+
         <Button type="secondary" onClick={() => authService.logout()}>
           Log Out
         </Button>
       </div>
-
-      <NewTopicContainer reset={resetTopicID} userInfo={userInfo} />
 
       <TopicListContext.Provider value={{ topics }}>
         <TopicQuestionsContext.Provider value={{ topicQuestions }}>
@@ -96,10 +111,6 @@ function RenderHomePage(props) {
             <RequestsContext.Provider value={{ requestList }}>
               <ResponsesContext.Provider value={{ responseList }}>
                 <ThreadsContext.Provider value={{ threads }}>
-                  <Requests />
-                  <Responses />
-                  <ThreadsList />
-
                   <div className="topics-container">
                     <div className="topics-list">
                       <h2 className="topics-list-title">Your Topics</h2>
@@ -114,6 +125,18 @@ function RenderHomePage(props) {
                       )}
                     </div>
                   </div>
+
+                  <div className="requests-container">
+                    <div className="requests-list">
+                      <h2 className="requests-list-title">
+                        Responses made from the topic {topics.name}
+                      </h2>
+                      <Requests />
+                    </div>
+                  </div>
+
+                  <Responses />
+                  <ThreadsList />
                 </ThreadsContext.Provider>
               </ResponsesContext.Provider>
             </RequestsContext.Provider>
