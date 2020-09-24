@@ -72,11 +72,15 @@ const RenderMainTopic = ({ topicID, reset, user }) => {
     let q = [];
     for (let i = 0; i < questions.length; i++) {
       for (let j = 0; j < topicQuestions.length; j++) {
-        if (questions[i].id === topicQuestions[j].questionid) {
+        if (
+          questions[i].id === topicQuestions[j].questionid &&
+          topicQuestions[j].topicid === topicID
+        ) {
           q.push([questions[i], topicQuestions[j]]);
         }
       }
     }
+    console.log("hQ:", q);
     return q;
   };
 
@@ -95,6 +99,7 @@ const RenderMainTopic = ({ topicID, reset, user }) => {
         }
       }
     }
+    console.log("hR:", r);
     return r;
   };
 
@@ -316,8 +321,6 @@ const RenderMainTopic = ({ topicID, reset, user }) => {
       <div className="context-questions-container">
         <h2>Context</h2>
         {contextQ.map((q, index) => {
-          console.log(contextQ);
-          console.log(topicResponses);
           return (
             <div key={index}>
               <h3 className="context-question">{q[0].question}</h3>
