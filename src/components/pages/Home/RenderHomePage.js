@@ -63,7 +63,6 @@ function RenderHomePage(props) {
 
     getAllResponses()
       .then(res => {
-        console.log(res);
         setResponses(res);
         setRequests(res);
       })
@@ -75,8 +74,6 @@ function RenderHomePage(props) {
       })
       .catch(err => console.log(err));
   }, [topicID]);
-
-  // const pageView = JSON.parse(localStorage.getItem("page_view")).value;
 
   const viewRequestsList = id => {
     console.log("viewRequestsList called");
@@ -94,16 +91,12 @@ function RenderHomePage(props) {
       <div className="nav">
         <h2 className="logo">Apollo</h2>
 
-        {/* <Button
-          type={pageView === "owner" ? "primary" : "text"}
-          name="ownerButton"
-          onClick={() => {
-            localStorage.setItem("page_view", "owner");
-            console.log("owner button pressed, pageview: ", pageView);
-          }}
-        >
+        <Button type="primary" href="/">
           Owner
-        </Button> */}
+        </Button>
+        <Button type="secondary" href="/member">
+          Member
+        </Button>
 
         <NewTopicContainer reset={resetTopicID} userInfo={userInfo} />
 
