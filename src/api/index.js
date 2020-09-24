@@ -14,6 +14,7 @@ const getToken = () => {
 
 const apiUrl = `${process.env.REACT_APP_API_URI}/profile/`;
 const topics = `${process.env.REACT_APP_API_URI}/topic/`;
+const contexts = `${process.env.REACT_APP_API_URI}/context/`;
 const topicQuestions = `${process.env.REACT_APP_API_URI}/topicquestion/`;
 const questions = `${process.env.REACT_APP_API_URI}/question/`;
 const responses = `${process.env.REACT_APP_API_URI}/response/`;
@@ -41,15 +42,25 @@ const getTopic = topicID => {
     .catch(err => console.log("GET /topic/:id", err));
 };
 
+const getAllContexts = () => {
+  return axios
+    .get(contexts, getToken())
+    .then(res => {
+      console.log("GET /context/", res);
+      return res.data;
+    })
+    .catch(err => console.log("GET /context/", err));
+};
+
 // get context by context id
-const getContext = contextID => {
+const getContextByID = contextID => {
   return axios
     .get(`${process.env.REACT_APP_API_URI}/context/${contextID}`, getToken())
     .then(res => {
       console.log("GET /context/:id", res);
       return res.data;
     })
-    .catch(err => console.log("GeT /context/:id", err));
+    .catch(err => console.log("GET /context/:id", err));
 };
 
 // get all preset questions
@@ -57,10 +68,10 @@ const getQuestions = () => {
   return axios
     .get(questions, getToken())
     .then(res => {
-      console.log("GET /context/:id", res);
+      console.log("GET /question", res);
       return res.data;
     })
-    .catch(err => console.log("GeT /context/:id", err));
+    .catch(err => console.log("GET /question", err));
 };
 
 // get all topic questions
@@ -71,7 +82,7 @@ const getAllQuestions = () => {
       console.log("GET /topicquestions", res);
       return res.data;
     })
-    .catch(err => console.log("GeT /topicquestions", err));
+    .catch(err => console.log("GET /topicquestions", err));
 };
 
 // get all questions by topic id
@@ -116,6 +127,7 @@ const getAllThreads = () => {
 
 // create a topic
 const createTopic = topic => {
+  console.log(topic);
   return axios
     .post(topics, topic, getToken())
     .then(res => {
@@ -123,6 +135,16 @@ const createTopic = topic => {
       return res.data;
     })
     .catch(err => console.log("POST to /topic", err));
+};
+
+const createQuestion = question => {
+  return axios
+    .post(questions, question, getToken())
+    .then(res => {
+      console.log("POST to /question", res);
+      return res.data;
+    })
+    .catch(err => console.log("POST to /question", err));
 };
 
 const createTopicQuestion = question => {
@@ -145,6 +167,39 @@ const createResponse = response => {
     .catch(err => console.log("POST to /response", err));
 };
 
+// edit topic
+const editTopic = topic => {
+  return axios
+    .put(topics, topic, getToken())
+    .then(res => {
+      console.log("PUT to /topic/", res);
+      return res.data;
+    })
+    .catch(err => console.log("PUT to /topic/", err));
+};
+
+// edit topic question
+const editTopicQuestion = topicquestion => {
+  return axios
+    .put(topicQuestions, topicquestion, getToken())
+    .then(res => {
+      console.log("PUT to /topicquestion/", res);
+      return res.data;
+    })
+    .catch(err => console.log("PUT to /topicquestion/", err));
+};
+
+// edit topic response
+const editResponse = response => {
+  return axios
+    .put(responses, response, getToken())
+    .then(res => {
+      console.log("PUT to /response/", res);
+      return res.data;
+    })
+    .catch(err => console.log("PUT to /response/", err));
+};
+
 // delete topic by topic id
 const deleteTopic = topicID => {
   return axios
@@ -156,17 +211,52 @@ const deleteTopic = topicID => {
     .catch(err => console.log("DELETE /topic/:id", err));
 };
 
+// delete topic by topic id
+const deleteTopicQuestion = question => {
+  return axios
+    .delete(
+      `${process.env.REACT_APP_API_URI}/topicquestion/${question.id}`,
+      getToken()
+    )
+    .then(res => {
+      console.log("DELETE /topicquestion/:id", res);
+      return res.data;
+    })
+    .catch(err => console.log("DELETE /topicquestion/:id", err));
+};
+
+// delete topic by topic id
+const deleteResponse = response => {
+  return axios
+    .delete(
+      `${process.env.REACT_APP_API_URI}/response/${response.id}`,
+      getToken()
+    )
+    .then(res => {
+      console.log("DELETE /response/:id", res);
+      return res.data;
+    })
+    .catch(err => console.log("DELETE /response/:id", err));
+};
+
 export {
   getAllTopics,
   getTopic,
-  getContext,
+  getAllContexts,
+  getContextByID,
   getQuestions,
   getAllQuestions,
   getAllTopicQuestions,
   getAllResponses,
   getAllThreads,
   createTopic,
+  createQuestion,
   createTopicQuestion,
   createResponse,
-  deleteTopic
+  editTopic,
+  editTopicQuestion,
+  editResponse,
+  deleteTopic,
+  deleteTopicQuestion,
+  deleteResponse
 };

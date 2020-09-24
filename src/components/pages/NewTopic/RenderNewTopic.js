@@ -1,8 +1,7 @@
 import React, { useState } from "react";
 import { Button, Modal, Form, Steps } from "antd";
 import { InfoCircleTwoTone } from "@ant-design/icons";
-import TopicTitle from "./TopicComponents/TopicTitle";
-import Frequency from "./TopicComponents/Frequency";
+import TopicDetails from "./TopicComponents/TopicDetails";
 import ContextType from "./TopicComponents/ContextType";
 import ContextQuestions from "./TopicComponents/ContextQuestions";
 import ContextResponses from "./TopicComponents/ContextResponses";
@@ -14,9 +13,7 @@ import {
   createResponse
 } from "../../../api/index";
 import axios from "axios";
-
-// TO DO's ----------------
-// - IMPLEMENT SELECTING RESPONSE TYPE FUNCTIONALITY
+import { reset } from "kleur";
 
 const RenderNewTopic = props => {
   // set the JOIN CODE
@@ -26,23 +23,8 @@ const RenderNewTopic = props => {
     excludeSimilarCharacters: true
   });
 
-  // initialize a new topic object
-  const newTopicValues = {
-    topicname: "",
-    topicfrequency: "",
-    contextid: "",
-    leaderid: props.user.sub,
-    joincode: joinCode
-  };
-
-  // initialize a collection of all questions
-  const newTopicQuestions = {
-    contextQ: [],
-    requestQ: []
-  };
-
   // initialize a question object
-  const newQuestion = {
+  const newTopicQuestion = {
     topicid: "",
     questionid: ""
   };
@@ -57,123 +39,102 @@ const RenderNewTopic = props => {
 
   // state variables
   const [form] = Form.useForm();
+  const [topicQuestion, setTopicQuestion] = useState(newTopicQuestion);
+  const [response, setResponse] = useState(newResponse);
   const [visible, setVisible] = useState(false);
   const [page, setPage] = useState(0);
-  const [topic, setTopic] = useState(newTopicValues);
-  const [question, setQuestion] = useState(newQuestion);
-  const [topicQuestions, setTopicQuestions] = useState(newTopicQuestions);
-  const [response, setResponse] = useState(newResponse);
-  const [responses, setResponses] = useState([]);
-  let allQuestions = [];
   let allTopicQuestions = [];
   let allResponses = [];
 
-  // axios authentication
-  const idToken = JSON.parse(localStorage.getItem("okta-token-storage")).idToken
-    .idToken;
-  const auth = { headers: { Authorization: `Bearer ${idToken}` } };
-
-  // handle state for topic
-  const handleTopicInput = (name, value) => {
-    setTopic({
-      ...topic,
-      [name]: value
-    });
-  };
-
-  // handle state for all questions
-  const handleQuestions = (name, q) => {
-    setTopicQuestions({
-      ...topicQuestions,
-      [name]: q
-    });
-  };
-
-  // handle state for all responses
-  const handleResponses = r => {
-    setResponses(r);
-  };
-
-  // map all question ids to question state
-  const handleAllQuestions = topic => {
-    return allQuestions.map(q => {
-      let temp = Object.assign({}, question);
-      temp.topicid = topic.id;
-      temp.questionid = q.id;
-      allTopicQuestions.push(temp);
-      return temp;
-    });
-  };
-
-  // map all context responses to response state
-  const handleAllResponses = topic => {
-    return responses.map((r, index) => {
-      let temp = Object.assign({}, response);
-      temp.topicid = topic.id;
-      temp.questionid = allQuestions[index].id;
-      temp.response = r;
-      temp.respondedby = topic.leaderid;
-      allResponses.push(temp);
-      return temp;
-    });
-  };
-
-  // display Join code on submit
-  const showJoinCode = () => {
-    return Modal.confirm({
-      title: "Here is your join code: ",
-      icon: <InfoCircleTwoTone />,
-      content: topic.joincode,
-      okText: "Ok"
-    });
-  };
-
-  // submitting topics
-  const createNewTopic = () => {
-    allQuestions = topicQuestions.contextQ.concat(topicQuestions.requestQ);
-
-    createTopic(topic)
-      .then(res => {
-        let createdTopic = res.topic;
-        handleAllQuestions(createdTopic);
-
-        axios
-          .all(
-            allTopicQuestions.map(q => {
-              createTopicQuestion(q);
-            })
-          )
-          .then(res => {
-            handleAllResponses(createdTopic);
-
-            axios
-              .all(
-                allResponses.map(r => {
-                  createResponse(r);
-                })
-              )
-              .then(res => {
-                setTopic(newTopicValues);
-                setVisible(false);
-                setPage(0);
-                showJoinCode();
-              })
-              .catch(err => console.log(err));
-          })
-          .catch(err => console.log(err));
-      })
-      .catch(err => console.log(err));
-  };
-
   // cancel topic creation
-  const cancelTopic = () => {
-    setTopic(newTopicValues);
+  const onCancel = () => {
+    form.resetFields();
     setVisible(false);
     setPage(0);
   };
 
-  const paginate = p => {
-    setPage(p);
+  // display Join code on submit
+  const showJoinCode = values => {
+    return Modal.confirm({
+      title: "Here is your join code: ",
+      icon: <InfoCircleTwoTone />,
+      content: values.topic.joincode,
+      okText: "Ok"
+    });
+  };
+
+  // submit handler for new topic form
+  const onCreate = () => {
+    form
+      .validateFields()
+      .then(values => {
+        // create a new topic
+        createTopic(values.topic)
+          .then(res => {
+            let topicID = res.topic.id;
+            handleTopicQuestions(values, topicID);
+            // create topic questions
+            submitTopicQuestions(allTopicQuestions)
+              .then(() => {
+                handleResponses(topicID, values);
+                // create responses
+                submitResponses(allResponses);
+              })
+              .then(() => {
+                form.resetFields();
+                setVisible(false);
+                showJoinCode(values);
+                props.reset();
+              });
+          })
+          .catch(err => console.log("Creating topic error", err));
+      })
+      .catch(info => console.log("Validating the form:", info));
+  };
+
+  // creating topic questions for all selected questions
+  const handleTopicQuestions = (values, topicID) => {
+    values.contextQuestions.map(q => {
+      let temp = Object.assign({}, topicQuestion);
+      temp.topicid = topicID;
+      temp.questionid = q.question[1];
+      allTopicQuestions.push(temp);
+    });
+
+    values.requestQuestions.map(q => {
+      let temp = Object.assign({}, topicQuestion);
+      temp.topicid = topicID;
+      temp.questionid = q.question;
+      allTopicQuestions.push(temp);
+    });
+  };
+
+  const submitTopicQuestions = questions => {
+    return axios.all(
+      questions.map(q => {
+        createTopicQuestion(q);
+      })
+    );
+  };
+
+  // creating responses to context questions
+  const handleResponses = (topicID, values) => {
+    values.contextQuestions.map(q => {
+      let temp = Object.assign({}, response);
+      temp.questionid = q.question[1];
+      temp.response = values.responses[q.question[1]];
+      temp.respondedby = props.user.sub;
+      temp.topicid = topicID;
+      allResponses.push(temp);
+    });
+  };
+
+  const submitResponses = responses => {
+    return axios.all(
+      responses.map(r => {
+        createResponse(r);
+      })
+    );
   };
 
   return (
@@ -190,11 +151,11 @@ const RenderNewTopic = props => {
       <Modal
         visible={visible}
         width={700}
-        title="New Topic"
-        okText="Create Topic"
+        title="Create a new topic"
+        okText="Create"
         cancelText="Cancel"
-        onCancel={cancelTopic}
-        onOk={createNewTopic}
+        onCancel={onCancel}
+        onOk={onCreate}
         maskClosable={false}
         footer={
           <>
@@ -209,7 +170,7 @@ const RenderNewTopic = props => {
               </Button>
             )}
             {page === 4 ? (
-              <Button type="primary" onClick={createTopic}>
+              <Button type="primary" onClick={onCreate}>
                 Create Topic
               </Button>
             ) : (
@@ -233,41 +194,34 @@ const RenderNewTopic = props => {
           <Steps.Step title="Response Questions" />
         </Steps>
 
-        <Form form={form} layout="vertical" name="newTopicForm">
-          {page === 0 ? (
-            <div>
-              <TopicTitle value={topic} onChange={handleTopicInput} />
-              <Frequency
-                page={paginate}
-                value={topic}
-                onChange={handleTopicInput}
-              />
-            </div>
-          ) : null}
-          {page === 1 ? (
-            <ContextType
-              page={paginate}
-              value={topic}
-              onChange={handleTopicInput}
-            />
-          ) : null}
-          {page === 2 ? (
-            <ContextQuestions page={paginate} onChange={handleQuestions} />
-          ) : null}
-          {page === 3 ? (
-            <ContextResponses
-              page={paginate}
-              value={topicQuestions}
-              onChange={handleResponses}
-            />
-          ) : null}
-          {page === 4 ? (
-            <RequestQuestions
-              page={paginate}
-              value={topic}
-              onChange={handleQuestions}
-            />
-          ) : null}
+        <Form form={form} layout="vertical" name="form_in_modal">
+          <Form.Item
+            className="closed"
+            name={["topic", "joincode"]}
+            initialValue={joinCode}
+          ></Form.Item>
+
+          <Form.Item
+            className="closed"
+            name={["topic", "leaderid"]}
+            initialValue={props.user.sub}
+          ></Form.Item>
+
+          <div className={page === 0 ? null : "closed"}>
+            <TopicDetails />
+          </div>
+          <div className={page === 1 ? null : "closed"}>
+            <ContextType />
+          </div>
+          <div className={page === 2 ? null : "closed"}>
+            <ContextQuestions />
+          </div>
+          <div className={page === 3 ? null : "closed"}>
+            <ContextResponses form={form} page={page} />
+          </div>
+          <div className={page === 4 ? null : "closed"}>
+            <RequestQuestions />
+          </div>
         </Form>
       </Modal>
     </div>

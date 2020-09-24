@@ -1,46 +1,56 @@
-import React from "react";
-import { Form, Input, Button, message } from "antd";
+import React, { useState, useEffect } from "react";
+import { Form, Input } from "antd";
+import { getQuestions } from "../../../../api/index";
 
-const ContextResponses = props => {
-  const { form } = Form.useForm();
+const ContextResponses = ({ form, page }) => {
+  const [inputs, setInputs] = useState([]);
+  let contextQuestions = form.getFieldsValue().contextQuestions;
+  let allQuestions = [];
 
-  const saveResponses = responses => {
-    message.info("Your responses were saved");
-    props.onChange(Object.values(responses));
-  };
+  useEffect(() => {
+    getQuestions()
+      .then(res => {
+        allQuestions = res.filter(q => q.type === "Context Questions");
+        getFields();
+      })
+      .catch(err => console.log(err));
+  }, [page]);
 
+  // render input fields for responses to context questions
   const getFields = () => {
-    const count = props.value.contextQ.length;
     const children = [];
-    for (let i = 0; i < count; i++) {
+
+    for (let i = 0; i < contextQuestions.length; i++) {
       children.push(
-        <div key={i}>
-          <Form.Item
-            name={props.value.contextQ[i].id}
-            label={props.value.contextQ[i].question}
-            rules={[{ required: true, message: "Input something!" }]}
-          >
-            <Input placeholder="Answer your context question." />
-          </Form.Item>
-        </div>
+        <Form.Item
+          key={i}
+          name={["responses", `${contextQuestions[i].question.slice(-1)}`]}
+          label={contextQuestions[i].question.slice(0, -1)}
+          rules={[{ required: true, message: "Input something!" }]}
+        >
+          <Input placeholder="Answer your context question." />
+        </Form.Item>
       );
     }
-    return children;
+
+    console.log(children);
+    setInputs(children);
   };
 
   return (
-    <div>
-      <Form form={form} name="context_responses" onFinish={saveResponses}>
-        {getFields()}
+    <div>{inputs}</div>
 
-        <h4 className="save-warning">
-          Please make sure to save your responses before moving on.
-        </h4>
-        <Button type="primary" htmlType="submit">
-          Save Responses
-        </Button>
-      </Form>
-    </div>
+    // <Form.List name="responses">
+    //   {fields => {
+    //     return (
+    //       fields.map((field, index) => (
+    //         <div key={field.key}>
+    //           {inputs}
+    //         </div>
+    //       ))
+    //     )
+    //   }}
+    // </Form.List>
   );
 };
 
