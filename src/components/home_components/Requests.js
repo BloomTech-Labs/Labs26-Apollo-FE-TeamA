@@ -19,7 +19,6 @@ const Requests = props => {
               }}
             >
               <h3>Created: {item.created_at}</h3>
-              <h4>{props.userID}</h4>
             </div>
           ))
         : null}
