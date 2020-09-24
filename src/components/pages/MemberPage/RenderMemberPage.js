@@ -12,7 +12,12 @@ import Responses from "../../home_components/Responses";
 import { ResponsesContext } from "../../../state/contexts/ResponsesContext";
 import ThreadsList from "../../home_components/ThreadsList";
 import { ThreadsContext } from "../../../state/contexts/ThreadsContext";
-import { getAllResponses, getAllTopics, getAllThreads } from "../../../api";
+import {
+  getAllResponses,
+  getAllTopics,
+  getAllThreads,
+  getAllTopicMembers
+} from "../../../api";
 
 function RenderMemberPage(props) {
   // state handlers
@@ -24,24 +29,11 @@ function RenderMemberPage(props) {
   const [threads, setThreads] = useState([]);
 
   useEffect(() => {
-    getAllResponses()
-      .then(res => {
-        setRequests(res);
-        let userTopicsId = res.topicID.filter(
-          resp => resp.respondedby == userInfo.sub
-        );
-        getAllTopics()
-          .then(res => {
-            let userTopics = res.filter(topic =>
-              userTopicsId.includes(topic.topicID)
-            );
-            setTopics(userTopics);
-          })
-          .catch(err => console.log(err));
-      })
-      .catch(err => {
-        console.log(err);
-      });
+    getAllTopicMembers().then(res => {
+      let userTopicsID = res.filter(member => member.memberid == userInfo.sub);
+
+      console.log("userTopicsID: ", userTopicsID);
+    });
   }, []);
   // for selecting a specific topic
   const getTopicID = id => {
