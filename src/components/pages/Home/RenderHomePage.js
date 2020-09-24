@@ -73,22 +73,22 @@ function RenderHomePage(props) {
       <NewTopicContainer userInfo={userInfo} />
 
       <TopicListContext.Provider value={{ topics }}>
-        <div className="topics-container">
-          <div className="topics-list">
-            <h2 className="topics-list-title">Your Topics</h2>
-            <TopicsList
-              topicID={getTopicID}
-              viewRequestsList={viewRequestsList}
-            />
-          </div>
+        <RequestsContext.Provider value={{ requestList }}>
+          <div className="topics-container">
+            <div className="topics-list">
+              <h2 className="topics-list-title">Your Topics</h2>
+              <TopicsList
+                topicID={getTopicID}
+                viewRequestsList={viewRequestsList}
+              />
+            </div>
 
-          <div className="main-topic-container">
-            {topicID === 0 ? (
-              <h2>Select a topic from the topics list.</h2>
-            ) : (
-              <>
-                <MainTopic topicID={topicID} reset={resetTopicID} />
-                <RequestsContext.Provider value={{ requestList }}>
+            <div className="main-topic-container">
+              {topicID === 0 ? (
+                <h2>Select a topic from the topics list.</h2>
+              ) : (
+                <>
+                  <MainTopic topicID={topicID} reset={resetTopicID} />
                   <div className="requests-container">
                     <div className="requests-list">
                       <h2 className="requests-list-title">
@@ -97,15 +97,15 @@ function RenderHomePage(props) {
                       <Requests />
                     </div>
                   </div>
-                </RequestsContext.Provider>
-              </>
-            )}
+                </>
+              )}
+            </div>
           </div>
-        </div>
+          <ResponsesContext.Provider value={{ responseList }}>
+            <Responses />
+          </ResponsesContext.Provider>
+        </RequestsContext.Provider>
       </TopicListContext.Provider>
-      <ResponsesContext.Provider value={{ responseList }}>
-        <Responses />
-      </ResponsesContext.Provider>
       <ThreadsContext.Provider value={{ threads }}>
         <ThreadsList />
       </ThreadsContext.Provider>
