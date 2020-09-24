@@ -19,7 +19,7 @@ const topicQuestions = `${process.env.REACT_APP_API_URI}/topicquestion/`;
 const questions = `${process.env.REACT_APP_API_URI}/question/`;
 const responses = `${process.env.REACT_APP_API_URI}/response/`;
 const threads = `${process.env.REACT_APP_API_URI}/thread/`;
-const topicMembers = `${process.env.REACT_APP_API_URI}/topicmember/`;
+const topicMembers = `${process.env.REACT_APP_API_URI}/topicmember`;
 
 // get all topics
 const getAllTopics = () => {
