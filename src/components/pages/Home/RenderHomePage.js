@@ -22,6 +22,7 @@ function RenderHomePage(props) {
   const [requestList, setRequests] = useState([]);
   const [responseList, setResponses] = useState([]);
   const [threads, setThreads] = useState([]);
+  localStorage.setItem("page_view", '{"value":"owner"}');
 
   useEffect(() => {
     getAllTopics()
@@ -33,6 +34,7 @@ function RenderHomePage(props) {
 
     getAllResponses()
       .then(res => {
+        console.log(res);
         setResponses(res);
         setRequests(res);
       })
@@ -44,7 +46,7 @@ function RenderHomePage(props) {
       })
       .catch(err => console.log(err));
   }, []);
-
+  const pageView = JSON.parse(localStorage.getItem("page_view")).value;
   // for selecting a specific topic
   const getTopicID = id => {
     setTopicID(id);
@@ -59,18 +61,26 @@ function RenderHomePage(props) {
     <div className="home">
       <div className="nav">
         <h2 className="logo">Apollo</h2>
+        <Button
+          type={pageView === "owner" ? "primary" : "text"}
+          name="ownerButton"
+          onClick={() => {
+            localStorage.setItem("page_view", "owner");
+            console.log("owner button pressed, pageview: ", pageView);
+          }}
+        >
+          Owner
+        </Button>
 
-        <RequestsContext.Provider value={{ requestList }}>
-          <Requests />
-        </RequestsContext.Provider>
-
-        <ResponsesContext.Provider value={{ responseList }}>
-          <Responses />
-        </ResponsesContext.Provider>
-
-        <ThreadsContext.Provider value={{ threads }}>
-          <ThreadsList />
-        </ThreadsContext.Provider>
+        <Button
+          type={pageView === "member" ? "primary" : "text"}
+          onClick={() => {
+            localStorage.setItem("page_view", "member");
+            console.log("member button pressed, pageview: ", pageView);
+          }}
+        >
+          Member
+        </Button>
 
         <Button type="secondary" onClick={() => authService.logout()}>
           Log Out
@@ -97,6 +107,22 @@ function RenderHomePage(props) {
           </div>
         </div>
       </TopicListContext.Provider>
+      <RequestsContext.Provider value={{ requestList }}>
+        <div className="requests-container">
+          <div className="requests-list">
+            <h2 className="requests-list-title">
+              Responses made from the topic {topics.name}
+            </h2>
+            <Requests />
+          </div>
+        </div>
+      </RequestsContext.Provider>
+      <ResponsesContext.Provider value={{ responseList }}>
+        <Responses />
+      </ResponsesContext.Provider>
+      <ThreadsContext.Provider value={{ threads }}>
+        <ThreadsList />
+      </ThreadsContext.Provider>
     </div>
   );
 }
