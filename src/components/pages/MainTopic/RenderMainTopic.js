@@ -1,5 +1,6 @@
 import React, { useContext, useState, useEffect, useRef } from "react";
-import { SettingFilled } from "@ant-design/icons";
+import axios from "axios";
+import Requests from "../../home_components/Requests";
 import EditDetails from "./EditComponents/EditDetails";
 import EditContext from "./EditComponents/EditContext";
 import EditContextQ from "./EditComponents/EditContextQ";
@@ -9,8 +10,8 @@ import { TopicListContext } from "../../../state/contexts/TopicListContext";
 import { TopicQuestionsContext } from "../../../state/contexts/TopicQuestionsContext";
 import { QuestionsContext } from "../../../state/contexts/QuestionsContext";
 import { ResponsesContext } from "../../../state/contexts/ResponsesContext";
-import axios from "axios";
 import { Button, message, Dropdown, Menu, Modal, Form } from "antd";
+import { SettingFilled } from "@ant-design/icons";
 import {
   getTopic,
   getContextByID,
@@ -311,6 +312,26 @@ const RenderMainTopic = ({ topicID, reset, user }) => {
           {topic.joincode}
         </textarea>
       </Button>
+
+      <div className="context-questions-container">
+        <h2>Context</h2>
+        {contextQ.map((q, index) => {
+          console.log(contextQ);
+          console.log(topicResponses);
+          return (
+            <div key={index}>
+              <h3 className="context-question">{q[0].question}</h3>
+            </div>
+          );
+        })}
+      </div>
+
+      <div className="requests-container">
+        <div className="requests-list">
+          <h2 className="requests-list-title">Responses</h2>
+          <Requests />
+        </div>
+      </div>
 
       <Modal
         visible={visible}

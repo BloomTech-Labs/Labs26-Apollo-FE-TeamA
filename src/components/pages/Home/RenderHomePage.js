@@ -1,8 +1,5 @@
 import React, { useState, useEffect } from "react";
-import axios from "axios";
 import { Button } from "antd";
-import { Link } from "react-router-dom";
-import Requests from "../../home_components/Requests";
 import { RequestsContext } from "../../../state/contexts/RequestsContext";
 import TopicsList from "../../home_components/TopicsList";
 import NewTopicContainer from "../NewTopic/NewTopicContainer";
@@ -33,7 +30,6 @@ function RenderHomePage(props) {
   const [requestList, setRequests] = useState([]);
   const [responseList, setResponses] = useState([]);
   const [threads, setThreads] = useState([]);
-  localStorage.setItem("page_view", '{"value":"owner"}');
 
   // for selecting a specific topic
   const getTopicID = id => {
@@ -80,14 +76,25 @@ function RenderHomePage(props) {
       .catch(err => console.log(err));
   }, [topicID]);
 
-  const pageView = JSON.parse(localStorage.getItem("page_view")).value;
+  // const pageView = JSON.parse(localStorage.getItem("page_view")).value;
+
+  const viewRequestsList = id => {
+    console.log("viewRequestsList called");
+    getAllResponses()
+      .then(res => {
+        let requestInfo = res.filter(req => req.topicid == id);
+        setRequests(requestInfo);
+        console.log("res", res);
+      })
+      .catch(err => console.log(err));
+  };
 
   return (
     <div className="home">
       <div className="nav">
         <h2 className="logo">Apollo</h2>
 
-        <Button
+        {/* <Button
           type={pageView === "owner" ? "primary" : "text"}
           name="ownerButton"
           onClick={() => {
@@ -96,7 +103,7 @@ function RenderHomePage(props) {
           }}
         >
           Owner
-        </Button>
+        </Button> */}
 
         <NewTopicContainer reset={resetTopicID} userInfo={userInfo} />
 
@@ -114,7 +121,10 @@ function RenderHomePage(props) {
                   <div className="topics-container">
                     <div className="topics-list">
                       <h2 className="topics-list-title">Your Topics</h2>
-                      <TopicsList topicID={getTopicID} />
+                      <TopicsList
+                        topicID={getTopicID}
+                        viewRequestsList={viewRequestsList}
+                      />
                     </div>
 
                     <div className="main-topic-container">
@@ -123,15 +133,6 @@ function RenderHomePage(props) {
                       ) : (
                         <MainTopic topicID={topicID} reset={resetTopicID} />
                       )}
-                    </div>
-                  </div>
-
-                  <div className="requests-container">
-                    <div className="requests-list">
-                      <h2 className="requests-list-title">
-                        Responses made from the topic {topics.name}
-                      </h2>
-                      <Requests />
                     </div>
                   </div>
 

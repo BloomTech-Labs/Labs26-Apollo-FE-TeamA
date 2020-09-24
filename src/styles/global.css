@@ -148,6 +148,10 @@ h1 {
 
 
 /* MAIN TOPIC STYLES */
+.main-topic {
+
+}
+
 .join-code {
   display: flex;
   align-items: center;
@@ -159,6 +163,7 @@ h1 {
   margin-left: 1rem;
   resize: none;
   color: #7F64FF;
+  background: none;
 }
 
 .join-code span {
@@ -217,4 +222,27 @@ h1 {
 /* NEW TOPIC STYLES */
 .closed {
   display: none;
+}
+
+.requests-container {
+  margin-top: 2rem;
+}
+
+.requests-list-title {
+  color: #7F64FF;
+  font-weight: bold;
+}
+
+.context-questions-container {
+  margin-top: 2rem;
+  width: 50%;
+}
+
+.context-questions-container h2 {
+  color: #7F64FF;
+  font-weight: bold;
+}
+
+.context-question {
+  margin: 1rem 0;
 }

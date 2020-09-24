@@ -18,6 +18,7 @@ const TopicsList = props => {
           className="topic-list-item"
           onClick={() => {
             setTopicID(item.id);
+            props.viewRequestsList(item.id);
           }}
         >
           <h3>{item.topicname}</h3>
