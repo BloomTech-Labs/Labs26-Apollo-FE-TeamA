@@ -48,6 +48,7 @@ function RenderHomePage(props) {
         let requestInfo = res.filter(req => req.topicid == id);
         setRequests(requestInfo);
         console.log("res", res);
+        console.log("requestsList", requestList);
       })
       .catch(err => console.log(err));
   };
@@ -85,18 +86,19 @@ function RenderHomePage(props) {
             {topicID === 0 ? (
               <h2>Select a topic from the topics list.</h2>
             ) : (
-              <MainTopic topicID={topicID} reset={resetTopicID}>
+              <>
+                <MainTopic topicID={topicID} reset={resetTopicID} />
                 <RequestsContext.Provider value={{ requestList }}>
                   <div className="requests-container">
                     <div className="requests-list">
                       <h2 className="requests-list-title">
-                        Responses made from the topic {topics.name}
+                        Responses made from the topic
                       </h2>
                       <Requests />
                     </div>
                   </div>
                 </RequestsContext.Provider>
-              </MainTopic>
+              </>
             )}
           </div>
         </div>
