@@ -1,5 +1,6 @@
 import React, { useContext, useState } from "react";
 import { TopicListContext } from "../../state/contexts/TopicListContext";
+import Moment from "react-moment";
 import axios from "axios";
 
 const TopicsList = props => {
@@ -21,7 +22,9 @@ const TopicsList = props => {
           }}
         >
           <h3>{item.topicname}</h3>
-          <h6>Updated: {item.updated_at}</h6>
+          <h4>
+            <Moment format="MM/DD/YYYY">{item.updated_at}</Moment>
+          </h4>
         </div>
       ))}
     </>

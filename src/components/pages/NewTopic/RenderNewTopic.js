@@ -13,6 +13,7 @@ import {
   createResponse
 } from "../../../api/index";
 import axios from "axios";
+import { reset } from "kleur";
 
 const RenderNewTopic = props => {
   // set the JOIN CODE
@@ -83,6 +84,7 @@ const RenderNewTopic = props => {
                 form.resetFields();
                 setVisible(false);
                 showJoinCode(values);
+                props.reset();
               });
           })
           .catch(err => console.log("Creating topic error", err));
