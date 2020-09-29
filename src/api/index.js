@@ -16,6 +16,7 @@ const apiUrl = `${process.env.REACT_APP_API_URI}/profile/`;
 const topics = `${process.env.REACT_APP_API_URI}/topic/`;
 const contexts = `${process.env.REACT_APP_API_URI}/context/`;
 const topicQuestions = `${process.env.REACT_APP_API_URI}/topicquestion/`;
+const topicMembers = `${process.env.REACT_APP_API_URI}/topicmember/`;
 const questions = `${process.env.REACT_APP_API_URI}/question/`;
 const responses = `${process.env.REACT_APP_API_URI}/response/`;
 const threads = `${process.env.REACT_APP_API_URI}/thread/`;
@@ -167,6 +168,17 @@ const createResponse = response => {
     .catch(err => console.log("POST to /response", err));
 };
 
+// add topic member
+const addMember = member => {
+  return axios
+    .post(topicMembers, member, getToken())
+    .then(res => {
+      console.log("POST to /topicmember", res);
+      return res.data;
+    })
+    .catch(err => console.log("POST to /topicmember", err));
+};
+
 // edit topic
 const editTopic = topic => {
   return axios
@@ -253,6 +265,7 @@ export {
   createQuestion,
   createTopicQuestion,
   createResponse,
+  addMember,
   editTopic,
   editTopicQuestion,
   editResponse,

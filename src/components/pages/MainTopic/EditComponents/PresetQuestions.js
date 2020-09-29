@@ -11,7 +11,6 @@ const PresetContextQuestions = props => {
     getQuestions()
       .then(res => {
         getFields(res);
-        console.log(props.contextQ);
       })
       .catch(err => console.log(err));
   }, [props.contextQ]);

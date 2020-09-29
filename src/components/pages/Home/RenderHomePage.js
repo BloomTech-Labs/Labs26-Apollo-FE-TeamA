@@ -11,6 +11,7 @@ import ThreadsList from "../../home_components/ThreadsList";
 import { ThreadsContext } from "../../../state/contexts/ThreadsContext";
 import { QuestionsContext } from "../../../state/contexts/QuestionsContext";
 import { TopicQuestionsContext } from "../../../state/contexts/TopicQuestionsContext";
+import JoinTopic from "./JoinTopic";
 
 import {
   getAllResponses,
@@ -64,7 +65,6 @@ function RenderHomePage(props) {
     getAllResponses()
       .then(res => {
         setResponses(res);
-        setRequests(res);
       })
       .catch(err => console.log(err));
 
@@ -81,7 +81,6 @@ function RenderHomePage(props) {
       .then(res => {
         let requestInfo = res.filter(req => req.topicid == id);
         setRequests(requestInfo);
-        console.log("res", res);
       })
       .catch(err => console.log(err));
   };
@@ -99,6 +98,7 @@ function RenderHomePage(props) {
         </Button>
 
         <NewTopicContainer reset={resetTopicID} userInfo={userInfo} />
+        <JoinTopic user={userInfo} topicID={topicID} />
 
         <Button type="secondary" onClick={() => authService.logout()}>
           Log Out
