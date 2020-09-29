@@ -13,7 +13,6 @@ import {
   createResponse
 } from "../../../api/index";
 import axios from "axios";
-import { reset } from "kleur";
 
 const RenderNewTopic = props => {
   // set the JOIN CODE

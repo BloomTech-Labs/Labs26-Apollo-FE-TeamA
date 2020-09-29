@@ -126,6 +126,16 @@ const getAllThreads = () => {
     .catch(err => console.log("GET /thread", err));
 };
 
+const getTopicMembers = () => {
+  return axios
+    .get(topicMembers, getToken())
+    .then(res => {
+      console.log("GET /topicmembers", res);
+      return res.data;
+    })
+    .catch(err => console.log("GET /topicmembers", err));
+};
+
 // create a topic
 const createTopic = topic => {
   console.log(topic);
@@ -261,6 +271,7 @@ export {
   getAllTopicQuestions,
   getAllResponses,
   getAllThreads,
+  getTopicMembers,
   createTopic,
   createQuestion,
   createTopicQuestion,

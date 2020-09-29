@@ -15,14 +15,13 @@ import { SettingFilled } from "@ant-design/icons";
 import {
   getTopic,
   getContextByID,
+  getTopicMembers,
   createResponse,
   createTopicQuestion,
   editTopic,
   editTopicQuestion,
   editResponse,
-  deleteTopic,
-  deleteTopicQuestion,
-  deleteResponse
+  deleteTopic
 } from "../../../api/index";
 
 const RenderMainTopic = ({ topicID, reset, user }) => {
@@ -37,6 +36,7 @@ const RenderMainTopic = ({ topicID, reset, user }) => {
   const { responseList } = useContext(ResponsesContext);
 
   const [topic, setTopic] = useState({});
+  const [members, setMembers] = useState([]);
   const [context, setContext] = useState({});
   const [topicResponses, setTopicResponses] = useState([]);
   const [contextQ, setContextQ] = useState([]);
@@ -168,8 +168,6 @@ const RenderMainTopic = ({ topicID, reset, user }) => {
 
     return axios.all(
       newR.map(r => {
-        // deleteResponse(r).then(res => {
-        // });
         createResponse(r);
       })
     );
@@ -212,8 +210,6 @@ const RenderMainTopic = ({ topicID, reset, user }) => {
     return axios.all(
       newRQuestions.map(q => {
         createTopicQuestion(q);
-        // deleteTopicQuestion(q).then(res => {
-        // });
       })
     );
   };
@@ -287,6 +283,10 @@ const RenderMainTopic = ({ topicID, reset, user }) => {
             setRequestQ(rQ);
             handleResponses().then(responses => {
               setTopicResponses(responses);
+              getTopicMembers().then(res => {
+                let tM = res.filter(m => m.topicid === topicID);
+                setMembers(tM);
+              });
             });
           })
           .catch(err => console.log(err));
@@ -299,7 +299,10 @@ const RenderMainTopic = ({ topicID, reset, user }) => {
       <div className="topic-title-content">
         <h1 className="topic-name">{topic.topicname}</h1>
 
-        <Dropdown overlay={settingsMenu}>
+        <Dropdown
+          className={user.sub === topic.leaderid ? "" : "hidden-edit"}
+          overlay={settingsMenu}
+        >
           <button className="settings-button">
             <SettingFilled />
           </button>
@@ -307,6 +310,9 @@ const RenderMainTopic = ({ topicID, reset, user }) => {
       </div>
 
       <h2>{context.contextoption}</h2>
+      <h3>
+        {members.length > 1 ? `${members.length + 1} Members` : `1 Member`}
+      </h3>
 
       <Button
         className="join-code"
