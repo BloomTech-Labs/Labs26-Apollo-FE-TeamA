@@ -44,7 +44,6 @@ const PresetRequestQuestions = props => {
         </Option>
       );
     }
-    console.log("lQ:", children);
     return children;
   };
 
@@ -71,7 +70,6 @@ const PresetRequestQuestions = props => {
         </div>
       );
     }
-    console.log("presets:", presets);
     setInputs(children);
   };
 

@@ -33,7 +33,6 @@ const EditContextQ = props => {
 
   // creating an Option for each question in state
   const loadQuestions = () => {
-    console.log("called");
     const count = initialQuestions.length;
     const children = [];
     for (let i = 0; i < count; i++) {

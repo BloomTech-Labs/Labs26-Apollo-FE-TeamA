@@ -44,30 +44,6 @@ const RenderMainTopic = ({ topicID, reset, user }) => {
   let cQ = [];
   let rQ = [];
 
-  useEffect(() => {
-    getTopic(topicID)
-      .then(res => {
-        setTopic(res);
-        getContextByID(res.contextid)
-          .then(res => {
-            setContext(res);
-            cQ = handleQuestions(
-              questions.filter(q => q.type === "Context Questions")
-            );
-            setContextQ(cQ);
-            rQ = handleQuestions(
-              questions.filter(q => q.type === "Request Questions")
-            );
-            setRequestQ(rQ);
-            handleResponses().then(responses => {
-              setTopicResponses(responses);
-            });
-          })
-          .catch(err => console.log(err));
-      })
-      .catch(err => console.log(err));
-  }, [topicID]);
-
   const handleQuestions = questions => {
     let q = [];
     for (let i = 0; i < questions.length; i++) {
@@ -80,7 +56,6 @@ const RenderMainTopic = ({ topicID, reset, user }) => {
         }
       }
     }
-    console.log("hQ:", q);
     return q;
   };
 
@@ -99,35 +74,7 @@ const RenderMainTopic = ({ topicID, reset, user }) => {
         }
       }
     }
-    console.log("hR:", r);
     return r;
-  };
-
-  const saveTopic = () => {
-    form
-      .validateFields()
-      .then(values => {
-        console.log(values);
-        editMainTopic(values)
-          .then(res => {
-            console.log(res);
-            handleContextQuestions(values);
-            handleRequestQuestions(values);
-            handleOldResponses(values).then(res => {
-              handleNewResponses(values);
-              if (values.newCQ) {
-                submitNewCQuestion(values);
-              }
-              if (values.newRQ) {
-                submitNewRQuestion(values);
-              }
-            });
-            setVisible(false);
-            reset();
-          })
-          .catch(err => console.log("Edit topic error", err));
-      })
-      .catch(err => console.log("Form validation error", err));
   };
 
   const editMainTopic = async values => {
@@ -141,7 +88,7 @@ const RenderMainTopic = ({ topicID, reset, user }) => {
     return editTopic(temp);
   };
 
-  const handleContextQuestions = values => {
+  const handleContextQuestions = async values => {
     let allContextQ = [];
     Object.values(values.oldCQ).map((q, index) => {
       let temp = Object.assign({}, contextQ[0][1]);
@@ -149,7 +96,6 @@ const RenderMainTopic = ({ topicID, reset, user }) => {
       temp.questionid = q[1];
       temp.id = contextQ[index][1].id;
       allContextQ.push(temp);
-      console.log("handleCQ:", temp);
     });
 
     return axios.all(
@@ -166,20 +112,16 @@ const RenderMainTopic = ({ topicID, reset, user }) => {
       temp.topicid = topicID;
       temp.questionid = q.question[1];
       newCQuestions.push(temp);
-      console.log("submitCQ:", temp);
     });
 
     return axios.all(
       newCQuestions.map(q => {
-        deleteTopicQuestion(q).then(res => {
-          createTopicQuestion(q);
-        });
+        createTopicQuestion(q);
       })
     );
   };
 
-  const handleOldResponses = values => {
-    console.log("contextR:", topicResponses);
+  const handleOldResponses = async values => {
     let oldR = [];
     let allOldCQ = Object.values(values.oldCQ);
     let allResponses = Object.values(values.responses);
@@ -192,14 +134,22 @@ const RenderMainTopic = ({ topicID, reset, user }) => {
       temp.respondedby = topic.leaderid;
       temp.topicid = topicID;
       oldR.push(temp);
-      console.log("handleOR:", temp, oldR);
     });
 
-    return axios.all(
-      oldR.map(r => {
-        editResponse(r);
+    return axios
+      .all(
+        oldR.map(r => {
+          editResponse(r);
+        })
+      )
+      .then(res => {
+        handleResponses()
+          .then(responses => {
+            setTopicResponses(responses);
+          })
+          .catch(err => console.log(err));
       })
-    );
+      .catch(err => console.log(err));
   };
 
   const handleNewResponses = values => {
@@ -214,19 +164,18 @@ const RenderMainTopic = ({ topicID, reset, user }) => {
       temp.respondedby = topic.leaderid;
       temp.topicid = topicID;
       newR.push(temp);
-      console.log("handleNR:", temp, newR);
     });
 
     return axios.all(
       newR.map(r => {
-        deleteResponse(r).then(res => {
-          createResponse(r);
-        });
+        // deleteResponse(r).then(res => {
+        // });
+        createResponse(r);
       })
     );
   };
 
-  const handleRequestQuestions = values => {
+  const handleRequestQuestions = async values => {
     let allRequestQ = [];
     Object.values(values.oldRQ).map((q, index) => {
       let temp = Object.assign({}, requestQ[0][1]);
@@ -234,14 +183,21 @@ const RenderMainTopic = ({ topicID, reset, user }) => {
       temp.questionid = q[1];
       temp.id = requestQ[index][1].id;
       allRequestQ.push(temp);
-      console.log("handleRQ:", temp);
     });
 
-    return axios.all(
-      allRequestQ.map(q => {
-        editTopicQuestion(q);
+    return axios
+      .all(
+        allRequestQ.map(q => {
+          editTopicQuestion(q);
+        })
+      )
+      .then(res => {
+        rQ = handleQuestions(
+          questions.filter(q => q.type === "Request Questions")
+        );
+        setRequestQ(rQ);
       })
-    );
+      .catch(err => console.log(err));
   };
 
   const submitNewRQuestion = values => {
@@ -251,14 +207,13 @@ const RenderMainTopic = ({ topicID, reset, user }) => {
       temp.topicid = topicID;
       temp.questionid = q.question[1];
       newRQuestions.push(temp);
-      console.log("submitRQ:", temp);
     });
 
     return axios.all(
       newRQuestions.map(q => {
-        deleteTopicQuestion(q).then(res => {
-          createTopicQuestion(q);
-        });
+        createTopicQuestion(q);
+        // deleteTopicQuestion(q).then(res => {
+        // });
       })
     );
   };
@@ -287,6 +242,58 @@ const RenderMainTopic = ({ topicID, reset, user }) => {
     </Menu>
   );
 
+  const saveTopic = () => {
+    form
+      .validateFields()
+      .then(values => {
+        console.log(values);
+        editMainTopic(values)
+          .then(res => {
+            handleContextQuestions(values).then(res => {
+              handleRequestQuestions(values).then(res => {
+                handleOldResponses(values).then(res => {
+                  handleNewResponses(values);
+                  if (values.newCQ) {
+                    submitNewCQuestion(values);
+                  }
+                  if (values.newRQ) {
+                    submitNewRQuestion(values);
+                  }
+                  setVisible(false);
+                  reset();
+                });
+              });
+            });
+          })
+          .catch(err => console.log("Edit topic error", err));
+      })
+      .catch(err => console.log("Form validation error", err));
+  };
+
+  useEffect(() => {
+    getTopic(topicID)
+      .then(res => {
+        setTopic(res);
+        getContextByID(res.contextid)
+          .then(res => {
+            setContext(res);
+            cQ = handleQuestions(
+              questions.filter(q => q.type === "Context Questions")
+            );
+            setContextQ(cQ);
+            rQ = handleQuestions(
+              questions.filter(q => q.type === "Request Questions")
+            );
+            setRequestQ(rQ);
+            handleResponses().then(responses => {
+              setTopicResponses(responses);
+            });
+          })
+          .catch(err => console.log(err));
+      })
+      .catch(err => console.log(err));
+  }, [topicID]);
+
   return (
     <div className="main-topic">
       <div className="topic-title-content">
@@ -299,12 +306,7 @@ const RenderMainTopic = ({ topicID, reset, user }) => {
         </Dropdown>
       </div>
 
-      <h2>
-        {context.contextoption} |{" "}
-        {topic.topicfrequency === "Off"
-          ? null
-          : `Occurs ${topic.topicfrequency}`}
-      </h2>
+      <h2>{context.contextoption}</h2>
 
       <Button
         className="join-code"
@@ -313,7 +315,7 @@ const RenderMainTopic = ({ topicID, reset, user }) => {
         onClick={copyJoinCode}
       >
         Join Code:
-        <textarea disabled readonly ref={textAreaRef} value={topic.joincode}>
+        <textarea readonly ref={textAreaRef} value={topic.joincode}>
           {topic.joincode}
         </textarea>
       </Button>
