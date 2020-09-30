@@ -1,12 +1,12 @@
 import React, { useState, useEffect } from "react";
 import { Form, Select } from "antd";
 import { getAllContexts } from "../../../../api";
-import axios from "axios";
 
 const ContextType = props => {
   const [contexts, setContexts] = useState([]); // load in contexts from API
   const { Option } = Select;
 
+  // load preset contexts
   useEffect(() => {
     getAllContexts()
       .then(res => {
