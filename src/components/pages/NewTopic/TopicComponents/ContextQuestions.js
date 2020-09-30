@@ -1,53 +1,42 @@
-import React, { useState, useEffect } from "react";
-import { Form, Button, Select, Divider } from "antd";
+import React, { useState, useContext, useEffect } from "react";
+import { Form, Input, Button, Select, Divider } from "antd";
 import { MinusCircleOutlined, PlusOutlined } from "@ant-design/icons";
-import { getQuestions } from "../../../../api/index";
-
-// ISSUE FOR ADDING CUSTOM QUESTIONS------------------------
-// issue may arise when attempting to add custom questions
-// because the question db table does not account for
-// context types, so all questions ever created will show up
+import { QuestionsContext } from "../../../../state/contexts/QuestionsContext";
 
 const ContextQuestions = props => {
-  const [initialQuestions, setInitialQuestions] = useState([]);
+  const [presets, setPresets] = useState([]);
+  const { questions } = useContext(QuestionsContext);
   const { Option } = Select;
 
-  // retrieve all context questions from the API /question
   useEffect(() => {
-    getQuestions()
-      .then(res => {
-        handleContextQuestions(res);
-      })
-      .catch(err => console.log(err));
+    setPresets(questions.filter(q => q.type === "Context Questions"));
   }, []);
 
-  // loading questions from API /question into state
-  const handleContextQuestions = cq => {
-    let options = [];
-
-    for (let i = 0; i < cq.length; i++) {
-      if (
-        // cq[i].contextid === props.value.contextid &&
-        cq[i].type === "Context Questions"
-      ) {
-        options.push(cq[i]);
-      }
+  // creating an Option for each question in state
+  const loadPresets = () => {
+    const count = presets.length;
+    const children = [];
+    for (let i = 0; i < count; i++) {
+      children.push(
+        <Form.Item
+          name={["presetCQ", `${presets[i].id}`]}
+          initialValue={presets[i].question}
+        >
+          <Select placeholder={presets[i].question}>{loadQuestions()}</Select>
+        </Form.Item>
+      );
     }
-
-    setInitialQuestions(options);
+    return children;
   };
 
   // creating an Option for each question in state
   const loadQuestions = () => {
-    const count = initialQuestions.length;
+    const count = presets.length;
     const children = [];
     for (let i = 0; i < count; i++) {
       children.push(
-        <Option
-          key={i}
-          value={[initialQuestions[i].question, initialQuestions[i].id]}
-        >
-          {initialQuestions[i].question}
+        <Option key={i} value={presets[i].question}>
+          {presets[i].question}
         </Option>
       );
     }
@@ -55,62 +44,65 @@ const ContextQuestions = props => {
   };
 
   return (
-    <Form.List name="contextQuestions">
-      {(fields, { add, remove }) => {
-        return (
-          <div>
-            {fields.map((field, index) => (
-              <div key={field.key}>
-                <Divider>Context Question {index + 1}</Divider>
-                <Form.Item
-                  className="closed"
-                  name={[index, "type"]}
-                  initialValue={"Context Questions"}
-                ></Form.Item>
+    <div>
+      <Divider>Context Questions</Divider>
 
-                <Form.Item
-                  className="closed"
-                  name={[index, "style"]}
-                  initialValue={"Text"}
-                ></Form.Item>
+      {loadPresets()}
 
-                <Form.Item
-                  name={[index, "question"]}
-                  rules={[{ required: true }]}
-                >
-                  <Select placeholder="Select a context question.">
-                    {loadQuestions()}
-                  </Select>
-                </Form.Item>
+      <Form.List name="customCQ">
+        {(fields, { add, remove }) => {
+          return (
+            <div>
+              {fields.map((field, index) => (
+                <div key={field.key}>
+                  <Form.Item
+                    className="closed"
+                    name={[index, "type"]}
+                    initialValue={"Context Questions"}
+                  ></Form.Item>
 
-                {fields.length > 1 ? (
-                  <Button
-                    type="danger"
-                    className="dynamic-delete-button"
-                    onClick={() => remove(field.name)}
-                    icon={<MinusCircleOutlined />}
+                  <Form.Item
+                    className="closed"
+                    name={[index, "style"]}
+                    initialValue={"Text"}
+                  ></Form.Item>
+
+                  <Form.Item
+                    name={[index, "question"]}
+                    rules={[{ required: true }]}
                   >
-                    Remove Question
-                  </Button>
-                ) : null}
-              </div>
-            ))}
+                    <Input />
+                  </Form.Item>
 
-            <Divider />
+                  {fields.length >= 1 ? (
+                    <Button
+                      type="danger"
+                      className="dynamic-delete-button"
+                      onClick={() => remove(field.name)}
+                      icon={<MinusCircleOutlined />}
+                    >
+                      Remove Question
+                    </Button>
+                  ) : null}
+                </div>
+              ))}
 
-            <Form.Item>
-              <Button
-                type="dashed"
-                onClick={() => add()}
-                style={{ width: "60%" }}
-              >
-                <PlusOutlined /> Add Question
-              </Button>
-            </Form.Item>
-          </div>
-        );
-      }}
-    </Form.List>
+              <Divider />
+
+              <Form.Item>
+                <Button
+                  type="dashed"
+                  onClick={() => add()}
+                  style={{ width: "60%" }}
+                >
+                  <PlusOutlined /> Add Question
+                </Button>
+              </Form.Item>
+            </div>
+          );
+        }}
+      </Form.List>
+    </div>
   );
 };
 
