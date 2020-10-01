@@ -4,26 +4,21 @@ import SelectedRequest from "../../selectedRequests/MainSelectRequestContainer";
 import EditDetails from "./EditComponents/EditDetails";
 import EditContext from "./EditComponents/EditContext";
 import EditContextQ from "./EditComponents/EditContextQ";
-import EditContextR from "./EditComponents/EditContextR";
 import EditRequestQ from "./EditComponents/EditRequestQ";
 import { TopicListContext } from "../../../state/contexts/TopicListContext";
 import { TopicQuestionsContext } from "../../../state/contexts/TopicQuestionsContext";
 import { QuestionsContext } from "../../../state/contexts/QuestionsContext";
-import { ResponsesContext } from "../../../state/contexts/ResponsesContext";
 import { Button, message, Dropdown, Menu, Modal, Form } from "antd";
 import { SettingFilled } from "@ant-design/icons";
 
 import {
   getTopic,
   getContextByID,
-  createResponse,
+  getTopicMembers,
   createTopicQuestion,
   editTopic,
   editTopicQuestion,
-  editResponse,
-  deleteTopic,
-  deleteTopicQuestion,
-  deleteResponse
+  deleteTopic
 } from "../../../api/index";
 
 const RenderMainTopic = ({ topicID, reset, user }) => {
@@ -35,40 +30,15 @@ const RenderMainTopic = ({ topicID, reset, user }) => {
   const { topics } = useContext(TopicListContext);
   const { topicQuestions } = useContext(TopicQuestionsContext);
   const { questions } = useContext(QuestionsContext);
-  const { responseList } = useContext(ResponsesContext);
 
   const [topic, setTopic] = useState({});
+  const [members, setMembers] = useState([]);
   const [context, setContext] = useState({});
-  const [topicResponses, setTopicResponses] = useState([]);
   const [contextQ, setContextQ] = useState([]);
   const [requestQ, setRequestQ] = useState([]);
 
   let cQ = [];
   let rQ = [];
-
-  useEffect(() => {
-    getTopic(topicID)
-      .then(res => {
-        setTopic(res);
-        getContextByID(res.contextid)
-          .then(res => {
-            setContext(res);
-            cQ = handleQuestions(
-              questions.filter(q => q.type === "Context Questions")
-            );
-            setContextQ(cQ);
-            rQ = handleQuestions(
-              questions.filter(q => q.type === "Request Questions")
-            );
-            setRequestQ(rQ);
-            handleResponses().then(responses => {
-              setTopicResponses(responses);
-            });
-          })
-          .catch(err => console.log(err));
-      })
-      .catch(err => console.log(err));
-  }, [topicID]);
 
   const handleQuestions = questions => {
     let q = [];
@@ -82,54 +52,7 @@ const RenderMainTopic = ({ topicID, reset, user }) => {
         }
       }
     }
-    console.log("hQ:", q);
     return q;
-  };
-
-  const handleResponses = async () => {
-    let contextQ = handleQuestions(
-      questions.filter(q => q.type === "Context Questions")
-    );
-    let r = [];
-    for (let i = 0; i < contextQ.length; i++) {
-      for (let j = 0; j < responseList.length; j++) {
-        if (
-          contextQ[i][0].id === responseList[j].questionid &&
-          responseList[j].topicid === topicID
-        ) {
-          r.push(responseList[j]);
-        }
-      }
-    }
-    console.log("hR:", r);
-    return r;
-  };
-
-  const saveTopic = () => {
-    form
-      .validateFields()
-      .then(values => {
-        console.log(values);
-        editMainTopic(values)
-          .then(res => {
-            console.log(res);
-            handleContextQuestions(values);
-            handleRequestQuestions(values);
-            handleOldResponses(values).then(res => {
-              handleNewResponses(values);
-              if (values.newCQ) {
-                submitNewCQuestion(values);
-              }
-              if (values.newRQ) {
-                submitNewRQuestion(values);
-              }
-            });
-            setVisible(false);
-            reset();
-          })
-          .catch(err => console.log("Edit topic error", err));
-      })
-      .catch(err => console.log("Form validation error", err));
   };
 
   const editMainTopic = async values => {
@@ -143,7 +66,7 @@ const RenderMainTopic = ({ topicID, reset, user }) => {
     return editTopic(temp);
   };
 
-  const handleContextQuestions = values => {
+  const handleContextQuestions = async values => {
     let allContextQ = [];
     Object.values(values.oldCQ).map((q, index) => {
       let temp = Object.assign({}, contextQ[0][1]);
@@ -151,7 +74,6 @@ const RenderMainTopic = ({ topicID, reset, user }) => {
       temp.questionid = q[1];
       temp.id = contextQ[index][1].id;
       allContextQ.push(temp);
-      console.log("handleCQ:", temp);
     });
 
     return axios.all(
@@ -168,67 +90,16 @@ const RenderMainTopic = ({ topicID, reset, user }) => {
       temp.topicid = topicID;
       temp.questionid = q.question[1];
       newCQuestions.push(temp);
-      console.log("submitCQ:", temp);
     });
 
     return axios.all(
       newCQuestions.map(q => {
-        deleteTopicQuestion(q).then(res => {
-          createTopicQuestion(q);
-        });
+        createTopicQuestion(q);
       })
     );
   };
 
-  const handleOldResponses = values => {
-    console.log("contextR:", topicResponses);
-    let oldR = [];
-    let allOldCQ = Object.values(values.oldCQ);
-    let allResponses = Object.values(values.responses);
-    let oldResponses = allResponses.slice(0, allOldCQ.length);
-    oldResponses.map((res, index) => {
-      let temp = Object.assign({}, topicResponses[0]);
-      temp.response = res;
-      temp.id = topicResponses[index].id;
-      temp.questionid = allOldCQ[index][1];
-      temp.respondedby = topic.leaderid;
-      temp.topicid = topicID;
-      oldR.push(temp);
-      console.log("handleOR:", temp, oldR);
-    });
-
-    return axios.all(
-      oldR.map(r => {
-        editResponse(r);
-      })
-    );
-  };
-
-  const handleNewResponses = values => {
-    let newR = [];
-    let newResponses = Object.values(values.responses).slice(
-      Object.values(values.oldCQ).length
-    );
-    newResponses.map((res, index) => {
-      let temp = Object.assign({}, topicResponses[0]);
-      temp.response = res;
-      temp.questionid = values.newCQ[index].question[1];
-      temp.respondedby = topic.leaderid;
-      temp.topicid = topicID;
-      newR.push(temp);
-      console.log("handleNR:", temp, newR);
-    });
-
-    return axios.all(
-      newR.map(r => {
-        deleteResponse(r).then(res => {
-          createResponse(r);
-        });
-      })
-    );
-  };
-
-  const handleRequestQuestions = values => {
+  const handleRequestQuestions = async values => {
     let allRequestQ = [];
     Object.values(values.oldRQ).map((q, index) => {
       let temp = Object.assign({}, requestQ[0][1]);
@@ -236,14 +107,21 @@ const RenderMainTopic = ({ topicID, reset, user }) => {
       temp.questionid = q[1];
       temp.id = requestQ[index][1].id;
       allRequestQ.push(temp);
-      console.log("handleRQ:", temp);
     });
 
-    return axios.all(
-      allRequestQ.map(q => {
-        editTopicQuestion(q);
+    return axios
+      .all(
+        allRequestQ.map(q => {
+          editTopicQuestion(q);
+        })
+      )
+      .then(res => {
+        rQ = handleQuestions(
+          questions.filter(q => q.type === "Request Questions")
+        );
+        setRequestQ(rQ);
       })
-    );
+      .catch(err => console.log(err));
   };
 
   const submitNewRQuestion = values => {
@@ -253,14 +131,11 @@ const RenderMainTopic = ({ topicID, reset, user }) => {
       temp.topicid = topicID;
       temp.questionid = q.question[1];
       newRQuestions.push(temp);
-      console.log("submitRQ:", temp);
     });
 
     return axios.all(
       newRQuestions.map(q => {
-        deleteTopicQuestion(q).then(res => {
-          createTopicQuestion(q);
-        });
+        createTopicQuestion(q);
       })
     );
   };
@@ -289,24 +164,75 @@ const RenderMainTopic = ({ topicID, reset, user }) => {
     </Menu>
   );
 
+  const saveTopic = () => {
+    form
+      .validateFields()
+      .then(values => {
+        console.log(values);
+        editMainTopic(values)
+          .then(res => {
+            handleContextQuestions(values).then(res => {
+              handleRequestQuestions(values).then(res => {
+                if (values.newCQ) {
+                  submitNewCQuestion(values);
+                }
+                if (values.newRQ) {
+                  submitNewRQuestion(values);
+                }
+                setVisible(false);
+                reset();
+              });
+            });
+          })
+          .catch(err => console.log("Edit topic error", err));
+      })
+      .catch(err => console.log("Form validation error", err));
+  };
+
+  useEffect(() => {
+    getTopic(topicID)
+      .then(res => {
+        setTopic(res);
+        getContextByID(res.contextid)
+          .then(res => {
+            setContext(res);
+            cQ = handleQuestions(
+              questions.filter(q => q.type === "Context Questions")
+            );
+            setContextQ(cQ);
+            rQ = handleQuestions(
+              questions.filter(q => q.type === "Request Questions")
+            );
+            setRequestQ(rQ);
+            getTopicMembers().then(res => {
+              let tM = res.filter(m => m.topicid === topicID);
+              setMembers(tM);
+            });
+          })
+          .catch(err => console.log(err));
+      })
+      .catch(err => console.log(err));
+  }, [topicID]);
+
   return (
     <div className="main-topic">
       <div className="topic-title-content">
         <h1 className="topic-name">{topic.topicname}</h1>
 
-        <Dropdown overlay={settingsMenu}>
+        <Dropdown
+          className={user.sub === topic.leaderid ? "" : "hidden-edit"}
+          overlay={settingsMenu}
+        >
           <button className="settings-button">
             <SettingFilled />
           </button>
         </Dropdown>
       </div>
 
-      <h2>
-        {context.contextoption} |{" "}
-        {topic.topicfrequency === "Off"
-          ? null
-          : `Occurs ${topic.topicfrequency}`}
-      </h2>
+      <h2>{context.contextoption}</h2>
+      <h3>
+        {members.length > 1 ? `${members.length + 1} Members` : `1 Member`}
+      </h3>
 
       <Button
         className="join-code"
@@ -315,11 +241,10 @@ const RenderMainTopic = ({ topicID, reset, user }) => {
         onClick={copyJoinCode}
       >
         Join Code:
-        <textarea disabled readonly ref={textAreaRef} value={topic.joincode}>
+        <textarea readonly ref={textAreaRef} value={topic.joincode}>
           {topic.joincode}
         </textarea>
       </Button>
-
       <div className="context-questions-container">
         <h2>Context</h2>
         {contextQ.map((q, index) => {
@@ -357,7 +282,7 @@ const RenderMainTopic = ({ topicID, reset, user }) => {
                 Back
               </Button>
             )}
-            {page === 4 ? (
+            {page === 3 ? (
               <Button type="primary" onClick={saveTopic}>
                 Save Topic
               </Button>
@@ -386,10 +311,8 @@ const RenderMainTopic = ({ topicID, reset, user }) => {
           <div className={page === 2 ? null : "closed"}>
             <EditContextQ contextQ={contextQ} />
           </div>
+
           <div className={page === 3 ? null : "closed"}>
-            <EditContextR form={form} page={page} contextR={topicResponses} />
-          </div>
-          <div className={page === 4 ? null : "closed"}>
             <EditRequestQ requestQ={requestQ} />
           </div>
         </Form>

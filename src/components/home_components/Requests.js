@@ -7,7 +7,6 @@ const Requests = props => {
   const { requestsList } = useContext(RequestsContext);
 
   const setRequestID = id => {
-    console.log("Requests ID: ", id);
     props.requestsID(id);
   };
 

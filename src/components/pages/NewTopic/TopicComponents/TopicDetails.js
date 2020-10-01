@@ -2,9 +2,9 @@ import React from "react";
 import { Form, Input, Select } from "antd";
 const { Option } = Select;
 
-const TopicDetails = () => {
+const TopicDetails = props => {
   return (
-    <>
+    <div>
       <Form.Item
         name={["topic", "topicname"]}
         label="Give your topic a title."
@@ -27,7 +27,7 @@ const TopicDetails = () => {
           <Option value="Monthly">Monthly</Option>
         </Select>
       </Form.Item>
-    </>
+    </div>
   );
 };
 

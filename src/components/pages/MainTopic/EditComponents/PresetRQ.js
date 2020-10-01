@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import { Form, Select, Divider } from "antd";
 import { getQuestions } from "../../../../api/index";
 
-const PresetRequestQuestions = props => {
+const PresetRQ = props => {
   const [inputs, setInputs] = useState([]);
   const { Option } = Select;
 
@@ -19,10 +19,7 @@ const PresetRequestQuestions = props => {
   const handleContextQuestions = cq => {
     let options = [];
     for (let i = 0; i < cq.length; i++) {
-      if (
-        // cq[i].contextid === props.value.contextid &&
-        cq[i].type === "Request Questions"
-      ) {
+      if (cq[i].type === "Request Questions") {
         options.push(cq[i]);
       }
     }
@@ -44,7 +41,6 @@ const PresetRequestQuestions = props => {
         </Option>
       );
     }
-    console.log("lQ:", children);
     return children;
   };
 
@@ -71,7 +67,6 @@ const PresetRequestQuestions = props => {
         </div>
       );
     }
-    console.log("presets:", presets);
     setInputs(children);
   };
 
@@ -82,4 +77,4 @@ const PresetRequestQuestions = props => {
   );
 };
 
-export default PresetRequestQuestions;
+export default PresetRQ;
