@@ -4,53 +4,23 @@ import { InfoCircleTwoTone } from "@ant-design/icons";
 import TopicDetails from "./TopicComponents/TopicDetails";
 import ContextType from "./TopicComponents/ContextType";
 import ContextQuestions from "./TopicComponents/ContextQuestions";
-import ContextResponses from "./TopicComponents/ContextResponses";
 import RequestQuestions from "./TopicComponents/RequestQuestions";
 import generator from "generate-password";
-import {
-  createTopic,
-  createTopicQuestion,
-  createResponse
-} from "../../../api/index";
+import { createTopic, createTopicQuestion } from "../../../api/index";
 import axios from "axios";
 
 const RenderNewTopic = props => {
+  // state variables
+  const [form] = Form.useForm();
+  const [visible, setVisible] = useState(false);
+  const [page, setPage] = useState(0);
+
   // set the JOIN CODE
   const joinCode = generator.generate({
     length: 6,
     numbers: true,
     excludeSimilarCharacters: true
   });
-
-  // initialize a question object
-  const newTopicQuestion = {
-    topicid: "",
-    questionid: ""
-  };
-
-  // initialize a response object
-  const newResponse = {
-    questionid: "",
-    response: "",
-    respondedby: "",
-    topicid: ""
-  };
-
-  // state variables
-  const [form] = Form.useForm();
-  const [topicQuestion, setTopicQuestion] = useState(newTopicQuestion);
-  const [response, setResponse] = useState(newResponse);
-  const [visible, setVisible] = useState(false);
-  const [page, setPage] = useState(0);
-  let allTopicQuestions = [];
-  let allResponses = [];
-
-  // cancel topic creation
-  const onCancel = () => {
-    form.resetFields();
-    setVisible(false);
-    setPage(0);
-  };
 
   // display Join code on submit
   const showJoinCode = values => {
@@ -62,78 +32,27 @@ const RenderNewTopic = props => {
     });
   };
 
-  // submit handler for new topic form
+  // create topic
   const onCreate = () => {
-    form
-      .validateFields()
-      .then(values => {
-        // create a new topic
-        createTopic(values.topic)
-          .then(res => {
-            let topicID = res.topic.id;
-            handleTopicQuestions(values, topicID);
-            // create topic questions
-            submitTopicQuestions(allTopicQuestions)
-              .then(() => {
-                handleResponses(topicID, values);
-                // create responses
-                submitResponses(allResponses);
-              })
-              .then(() => {
-                form.resetFields();
-                setVisible(false);
-                showJoinCode(values);
-                props.reset();
-              });
-          })
-          .catch(err => console.log("Creating topic error", err));
-      })
-      .catch(info => console.log("Validating the form:", info));
-  };
-
-  // creating topic questions for all selected questions
-  const handleTopicQuestions = (values, topicID) => {
-    values.contextQuestions.map(q => {
-      let temp = Object.assign({}, topicQuestion);
-      temp.topicid = topicID;
-      temp.questionid = q.question[1];
-      allTopicQuestions.push(temp);
-    });
-
-    values.requestQuestions.map(q => {
-      let temp = Object.assign({}, topicQuestion);
-      temp.topicid = topicID;
-      temp.questionid = q.question;
-      allTopicQuestions.push(temp);
+    form.validateFields().then(values => {
+      console.log(values);
     });
   };
 
-  const submitTopicQuestions = questions => {
-    return axios.all(
-      questions.map(q => {
-        createTopicQuestion(q);
-      })
-    );
-  };
-
-  // creating responses to context questions
-  const handleResponses = (topicID, values) => {
-    values.contextQuestions.map(q => {
-      let temp = Object.assign({}, response);
-      temp.questionid = q.question[1];
-      temp.response = values.responses[q.question[1]];
-      temp.respondedby = props.user.sub;
-      temp.topicid = topicID;
-      allResponses.push(temp);
+  // IN PROGRESS: needs to post presetCQ/RQ & custom CQ/RQ
+  const create = () => {
+    form.validateFields().then(values => {
+      createTopic(values.topic).then(topic => {
+        console.log(topic);
+      });
     });
   };
 
-  const submitResponses = responses => {
-    return axios.all(
-      responses.map(r => {
-        createResponse(r);
-      })
-    );
+  // cancel topic creation
+  const onCancel = () => {
+    form.resetFields();
+    setVisible(false);
+    setPage(0);
   };
 
   return (
@@ -168,7 +87,7 @@ const RenderNewTopic = props => {
                 Back
               </Button>
             )}
-            {page === 4 ? (
+            {page === 3 ? (
               <Button type="primary" onClick={onCreate}>
                 Create Topic
               </Button>
@@ -189,8 +108,7 @@ const RenderNewTopic = props => {
           <Steps.Step title="Topic Info" />
           <Steps.Step title="Context" />
           <Steps.Step title="Context Questions" />
-          <Steps.Step title="Context Responses" />
-          <Steps.Step title="Response Questions" />
+          <Steps.Step title="Request Questions" />
         </Steps>
 
         <Form form={form} layout="vertical" name="form_in_modal">
@@ -216,9 +134,6 @@ const RenderNewTopic = props => {
             <ContextQuestions />
           </div>
           <div className={page === 3 ? null : "closed"}>
-            <ContextResponses form={form} page={page} />
-          </div>
-          <div className={page === 4 ? null : "closed"}>
             <RequestQuestions />
           </div>
         </Form>

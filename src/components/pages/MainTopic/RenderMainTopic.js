@@ -4,23 +4,19 @@ import Requests from "../../home_components/Requests";
 import EditDetails from "./EditComponents/EditDetails";
 import EditContext from "./EditComponents/EditContext";
 import EditContextQ from "./EditComponents/EditContextQ";
-import EditContextR from "./EditComponents/EditContextR";
 import EditRequestQ from "./EditComponents/EditRequestQ";
 import { TopicListContext } from "../../../state/contexts/TopicListContext";
 import { TopicQuestionsContext } from "../../../state/contexts/TopicQuestionsContext";
 import { QuestionsContext } from "../../../state/contexts/QuestionsContext";
-import { ResponsesContext } from "../../../state/contexts/ResponsesContext";
 import { Button, message, Dropdown, Menu, Modal, Form } from "antd";
 import { SettingFilled } from "@ant-design/icons";
 import {
   getTopic,
   getContextByID,
   getTopicMembers,
-  createResponse,
   createTopicQuestion,
   editTopic,
   editTopicQuestion,
-  editResponse,
   deleteTopic
 } from "../../../api/index";
 
@@ -33,12 +29,10 @@ const RenderMainTopic = ({ topicID, reset, user }) => {
   const { topics } = useContext(TopicListContext);
   const { topicQuestions } = useContext(TopicQuestionsContext);
   const { questions } = useContext(QuestionsContext);
-  const { responseList } = useContext(ResponsesContext);
 
   const [topic, setTopic] = useState({});
   const [members, setMembers] = useState([]);
   const [context, setContext] = useState({});
-  const [topicResponses, setTopicResponses] = useState([]);
   const [contextQ, setContextQ] = useState([]);
   const [requestQ, setRequestQ] = useState([]);
   let cQ = [];
@@ -57,24 +51,6 @@ const RenderMainTopic = ({ topicID, reset, user }) => {
       }
     }
     return q;
-  };
-
-  const handleResponses = async () => {
-    let contextQ = handleQuestions(
-      questions.filter(q => q.type === "Context Questions")
-    );
-    let r = [];
-    for (let i = 0; i < contextQ.length; i++) {
-      for (let j = 0; j < responseList.length; j++) {
-        if (
-          contextQ[i][0].id === responseList[j].questionid &&
-          responseList[j].topicid === topicID
-        ) {
-          r.push(responseList[j]);
-        }
-      }
-    }
-    return r;
   };
 
   const editMainTopic = async values => {
@@ -117,58 +93,6 @@ const RenderMainTopic = ({ topicID, reset, user }) => {
     return axios.all(
       newCQuestions.map(q => {
         createTopicQuestion(q);
-      })
-    );
-  };
-
-  const handleOldResponses = async values => {
-    let oldR = [];
-    let allOldCQ = Object.values(values.oldCQ);
-    let allResponses = Object.values(values.responses);
-    let oldResponses = allResponses.slice(0, allOldCQ.length);
-    oldResponses.map((res, index) => {
-      let temp = Object.assign({}, topicResponses[0]);
-      temp.response = res;
-      temp.id = topicResponses[index].id;
-      temp.questionid = allOldCQ[index][1];
-      temp.respondedby = topic.leaderid;
-      temp.topicid = topicID;
-      oldR.push(temp);
-    });
-
-    return axios
-      .all(
-        oldR.map(r => {
-          editResponse(r);
-        })
-      )
-      .then(res => {
-        handleResponses()
-          .then(responses => {
-            setTopicResponses(responses);
-          })
-          .catch(err => console.log(err));
-      })
-      .catch(err => console.log(err));
-  };
-
-  const handleNewResponses = values => {
-    let newR = [];
-    let newResponses = Object.values(values.responses).slice(
-      Object.values(values.oldCQ).length
-    );
-    newResponses.map((res, index) => {
-      let temp = Object.assign({}, topicResponses[0]);
-      temp.response = res;
-      temp.questionid = values.newCQ[index].question[1];
-      temp.respondedby = topic.leaderid;
-      temp.topicid = topicID;
-      newR.push(temp);
-    });
-
-    return axios.all(
-      newR.map(r => {
-        createResponse(r);
       })
     );
   };
@@ -247,17 +171,14 @@ const RenderMainTopic = ({ topicID, reset, user }) => {
           .then(res => {
             handleContextQuestions(values).then(res => {
               handleRequestQuestions(values).then(res => {
-                handleOldResponses(values).then(res => {
-                  handleNewResponses(values);
-                  if (values.newCQ) {
-                    submitNewCQuestion(values);
-                  }
-                  if (values.newRQ) {
-                    submitNewRQuestion(values);
-                  }
-                  setVisible(false);
-                  reset();
-                });
+                if (values.newCQ) {
+                  submitNewCQuestion(values);
+                }
+                if (values.newRQ) {
+                  submitNewRQuestion(values);
+                }
+                setVisible(false);
+                reset();
               });
             });
           })
@@ -281,12 +202,9 @@ const RenderMainTopic = ({ topicID, reset, user }) => {
               questions.filter(q => q.type === "Request Questions")
             );
             setRequestQ(rQ);
-            handleResponses().then(responses => {
-              setTopicResponses(responses);
-              getTopicMembers().then(res => {
-                let tM = res.filter(m => m.topicid === topicID);
-                setMembers(tM);
-              });
+            getTopicMembers().then(res => {
+              let tM = res.filter(m => m.topicid === topicID);
+              setMembers(tM);
             });
           })
           .catch(err => console.log(err));
@@ -326,20 +244,9 @@ const RenderMainTopic = ({ topicID, reset, user }) => {
         </textarea>
       </Button>
 
-      <div className="context-questions-container">
-        <h2>Context</h2>
-        {contextQ.map((q, index) => {
-          return (
-            <div key={index}>
-              <h3 className="context-question">{q[0].question}</h3>
-            </div>
-          );
-        })}
-      </div>
-
       <div className="requests-container">
         <div className="requests-list">
-          <h2 className="requests-list-title">Responses</h2>
+          <h2 className="requests-list-title">Requests</h2>
           <Requests />
         </div>
       </div>
@@ -367,7 +274,7 @@ const RenderMainTopic = ({ topicID, reset, user }) => {
                 Back
               </Button>
             )}
-            {page === 4 ? (
+            {page === 3 ? (
               <Button type="primary" onClick={saveTopic}>
                 Save Topic
               </Button>
@@ -396,10 +303,8 @@ const RenderMainTopic = ({ topicID, reset, user }) => {
           <div className={page === 2 ? null : "closed"}>
             <EditContextQ contextQ={contextQ} />
           </div>
+
           <div className={page === 3 ? null : "closed"}>
-            <EditContextR form={form} page={page} contextR={topicResponses} />
-          </div>
-          <div className={page === 4 ? null : "closed"}>
             <EditRequestQ requestQ={requestQ} />
           </div>
         </Form>

@@ -87,30 +87,36 @@ function RenderHomePage(props) {
 
   return (
     <div className="home">
-      <div className="nav">
-        <h2 className="logo">Apollo</h2>
-
-        <Button type="primary" href="/">
-          Owner
-        </Button>
-        <Button type="secondary" href="/member">
-          Member
-        </Button>
-
-        <NewTopicContainer reset={resetTopicID} userInfo={userInfo} />
-        <JoinTopic user={userInfo} topicID={topicID} />
-
-        <Button type="secondary" onClick={() => authService.logout()}>
-          Log Out
-        </Button>
-      </div>
-
       <TopicListContext.Provider value={{ topics }}>
         <TopicQuestionsContext.Provider value={{ topicQuestions }}>
           <QuestionsContext.Provider value={{ questions }}>
             <RequestsContext.Provider value={{ requestList }}>
               <ResponsesContext.Provider value={{ responseList }}>
                 <ThreadsContext.Provider value={{ threads }}>
+                  <div className="nav">
+                    <h2 className="logo">Apollo</h2>
+
+                    <Button type="primary" href="/">
+                      Owner
+                    </Button>
+                    <Button type="secondary" href="/member">
+                      Member
+                    </Button>
+
+                    <NewTopicContainer
+                      reset={resetTopicID}
+                      userInfo={userInfo}
+                    />
+                    <JoinTopic user={userInfo} topicID={topicID} />
+
+                    <Button
+                      type="secondary"
+                      onClick={() => authService.logout()}
+                    >
+                      Log Out
+                    </Button>
+                  </div>
+
                   <div className="topics-container">
                     <div className="topics-list">
                       <h2 className="topics-list-title">Your Topics</h2>

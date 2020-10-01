@@ -1,46 +1,42 @@
-import React, { useState, useEffect } from "react";
-import { Form, Button, Select, Divider, message } from "antd";
+import React, { useState, useContext, useEffect } from "react";
+import { Form, Input, Button, Select, Divider } from "antd";
 import { MinusCircleOutlined, PlusOutlined } from "@ant-design/icons";
-import { getQuestions } from "../../../../api/index";
+import { QuestionsContext } from "../../../../state/contexts/QuestionsContext";
 
 const RequestQuestions = props => {
-  const [initialQuestions, setInitialQuestions] = useState([]);
-  const allResponseQuestions = [];
+  const [presets, setPresets] = useState([]);
+  const { questions } = useContext(QuestionsContext);
   const { Option } = Select;
 
-  // retrieve all questions from the API /question
   useEffect(() => {
-    getQuestions()
-      .then(res => {
-        handleRequestQuestions(res.slice(0, 6));
-      })
-      .catch(err => console.log(err));
+    setPresets(questions.filter(q => q.type === "Request Questions"));
   }, []);
 
-  // filter questions to display on questions of type: "request"
-  const handleRequestQuestions = cq => {
-    let options = [];
-
-    for (let i = 0; i < cq.length; i++) {
-      if (
-        // cq[i].contextid === props.value.contextid &&
-        cq[i].type === "Request Questions"
-      ) {
-        options.push(cq[i]);
-      }
-    }
-
-    setInitialQuestions(options);
-  };
-
-  // load questions into Options for Select
-  const loadQuestions = () => {
-    const count = initialQuestions.length;
+  // creating an Option for each question in state
+  const loadPresets = () => {
+    const count = presets.length;
     const children = [];
     for (let i = 0; i < count; i++) {
       children.push(
-        <Option value={initialQuestions[i].id}>
-          {initialQuestions[i].question}
+        <Form.Item
+          name={["presetRQ", `${presets[i].id}`]}
+          initialValue={presets[i].question}
+        >
+          <Select placeholder={presets[i].question}>{loadQuestions()}</Select>
+        </Form.Item>
+      );
+    }
+    return children;
+  };
+
+  // creating an Option for each question in state
+  const loadQuestions = () => {
+    const count = presets.length;
+    const children = [];
+    for (let i = 0; i < count; i++) {
+      children.push(
+        <Option key={i} value={presets[i].question}>
+          {presets[i].question}
         </Option>
       );
     }
@@ -48,78 +44,65 @@ const RequestQuestions = props => {
   };
 
   return (
-    <Form.List name="requestQuestions">
-      {(fields, { add, remove }) => {
-        return (
-          <div>
-            {fields.map((field, index) => (
-              <div key={field.key}>
-                <Divider>Request Question {index + 1}</Divider>
+    <div>
+      <Divider>Request Questions</Divider>
 
-                <Form.Item
-                  className="closed"
-                  name={[index, "type"]}
-                  initialValue={"Request Questions"}
-                ></Form.Item>
+      {loadPresets()}
 
-                <Form.Item
-                  className="closed"
-                  name={[index, "style"]}
-                  initialValue={"Text"}
-                ></Form.Item>
+      <Form.List name="customRQ">
+        {(fields, { add, remove }) => {
+          return (
+            <div>
+              {fields.map((field, index) => (
+                <div key={field.key}>
+                  <Form.Item
+                    className="closed"
+                    name={[index, "type"]}
+                    initialValue={"Request Questions"}
+                  ></Form.Item>
 
-                <Form.Item
-                  name={[index, "question"]}
-                  rules={[{ required: true }]}
-                >
-                  <Select placeholder="Select a request question.">
-                    {loadQuestions()}
-                  </Select>
-                </Form.Item>
+                  <Form.Item
+                    className="closed"
+                    name={[index, "style"]}
+                    initialValue={"Text"}
+                  ></Form.Item>
 
-                {/* <Form.Item
-                  className="form-question"
-                  name={[index, "style"]}
-                  label={`Response Type for Question ${index + 1}`}
-                  rules={[{ required: true }]}
-                >
-                  <Select placeholder="Select a response type.">
-                    <Option value={"Text"}>Text</Option>
-                    <Option value={"Star Rating"}>Star Rating</Option>
-                    <Option value={"Yes or No"}>Yes or No</Option>
-                    <Option value={"Multiple Choice"}>Multiple Choice</Option>
-                    <Option value={"URL"}>URL</Option>
-                  </Select>
-                </Form.Item> */}
-
-                {fields.length > 1 ? (
-                  <Button
-                    type="danger"
-                    className="dynamic-delete-button"
-                    onClick={() => remove(field.name)}
-                    icon={<MinusCircleOutlined />}
+                  <Form.Item
+                    name={[index, "question"]}
+                    rules={[{ required: true }]}
                   >
-                    Remove Question
-                  </Button>
-                ) : null}
-              </div>
-            ))}
+                    <Input />
+                  </Form.Item>
 
-            <Divider />
+                  {fields.length >= 1 ? (
+                    <Button
+                      type="danger"
+                      className="dynamic-delete-button"
+                      onClick={() => remove(field.name)}
+                      icon={<MinusCircleOutlined />}
+                    >
+                      Remove Question
+                    </Button>
+                  ) : null}
+                </div>
+              ))}
 
-            <Form.Item>
-              <Button
-                type="dashed"
-                onClick={() => add()}
-                style={{ width: "60%" }}
-              >
-                <PlusOutlined /> Add Question
-              </Button>
-            </Form.Item>
-          </div>
-        );
-      }}
-    </Form.List>
+              <Divider />
+
+              <Form.Item>
+                <Button
+                  type="dashed"
+                  onClick={() => add()}
+                  style={{ width: "60%" }}
+                >
+                  <PlusOutlined /> Add Question
+                </Button>
+              </Form.Item>
+            </div>
+          );
+        }}
+      </Form.List>
+    </div>
   );
 };
 
