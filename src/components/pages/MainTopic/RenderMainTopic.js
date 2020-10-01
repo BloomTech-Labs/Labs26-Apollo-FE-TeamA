@@ -1,6 +1,6 @@
 import React, { useContext, useState, useEffect, useRef } from "react";
 import axios from "axios";
-import Requests from "../../home_components/Requests";
+import SelectedRequest from "../../selectedRequests/MainSelectRequestContainer";
 import EditDetails from "./EditComponents/EditDetails";
 import EditContext from "./EditComponents/EditContext";
 import EditContextQ from "./EditComponents/EditContextQ";
@@ -12,6 +12,7 @@ import { QuestionsContext } from "../../../state/contexts/QuestionsContext";
 import { ResponsesContext } from "../../../state/contexts/ResponsesContext";
 import { Button, message, Dropdown, Menu, Modal, Form } from "antd";
 import { SettingFilled } from "@ant-design/icons";
+
 import {
   getTopic,
   getContextByID,
@@ -41,6 +42,7 @@ const RenderMainTopic = ({ topicID, reset, user }) => {
   const [topicResponses, setTopicResponses] = useState([]);
   const [contextQ, setContextQ] = useState([]);
   const [requestQ, setRequestQ] = useState([]);
+
   let cQ = [];
   let rQ = [];
 
@@ -72,11 +74,15 @@ const RenderMainTopic = ({ topicID, reset, user }) => {
     let q = [];
     for (let i = 0; i < questions.length; i++) {
       for (let j = 0; j < topicQuestions.length; j++) {
-        if (questions[i].id === topicQuestions[j].questionid) {
+        if (
+          questions[i].id === topicQuestions[j].questionid &&
+          topicQuestions[j].topicid === topicID
+        ) {
           q.push([questions[i], topicQuestions[j]]);
         }
       }
     }
+    console.log("hQ:", q);
     return q;
   };
 
@@ -95,6 +101,7 @@ const RenderMainTopic = ({ topicID, reset, user }) => {
         }
       }
     }
+    console.log("hR:", r);
     return r;
   };
 
@@ -316,8 +323,6 @@ const RenderMainTopic = ({ topicID, reset, user }) => {
       <div className="context-questions-container">
         <h2>Context</h2>
         {contextQ.map((q, index) => {
-          console.log(contextQ);
-          console.log(topicResponses);
           return (
             <div key={index}>
               <h3 className="context-question">{q[0].question}</h3>
@@ -325,14 +330,10 @@ const RenderMainTopic = ({ topicID, reset, user }) => {
           );
         })}
       </div>
-
-      <div className="requests-container">
-        <div className="requests-list">
-          <h2 className="requests-list-title">Responses</h2>
-          <Requests />
-        </div>
+      <div>
+        <h3>Responses</h3>
+        <SelectedRequest />
       </div>
-
       <Modal
         visible={visible}
         width={700}

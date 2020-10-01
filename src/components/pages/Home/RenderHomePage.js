@@ -1,9 +1,5 @@
 import React, { useState, useEffect } from "react";
-import axios from "axios";
 import { Button } from "antd";
-import { Link, Route } from "react-router-dom";
-import Requests from "../../home_components/Requests";
-import { RequestsContext } from "../../../state/contexts/RequestsContext";
 import TopicsList from "../../home_components/TopicsList";
 import NewTopicContainer from "../NewTopic/NewTopicContainer";
 import MainTopic from "../MainTopic/MainTopicContainer";
@@ -12,16 +8,28 @@ import Responses from "../../home_components/Responses";
 import { ResponsesContext } from "../../../state/contexts/ResponsesContext";
 import ThreadsList from "../../home_components/ThreadsList";
 import { ThreadsContext } from "../../../state/contexts/ThreadsContext";
-import { getAllResponses, getAllTopics, getAllThreads } from "../../../api";
+import { QuestionsContext } from "../../../state/contexts/QuestionsContext";
+import { TopicQuestionsContext } from "../../../state/contexts/TopicQuestionsContext";
+import { RequestsContext } from "../../../state/contexts/RequestsContext";
+
+import {
+  getAllResponses,
+  getAllTopics,
+  getAllThreads,
+  getAllQuestions,
+  getQuestions
+} from "../../../api";
 
 function RenderHomePage(props) {
   // state handlers
   const { userInfo, authService } = props;
   const [topics, setTopics] = useState([]);
   const [topicID, setTopicID] = useState(0);
-  const [requestList, setRequests] = useState([]);
+  const [questions, setQuestions] = useState([]);
+  const [topicQuestions, setTopicQuestions] = useState([]);
   const [responseList, setResponses] = useState([]);
   const [threads, setThreads] = useState([]);
+  const [requestsList, setRequestsList] = useState([]);
 
   useEffect(() => {
     getAllTopics()
@@ -41,27 +49,49 @@ function RenderHomePage(props) {
     setTopicID(0);
   };
 
-  const viewRequestsList = id => {
-    console.log("viewRequestsList called");
-    getAllResponses()
+  useEffect(() => {
+    getAllTopics()
       .then(res => {
-        let requestInfo = res.filter(req => req.topicid == id);
-        setRequests(requestInfo);
-        console.log("res", res);
-        console.log("requestsList", requestList);
+        let userTopics = res.filter(topic => topic.leaderid == userInfo.sub);
+        setTopics(userTopics);
       })
       .catch(err => console.log(err));
+
+    getQuestions()
+      .then(res => {
+        setQuestions(res);
+      })
+      .catch(err => console.log(err));
+
+    getAllQuestions()
+      .then(res => {
+        setTopicQuestions(res);
+      })
+      .catch(err => console.log(err));
+  }, [topicID]);
+  const getSurveyRequests = id => {
+    getAllResponses()
+      .then(res => {
+        let TopicRequest = res.filter(req => req.topicid === id);
+        setRequestsList(TopicRequest);
+        console.log("getAllResponses", res);
+        console.log("getAllResponses -> requestsList", requestsList);
+      })
+      .catch(err => console.log("getAllResponses", err));
   };
 
   return (
     <div className="home">
       <div className="nav">
         <h2 className="logo">Apollo</h2>
-        <Button type="primary">Owner</Button>
-
-        <Button type="text" href="/member">
+        <Button type="primary" href="/">
+          Owner
+        </Button>
+        <Button type="secondary" href="/member">
           Member
         </Button>
+
+        <NewTopicContainer reset={resetTopicID} userInfo={userInfo} />
 
         <Button type="secondary" onClick={() => authService.logout()}>
           Log Out
@@ -73,42 +103,35 @@ function RenderHomePage(props) {
       <NewTopicContainer userInfo={userInfo} />
 
       <TopicListContext.Provider value={{ topics }}>
-        <RequestsContext.Provider value={{ requestList }}>
-          <div className="topics-container">
-            <div className="topics-list">
-              <h2 className="topics-list-title">Your Topics</h2>
-              <TopicsList
-                topicID={getTopicID}
-                viewRequestsList={viewRequestsList}
-              />
-            </div>
-
-            <div className="main-topic-container">
-              {topicID === 0 ? (
-                <h2>Select a topic from the topics list.</h2>
-              ) : (
-                <>
-                  <MainTopic topicID={topicID} reset={resetTopicID} />
-                  <div className="requests-container">
-                    <div className="requests-list">
-                      <h2 className="requests-list-title">
-                        Responses made from the topic
-                      </h2>
-                      <Requests />
+        <TopicQuestionsContext.Provider value={{ topicQuestions }}>
+          <QuestionsContext.Provider value={{ questions }}>
+            <RequestsContext.Provider value={{ requestsList }}>
+              <ResponsesContext.Provider value={{ responseList }}>
+                <ThreadsContext.Provider value={{ threads }}>
+                  <div className="topics-container">
+                    <div className="topics-list">
+                      <h2 className="topics-list-title">Your Topics</h2>
+                      <TopicsList
+                        topicID={getTopicID}
+                        getSurveyList={getSurveyRequests}
+                      />
+                    </div>
+                    <div className="main-topic-container">
+                      {topicID === 0 ? (
+                        <h2>Select a topic from the topics list.</h2>
+                      ) : (
+                        <MainTopic topicID={topicID} reset={resetTopicID} />
+                      )}
                     </div>
                   </div>
-                </>
-              )}
-            </div>
-          </div>
-          <ResponsesContext.Provider value={{ responseList }}>
-            <Responses />
-          </ResponsesContext.Provider>
-        </RequestsContext.Provider>
+                  <Responses />
+                  <ThreadsList />
+                </ThreadsContext.Provider>
+              </ResponsesContext.Provider>
+            </RequestsContext.Provider>
+          </QuestionsContext.Provider>
+        </TopicQuestionsContext.Provider>
       </TopicListContext.Provider>
-      <ThreadsContext.Provider value={{ threads }}>
-        <ThreadsList />
-      </ThreadsContext.Provider>
     </div>
   );
 }

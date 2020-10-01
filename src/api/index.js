@@ -270,5 +270,6 @@ export {
   deleteTopic,
   deleteTopicQuestion,
   deleteResponse,
-  getAllTopicMembers
+  getAllTopicMembers,
+  getToken
 };
