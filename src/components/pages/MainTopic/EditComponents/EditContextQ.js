@@ -1,47 +1,28 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useContext } from "react";
 import { Form, Button, Select, Divider } from "antd";
 import { MinusCircleOutlined, PlusOutlined } from "@ant-design/icons";
 import { getQuestions } from "../../../../api/index";
-import PresetContextQuestions from "./PresetQuestions";
+import PresetCQ from "./PresetCQ";
+import { QuestionsContext } from "../../../../state/contexts/QuestionsContext";
 
 const EditContextQ = props => {
-  const [initialQuestions, setInitialQuestions] = useState([]);
+  const [initQ, setInitQ] = useState([]);
+  const { questions } = useContext(QuestionsContext);
   const { Option } = Select;
 
   // retrieve all context questions from the API /question
   useEffect(() => {
-    getQuestions()
-      .then(res => {
-        handleContextQuestions(res);
-      })
-      .catch(err => console.log(err));
-  }, [props.contextQ]);
-
-  // loading questions from API /question into state
-  const handleContextQuestions = cq => {
-    let options = [];
-    for (let i = 0; i < cq.length; i++) {
-      if (
-        // cq[i].contextid === props.value.contextid &&
-        cq[i].type === "Context Questions"
-      ) {
-        options.push(cq[i]);
-      }
-    }
-    setInitialQuestions(options);
-  };
+    setInitQ(questions.filter(q => q.type === "Context Questions"));
+  }, []);
 
   // creating an Option for each question in state
   const loadQuestions = () => {
-    const count = initialQuestions.length;
+    const count = initQ.length;
     const children = [];
     for (let i = 0; i < count; i++) {
       children.push(
-        <Option
-          key={i}
-          value={[initialQuestions[i].question, initialQuestions[i].id]}
-        >
-          {initialQuestions[i].question}
+        <Option key={i} value={[initQ[i].question, initQ[i].id]}>
+          {initQ[i].question}
         </Option>
       );
     }
@@ -50,7 +31,9 @@ const EditContextQ = props => {
 
   return (
     <>
-      <PresetContextQuestions contextQ={props.contextQ} />
+      {/* <PresetCQ contextQ={props.contextQ} /> */}
+
+      <Divider>Context Question</Divider>
 
       <Form.List name="newCQ">
         {(fields, { add, remove }) => {
@@ -58,7 +41,6 @@ const EditContextQ = props => {
             <div>
               {fields.map((field, index) => (
                 <div key={field.key}>
-                  <Divider>Context Question</Divider>
                   <Form.Item
                     className="closed"
                     name={[index, "type"]}

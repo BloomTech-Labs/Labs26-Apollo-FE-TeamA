@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import { Form, Select, Divider } from "antd";
 import { getQuestions } from "../../../../api/index";
 
-const PresetContextQuestions = props => {
+const PresetRQ = props => {
   const [inputs, setInputs] = useState([]);
   const { Option } = Select;
 
@@ -13,16 +13,13 @@ const PresetContextQuestions = props => {
         getFields(res);
       })
       .catch(err => console.log(err));
-  }, [props.contextQ]);
+  }, [props.requestQ]);
 
   // loading questions from API /question into state
   const handleContextQuestions = cq => {
     let options = [];
     for (let i = 0; i < cq.length; i++) {
-      if (
-        // cq[i].contextid === props.value.contextid &&
-        cq[i].type === "Context Questions"
-      ) {
+      if (cq[i].type === "Request Questions") {
         options.push(cq[i]);
       }
     }
@@ -50,20 +47,20 @@ const PresetContextQuestions = props => {
   const getFields = async res => {
     const presets = await loadQuestions(res);
     const children = [];
-    for (let i = 0; i < props.contextQ.length; i++) {
+    for (let i = 0; i < props.requestQ.length; i++) {
       children.push(
         <div>
-          <Divider>Context Question</Divider>
+          <Divider>Request Question</Divider>
 
           <Form.Item
-            name={["oldCQ", `${props.contextQ[i][0].id}`]}
+            name={["oldRQ", `${props.requestQ[i][0].id}`]}
             rules={[{ required: true }]}
             initialValue={[
-              props.contextQ[i][0].question,
-              props.contextQ[i][0].id
+              props.requestQ[i][0].question,
+              props.requestQ[i][0].id
             ]}
           >
-            <Select placeholder={props.contextQ[i][0].question}>
+            <Select placeholder={props.requestQ[i][0].question}>
               {presets}
             </Select>
           </Form.Item>
@@ -80,4 +77,4 @@ const PresetContextQuestions = props => {
   );
 };
 
-export default PresetContextQuestions;
+export default PresetRQ;

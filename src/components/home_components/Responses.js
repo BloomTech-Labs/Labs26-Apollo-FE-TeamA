@@ -4,6 +4,7 @@ import { ResponsesContext } from "../../state/contexts/ResponsesContext";
 
 const Responses = () => {
   const { responsesList } = useContext(ResponsesContext);
+
   return (
     <>
       {responsesList

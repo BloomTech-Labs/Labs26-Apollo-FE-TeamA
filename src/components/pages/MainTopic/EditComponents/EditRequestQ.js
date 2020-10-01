@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import { Form, Button, Select, Divider } from "antd";
 import { MinusCircleOutlined, PlusOutlined } from "@ant-design/icons";
 import { getQuestions } from "../../../../api/index";
-import PresetRequestQuestions from "./PresetRequestQuestions";
+import PresetRQ from "./PresetRQ";
 
 const EditRequestQ = props => {
   const [initialQuestions, setInitialQuestions] = useState([]);
@@ -22,10 +22,7 @@ const EditRequestQ = props => {
     let options = [];
 
     for (let i = 0; i < cq.length; i++) {
-      if (
-        // cq[i].contextid === props.value.contextid &&
-        cq[i].type === "Request Questions"
-      ) {
+      if (cq[i].type === "Request Questions") {
         options.push(cq[i]);
       }
     }
@@ -52,7 +49,7 @@ const EditRequestQ = props => {
 
   return (
     <>
-      <PresetRequestQuestions requestQ={props.requestQ} />
+      <PresetRQ requestQ={props.requestQ} />
 
       <Form.List name="newRQ">
         {(fields, { add, remove }) => {

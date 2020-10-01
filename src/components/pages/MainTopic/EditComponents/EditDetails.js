@@ -9,7 +9,7 @@ const TopicDetails = props => {
     <>
       <Form.Item
         name={["topic", "topicname"]}
-        label="Give your topic a title."
+        label="Title"
         required
         rules={[{ required: true, message: "Please provide a topic title." }]}
         initialValue={topic.topicname}
@@ -19,7 +19,7 @@ const TopicDetails = props => {
 
       <Form.Item
         name={["topic", "topicfrequency"]}
-        label="How often should the topic surveys occur?"
+        label="Frequency"
         required
         rules={[{ required: true, message: "Please set a topic frequency." }]}
         initialValue={topic.topicfrequency}

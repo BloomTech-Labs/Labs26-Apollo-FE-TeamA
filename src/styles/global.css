@@ -170,6 +170,10 @@ h1 {
   font-weight: bold;
 }
 
+.hidden-edit {
+  display: none;
+}
+
 .topic-title-content {
   display: flex;
   justify-content: flex-start;

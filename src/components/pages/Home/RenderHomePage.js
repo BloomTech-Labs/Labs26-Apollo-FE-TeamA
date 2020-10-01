@@ -130,7 +130,11 @@ function RenderHomePage(props) {
                       {topicID === 0 ? (
                         <h2>Select a topic from the topics list.</h2>
                       ) : (
-                        <MainTopic topicID={topicID} reset={resetTopicID} />
+                        <MainTopic
+                          topicID={topicID}
+                          user={userInfo}
+                          reset={resetTopicID}
+                        />
                       )}
                     </div>
                   </div>
