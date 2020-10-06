@@ -6,19 +6,16 @@ import { Button, message, Dropdown, Menu, Modal, Form } from "antd";
 import { SettingFilled } from "@ant-design/icons";
 import { getAllResponses } from "../../api/index";
 
-const RenderSelectRequest = props => {
+const RenderSelectRequest = ({ getResponseList }) => {
   const [selectRequestID, setRequestID] = useState(0);
 
-  const getRequestID = id => {
-    setRequestID(id);
-  };
   const resetRequestID = id => {
     setRequestID(0);
   };
 
   return (
     <div>
-      <Requests requestsID={getRequestID} />
+      <Requests getRsponseList={getResponseList} />
     </div>
   );
 };
