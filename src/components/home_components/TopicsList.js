@@ -19,6 +19,7 @@ const TopicsList = props => {
           onClick={() => {
             setTopicID(item.id);
             props.getSurveyList(item.id);
+            props.resetReqAndResID();
           }}
         >
           <h3>{item.topicname}</h3>
