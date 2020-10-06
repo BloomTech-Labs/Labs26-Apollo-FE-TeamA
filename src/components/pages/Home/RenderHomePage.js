@@ -12,13 +12,17 @@ import { QuestionsContext } from "../../../state/contexts/QuestionsContext";
 import { TopicQuestionsContext } from "../../../state/contexts/TopicQuestionsContext";
 import { RequestsContext } from "../../../state/contexts/RequestsContext";
 import JoinTopic from "./JoinTopic";
+import axios from "axios";
 
 import {
+  getAllRequestResponses,
   getAllResponses,
   getAllTopics,
   getAllThreads,
   getAllQuestions,
-  getQuestions
+  getQuestions,
+  getAllSurveyRequest,
+  getToken
 } from "../../../api";
 
 function RenderHomePage(props) {
@@ -31,24 +35,8 @@ function RenderHomePage(props) {
   const [responseList, setResponses] = useState([]);
   const [threads, setThreads] = useState([]);
   const [requestsList, setRequestsList] = useState([]);
-
-  useEffect(() => {
-    getAllTopics()
-      .then(res => {
-        let userTopics = res.filter(topic => topic.leaderid == userInfo.sub);
-        setTopics(userTopics);
-      })
-      .catch(err => console.log(err));
-  }, []);
-  // for selecting a specific topic
-  const getTopicID = id => {
-    setTopicID(id);
-  };
-
-  // used when deleting a topic
-  const resetTopicID = () => {
-    setTopicID(0);
-  };
+  const [requestID, setRequestID] = useState(0);
+  const [responseID, setResponseID] = useState(0);
 
   useEffect(() => {
     getAllTopics()
@@ -76,15 +64,53 @@ function RenderHomePage(props) {
       })
       .catch(err => console.log(err));
   }, [topicID]);
+
+  // for selecting a specific topic
+  const getTopicID = id => {
+    setTopicID(id);
+  };
+
+  // used when deleting a topic
+  const resetTopicID = () => {
+    setTopicID(0);
+    setRequestID(0);
+  };
   const getSurveyRequests = id => {
-    getAllResponses()
+    getAllSurveyRequest()
       .then(res => {
-        let TopicRequest = res.filter(req => req.topicid === id);
+        let TopicRequest = res.filter(req => req.topicid == id);
         setRequestsList(TopicRequest);
-        console.log("getAllResponses", res);
-        console.log("getAllResponses -> requestsList", requestsList);
+        console.log("getAllSurveyRequests", res);
+        console.log("getAllSurveyRequests -> requestsList", requestsList);
       })
       .catch(err => console.log("getAllResponses", err));
+  };
+
+  const resetReqAndResID = () => {
+    setResponseID(0);
+    setRequestID(0);
+  };
+
+  const getResponseList = id => {
+    // setResponseID(id);
+    getAllRequestResponses()
+      .then(res => {
+        setRequestID(id);
+        let RequestResponses = res.filter(
+          response => response.surveyrequestid == id
+        );
+        setResponses(RequestResponses);
+        console.log("getResponseList", res);
+        console.log("getResponseList -> RequestReponses", responseList);
+      })
+      .catch(err => console.log("getResponseList", err));
+  };
+
+  const getThreadList = id => {};
+
+  const resetThreadList = () => {
+    setResponseID(0);
+    getThreadList(0);
   };
 
   return (
@@ -125,6 +151,7 @@ function RenderHomePage(props) {
                       <TopicsList
                         topicID={getTopicID}
                         getSurveyList={getSurveyRequests}
+                        resetReqAndResID={resetReqAndResID}
                       />
                     </div>
                     <div className="main-topic-container">
@@ -135,11 +162,12 @@ function RenderHomePage(props) {
                           topicID={topicID}
                           user={userInfo}
                           reset={resetTopicID}
+                          getResponseList={getResponseList}
+                          requestID={requestID}
                         />
                       )}
                     </div>
                   </div>
-                  <Responses />
                   <ThreadsList />
                 </ThreadsContext.Provider>
               </ResponsesContext.Provider>
