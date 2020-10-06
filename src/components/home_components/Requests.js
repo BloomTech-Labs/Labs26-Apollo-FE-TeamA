@@ -2,22 +2,16 @@ import React, { useContext, useState } from "react";
 import { RequestsContext } from "../../state/contexts/RequestsContext";
 import axios from "axios";
 import { getToken } from "../../api/index";
+import Responses from "./Responses";
+import { Menu, Dropdown } from "antd";
+import { DownOutlined } from "@ant-design/icons";
 
 const Requests = props => {
   const { requestsList } = useContext(RequestsContext);
 
-  const setRequestID = id => {
-    props.requestsID(id);
-  };
-
-  const getUserProfile = id => {
-    return axios
-      .get(`https://apollo-a-api.herokuapp.com/${id}`, getToken())
-      .then(res => {
-        console.log("getUserProfile GET /profile/:id", res);
-        return JSON.parse(res.data.firstname);
-      })
-      .catch(err => console.log("GET /profile/:id", err));
+  const displayDate = date => {
+    let res = date.slice(0, 10);
+    return res;
   };
 
   return (
@@ -26,11 +20,12 @@ const Requests = props => {
         requestsList.map(item => (
           <div
             onClick={() => {
-              setRequestID(item.id);
+              props.getResponseList(item.id);
+              // props.resetThreadList();
             }}
           >
-            <h3>Created: {item.created_at}</h3>
-            <h3>{getUserProfile(item.respondedby)}</h3>
+            <h3>Created: {displayDate(item.created_at)}</h3>
+            {/* <h3>{getUserProfile(item.id)}</h3> */}
           </div>
         ))
       ) : (
@@ -41,3 +36,30 @@ const Requests = props => {
 };
 
 export default Requests;
+
+// const menu = (
+//   <Menu>
+//       {requestsList.map(item => {
+//           return(<Menu.item>
+//             <p
+//             onClick={() => {
+//               props.getResponseList(item.id)
+//               // props.resetThreadList();
+//             }}
+//             >
+//               Created: {item.created_at} </p>
+//           </Menu.item>)
+//         })}
+//   </Menu>)
+
+//   return (
+//     <>
+//       {requestsList.length > 0 ?
+//       (<Dropdown overlay = {menu}>
+//         <Button onClick={e=> e.preventDefault()}>Select a survey request <DownOutlined/></Button>
+//       </Dropdown>)
+//       :(
+//         <p>There are no survey requests submitted for this topic</p>
+//       )}
+//     </>
+//   );
