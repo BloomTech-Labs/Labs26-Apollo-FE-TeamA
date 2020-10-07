@@ -1,28 +1,31 @@
-import React, { useState, useContext, useEffect } from "react";
+import React, { useState, useEffect } from "react";
 import { Form, Input, Button, Select, Divider } from "antd";
 import { MinusCircleOutlined, PlusOutlined } from "@ant-design/icons";
-import { QuestionsContext } from "../../../../state/contexts/QuestionsContext";
+import { getCQ } from "../../../../api/index";
 
-const ContextQuestions = props => {
+const ContextQuestions = () => {
   const [presets, setPresets] = useState([]);
-  const { questions } = useContext(QuestionsContext);
   const { Option } = Select;
 
   useEffect(() => {
-    setPresets(questions.filter(q => q.type === "Context Questions"));
+    getCQ()
+      .then(res => {
+        console.log("CQ:", res);
+        setPresets(res);
+      })
+      .catch(err => console.log(err));
   }, []);
 
-  // creating an Option for each question in state
+  // load all three preset questions
   const loadPresets = () => {
-    const count = presets.length;
     const children = [];
-    for (let i = 0; i < count; i++) {
+    for (let i = 0; i < presets.length; i++) {
       children.push(
         <Form.Item
           name={["presetCQ", `${presets[i].id}`]}
           initialValue={presets[i].question}
         >
-          <Select placeholder={presets[i].question}>{loadQuestions()}</Select>
+          <Input disabled={true} placeholder={presets[i].question} />
         </Form.Item>
       );
     }
@@ -55,6 +58,12 @@ const ContextQuestions = props => {
             <div>
               {fields.map((field, index) => (
                 <div key={field.key}>
+                  <Form.Item
+                    className="closed"
+                    name={[index, "default"]}
+                    initialValue={"False"}
+                  ></Form.Item>
+
                   <Form.Item
                     className="closed"
                     name={[index, "type"]}

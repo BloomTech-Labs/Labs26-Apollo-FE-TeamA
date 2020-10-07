@@ -13,13 +13,7 @@ import { QuestionsContext } from "../../../state/contexts/QuestionsContext";
 import { TopicQuestionsContext } from "../../../state/contexts/TopicQuestionsContext";
 import JoinTopic from "./JoinTopic";
 
-import {
-  getAllResponses,
-  getAllTopics,
-  getAllThreads,
-  getAllQuestions,
-  getQuestions
-} from "../../../api";
+import { getAllTopics, getAllThreads } from "../../../api";
 
 function RenderHomePage(props) {
   // state handlers
@@ -50,24 +44,6 @@ function RenderHomePage(props) {
       })
       .catch(err => console.log(err));
 
-    getQuestions()
-      .then(res => {
-        setQuestions(res);
-      })
-      .catch(err => console.log(err));
-
-    getAllQuestions()
-      .then(res => {
-        setTopicQuestions(res);
-      })
-      .catch(err => console.log(err));
-
-    getAllResponses()
-      .then(res => {
-        setResponses(res);
-      })
-      .catch(err => console.log(err));
-
     getAllThreads()
       .then(res => {
         setThreads(res);
@@ -77,12 +53,6 @@ function RenderHomePage(props) {
 
   const viewRequestsList = id => {
     console.log("viewRequestsList called");
-    getAllResponses()
-      .then(res => {
-        let requestInfo = res.filter(req => req.topicid == id);
-        setRequests(requestInfo);
-      })
-      .catch(err => console.log(err));
   };
 
   return (
@@ -96,12 +66,12 @@ function RenderHomePage(props) {
                   <div className="nav">
                     <h2 className="logo">Apollo</h2>
 
-                    <Button type="primary" href="/">
+                    {/* <Button type="primary" href="/">
                       Owner
                     </Button>
                     <Button type="secondary" href="/member">
                       Member
-                    </Button>
+                    </Button> */}
 
                     <NewTopicContainer
                       reset={resetTopicID}

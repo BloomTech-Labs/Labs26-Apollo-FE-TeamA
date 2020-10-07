@@ -1,19 +1,12 @@
 import React, { useState, useEffect } from "react";
 import { Form, Select, Divider } from "antd";
-import { getQuestions } from "../../../../api/index";
 
 const PresetRQ = props => {
   const [inputs, setInputs] = useState([]);
   const { Option } = Select;
 
   // retrieve all context questions from the API /question
-  useEffect(() => {
-    getQuestions()
-      .then(res => {
-        getFields(res);
-      })
-      .catch(err => console.log(err));
-  }, [props.requestQ]);
+  useEffect(() => {}, [props.requestQ]);
 
   // loading questions from API /question into state
   const handleContextQuestions = cq => {

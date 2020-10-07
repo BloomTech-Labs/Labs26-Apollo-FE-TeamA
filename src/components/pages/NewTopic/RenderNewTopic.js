@@ -1,12 +1,12 @@
 import React, { useState } from "react";
-import { Button, Modal, Form, Steps } from "antd";
+import { Button, Modal, Form, Steps, message } from "antd";
 import { InfoCircleTwoTone } from "@ant-design/icons";
 import TopicDetails from "./TopicComponents/TopicDetails";
 import ContextType from "./TopicComponents/ContextType";
 import ContextQuestions from "./TopicComponents/ContextQuestions";
 import RequestQuestions from "./TopicComponents/RequestQuestions";
 import generator from "generate-password";
-import { createTopic, createTopicQuestion } from "../../../api/index";
+import { createTopic } from "../../../api/index";
 import axios from "axios";
 
 const RenderNewTopic = props => {
@@ -34,18 +34,34 @@ const RenderNewTopic = props => {
 
   // create topic
   const onCreate = () => {
-    form.validateFields().then(values => {
-      console.log(values);
-    });
+    form
+      .validateFields()
+      .then(values => {
+        console.log(values);
+      })
+      .catch(err => {
+        console.log(err);
+        err.errorFields.map(err => {
+          return message.error(`${err.errors[0]}`, 10);
+        });
+      });
   };
 
   // IN PROGRESS: needs to post presetCQ/RQ & custom CQ/RQ
   const create = () => {
-    form.validateFields().then(values => {
-      createTopic(values.topic).then(topic => {
-        console.log(topic);
+    form
+      .validateFields()
+      .then(values => {
+        createTopic(values.topic).then(topic => {
+          console.log(topic);
+        });
+      })
+      .catch(err => {
+        console.log(err);
+        err.errorFields.map(err => {
+          return message.error(`${err.errors[0]}`, 10);
+        });
       });
-    });
   };
 
   // cancel topic creation

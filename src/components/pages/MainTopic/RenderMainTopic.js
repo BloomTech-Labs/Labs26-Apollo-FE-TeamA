@@ -14,9 +14,7 @@ import {
   getTopic,
   getContextByID,
   getTopicMembers,
-  createTopicQuestion,
   editTopic,
-  editTopicQuestion,
   deleteTopic
 } from "../../../api/index";
 
@@ -73,12 +71,6 @@ const RenderMainTopic = ({ topicID, reset, user }) => {
       temp.id = contextQ[index][1].id;
       allContextQ.push(temp);
     });
-
-    return axios.all(
-      allContextQ.map(q => {
-        editTopicQuestion(q);
-      })
-    );
   };
 
   const submitNewCQuestion = values => {
@@ -89,12 +81,6 @@ const RenderMainTopic = ({ topicID, reset, user }) => {
       temp.questionid = q.question[1];
       newCQuestions.push(temp);
     });
-
-    return axios.all(
-      newCQuestions.map(q => {
-        createTopicQuestion(q);
-      })
-    );
   };
 
   const handleRequestQuestions = async values => {
@@ -106,20 +92,6 @@ const RenderMainTopic = ({ topicID, reset, user }) => {
       temp.id = requestQ[index][1].id;
       allRequestQ.push(temp);
     });
-
-    return axios
-      .all(
-        allRequestQ.map(q => {
-          editTopicQuestion(q);
-        })
-      )
-      .then(res => {
-        rQ = handleQuestions(
-          questions.filter(q => q.type === "Request Questions")
-        );
-        setRequestQ(rQ);
-      })
-      .catch(err => console.log(err));
   };
 
   const submitNewRQuestion = values => {
@@ -130,12 +102,6 @@ const RenderMainTopic = ({ topicID, reset, user }) => {
       temp.questionid = q.question[1];
       newRQuestions.push(temp);
     });
-
-    return axios.all(
-      newRQuestions.map(q => {
-        createTopicQuestion(q);
-      })
-    );
   };
 
   const deleteMainTopic = () => {
