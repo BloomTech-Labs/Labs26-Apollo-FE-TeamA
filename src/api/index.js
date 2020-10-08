@@ -20,6 +20,41 @@ const topicMembers = `${process.env.REACT_APP_API_URI}/topicmember/`;
 const questions = `${process.env.REACT_APP_API_URI}/question/`;
 const responses = `${process.env.REACT_APP_API_URI}/response/`;
 const threads = `${process.env.REACT_APP_API_URI}/thread/`;
+const surveyRequest = `${process.env.REACT_APP_API_URI}/surveyrequest/`;
+const requestResponse = `${process.env.REACT_APP_API_URI}/requestresponse/`;
+const topicContextQuestion = `${process.env.REACT_APP_API_URI}/topiccontextquestion/`;
+const topicRequestQuestion = `${process.env.REACT_APP_API_URI}/topicrequestquestion/`;
+const requestQuestions = `${process.env.REACT_APP_API_URI}/requestquestion/`;
+
+const getAllRequestQuestions = () => {
+  return axios
+    .get(requestQuestions, getToken())
+    .then(res => {
+      console.log("GET /requestquestions", res);
+      return res.data;
+    })
+    .catch(err => console.log("GET /requestquestions", err));
+};
+
+const getAllTopicRequestQuestions = () => {
+  return axios
+    .get(topicRequestQuestion, getToken())
+    .then(res => {
+      console.log("GET /topicRequestQuestion", res);
+      return res.data;
+    })
+    .catch(err => console.log(err));
+};
+
+const getAllTopicContextQuestions = () => {
+  return axios
+    .get(topicContextQuestion, getToken())
+    .then(res => {
+      console.log("GET /topicContextQuestion", res);
+      return res.data;
+    })
+    .catch(err => console.log(err));
+};
 
 // get all topics
 const getAllTopics = () => {
@@ -30,6 +65,26 @@ const getAllTopics = () => {
       return res.data;
     })
     .catch(err => console.log("GET /topic", err));
+};
+
+const getAllSurveyRequest = () => {
+  return axios
+    .get(surveyRequest, getToken())
+    .then(res => {
+      console.log("GET /surveyrequest", res);
+      return res.data;
+    })
+    .catch(err => console.log("GET /surveyrequest", err));
+};
+
+const getAllTopicMembers = () => {
+  return axios
+    .get(topicMembers, getToken())
+    .then(res => {
+      console.log("GET /topicmember", res);
+      return res.data;
+    })
+    .catch(err => console.log("GET /topicmember", err));
 };
 
 // get topic by topic id
@@ -107,12 +162,12 @@ const getAllTopicQuestions = questions => {
 // get all responses
 const getAllResponses = () => {
   return axios
-    .get(responses, getToken())
+    .get(requestResponse, getToken())
     .then(res => {
-      console.log("GET /response", res);
+      console.log("GET /requestrespose", res);
       return res.data;
     })
-    .catch(err => console.log("GET /response", err));
+    .catch(err => console.log("GET /requestresponse", err));
 };
 
 // get all threads
@@ -261,8 +316,20 @@ const deleteResponse = response => {
     .catch(err => console.log("DELETE /response/:id", err));
 };
 
+const getAllRequestResponses = () => {
+  return axios
+    .get(requestResponse, getToken())
+    .then(res => {
+      console.log("GET /requestresponse", res);
+      return res.data;
+    })
+    .catch(err => console.log("GET /requestresponse", err));
+};
+
 export {
+  getAllRequestResponses,
   getAllTopics,
+  getAllSurveyRequest,
   getTopic,
   getAllContexts,
   getContextByID,
@@ -282,5 +349,10 @@ export {
   editResponse,
   deleteTopic,
   deleteTopicQuestion,
-  deleteResponse
+  deleteResponse,
+  getAllTopicMembers,
+  getToken,
+  getAllTopicContextQuestions,
+  getAllTopicRequestQuestions,
+  getAllRequestQuestions
 };

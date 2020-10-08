@@ -18,7 +18,10 @@ const TopicsList = props => {
           className="topic-list-item"
           onClick={() => {
             setTopicID(item.id);
-            props.viewRequestsList(item.id);
+            props.getSurveyList(item.id);
+            props.getSurveyRequestForm(item.id);
+            props.getSurveryContextForm(item.id);
+            props.resetReqAndResID();
           }}
         >
           <h3>{item.topicname}</h3>

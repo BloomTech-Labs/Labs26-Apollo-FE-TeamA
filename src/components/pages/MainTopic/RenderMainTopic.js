@@ -1,6 +1,5 @@
 import React, { useContext, useState, useEffect, useRef } from "react";
 import axios from "axios";
-import Requests from "../../home_components/Requests";
 import EditDetails from "./EditComponents/EditDetails";
 import EditContext from "./EditComponents/EditContext";
 import EditContextQ from "./EditComponents/EditContextQ";
@@ -10,6 +9,7 @@ import { TopicQuestionsContext } from "../../../state/contexts/TopicQuestionsCon
 import { QuestionsContext } from "../../../state/contexts/QuestionsContext";
 import { Button, message, Dropdown, Menu, Modal, Form } from "antd";
 import { SettingFilled } from "@ant-design/icons";
+import Responses from "../../home_components/Responses";
 import {
   getTopic,
   getContextByID,
@@ -19,8 +19,16 @@ import {
   editTopicQuestion,
   deleteTopic
 } from "../../../api/index";
+import Requests from "../../home_components/Requests";
 
-const RenderMainTopic = ({ topicID, reset, user }) => {
+const RenderMainTopic = ({
+  topicID,
+  reset,
+  getResponseList,
+  requestID,
+  getThreadList,
+  user
+}) => {
   const textAreaRef = useRef();
   const [form] = Form.useForm();
   const [visible, setVisible] = useState(false);
@@ -35,6 +43,7 @@ const RenderMainTopic = ({ topicID, reset, user }) => {
   const [context, setContext] = useState({});
   const [contextQ, setContextQ] = useState([]);
   const [requestQ, setRequestQ] = useState([]);
+
   let cQ = [];
   let rQ = [];
 
@@ -115,7 +124,7 @@ const RenderMainTopic = ({ topicID, reset, user }) => {
       )
       .then(res => {
         rQ = handleQuestions(
-          questions.filter(q => q.type === "Request Questions")
+          questions.filter(q => q.type == "Request Questions")
         );
         setRequestQ(rQ);
       })
@@ -195,15 +204,15 @@ const RenderMainTopic = ({ topicID, reset, user }) => {
           .then(res => {
             setContext(res);
             cQ = handleQuestions(
-              questions.filter(q => q.type === "Context Questions")
+              questions.filter(q => q.type == "Context Questions")
             );
             setContextQ(cQ);
             rQ = handleQuestions(
-              questions.filter(q => q.type === "Request Questions")
+              questions.filter(q => q.type == "Request Questions")
             );
             setRequestQ(rQ);
             getTopicMembers().then(res => {
-              let tM = res.filter(m => m.topicid === topicID);
+              let tM = res.filter(m => m.topicid == topicID);
               setMembers(tM);
             });
           })
@@ -243,14 +252,25 @@ const RenderMainTopic = ({ topicID, reset, user }) => {
           {topic.joincode}
         </textarea>
       </Button>
-
-      <div className="requests-container">
-        <div className="requests-list">
-          <h2 className="requests-list-title">Requests</h2>
-          <Requests />
-        </div>
+      <div className="context-questions-container">
+        <h2>Context</h2>
+        {contextQ.map((q, index) => {
+          return (
+            <div key={index}>
+              <h3 className="context-question">{q[0].question}</h3>
+            </div>
+          );
+        })}
       </div>
-
+      <div>
+        <h3>Survey Requests</h3>
+        <Requests getResponseList={getResponseList} />
+        {requestID != 0 ? (
+          <Responses getThreadList={getThreadList} />
+        ) : (
+          <p>Select a Survey Request </p>
+        )}
+      </div>
       <Modal
         visible={visible}
         width={700}

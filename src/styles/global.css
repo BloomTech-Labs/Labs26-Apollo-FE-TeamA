@@ -104,7 +104,7 @@ h1 {
 }
 
 .main-topic-container {
-  display: flex;
+  display: table-column;
   justify-items: center;
   align-items: flex-start;
   width: 65%;
