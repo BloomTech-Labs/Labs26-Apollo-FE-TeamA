@@ -9,6 +9,7 @@ function MainTopicContainer(props) {
       reset={props.reset}
       getResponseList={props.getResponseList}
       requestID={props.requestID}
+      getThreadList={props.getThreadList}
     />
   );
 }

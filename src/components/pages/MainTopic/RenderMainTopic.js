@@ -1,6 +1,5 @@
 import React, { useContext, useState, useEffect, useRef } from "react";
 import axios from "axios";
-import SelectedRequest from "../../selectedRequests/MainSelectRequestContainer";
 import EditDetails from "./EditComponents/EditDetails";
 import EditContext from "./EditComponents/EditContext";
 import EditContextQ from "./EditComponents/EditContextQ";
@@ -27,6 +26,7 @@ const RenderMainTopic = ({
   reset,
   getResponseList,
   requestID,
+  getThreadList,
   user
 }) => {
   const textAreaRef = useRef();
@@ -265,7 +265,11 @@ const RenderMainTopic = ({
       <div>
         <h3>Survey Requests</h3>
         <Requests getResponseList={getResponseList} />
-        {requestID != 0 ? <Responses /> : null}
+        {requestID != 0 ? (
+          <Responses getThreadList={getThreadList} />
+        ) : (
+          <p>Select a Survey Request </p>
+        )}
       </div>
       <Modal
         visible={visible}
