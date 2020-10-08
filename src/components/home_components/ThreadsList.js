@@ -16,13 +16,18 @@ const ThreadsList = props => {
       .catch(err => console.log("getUserName", err));
   };
 
+  const displayDate = date => {
+    let res = date.slice(0, 10);
+    return res;
+  };
   return (
     <>
       {threads ? (
         threads.map(item => (
           <div>
-            <h4>{getUserName(item.repliedby)}</h4>
-            <p>{item.replies}</p>
+            <p>{item.reply}</p>
+            <h5>{getUserName(item.repliedby)}</h5>
+            <h6>{displayDate(item.updated_at)}</h6>
           </div>
         ))
       ) : (

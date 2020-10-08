@@ -19,6 +19,8 @@ const TopicsList = props => {
           onClick={() => {
             setTopicID(item.id);
             props.getSurveyList(item.id);
+            props.getSurveyRequestForm(item.id);
+            props.getSurveryContextForm(item.id);
             props.resetReqAndResID();
           }}
         >

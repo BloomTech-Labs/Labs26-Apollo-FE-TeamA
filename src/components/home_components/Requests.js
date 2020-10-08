@@ -16,7 +16,7 @@ const Requests = props => {
 
   return (
     <>
-      {requestsList ? (
+      {requestsList.length != 0 ? (
         requestsList.map(item => (
           <div
             onClick={() => {

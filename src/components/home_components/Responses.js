@@ -1,4 +1,4 @@
-import React, { useContext, useState } from "react";
+import React, { useContext, useState, useEffect } from "react";
 import axios from "axios";
 import { ResponsesContext } from "../../state/contexts/ResponsesContext";
 import { getToken } from "../../api/index";
@@ -6,9 +6,9 @@ import { getToken } from "../../api/index";
 const Responses = props => {
   const { responsesList } = useContext(ResponsesContext);
 
-  const getResID = id => {
-    props.setResponseID(id);
-  };
+  useEffect(() => {
+    console.log("Responses component, ", responsesList);
+  });
 
   const getQuestionByID = id => {
     axios
