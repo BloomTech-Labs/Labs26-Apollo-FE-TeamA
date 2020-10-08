@@ -144,8 +144,6 @@ function RenderHomePage(props) {
         console.log("getResponseList -> RequestReponses", responseList);
       })
       .catch(err => console.log("getResponseList", err));
-
-    return responseList;
   };
 
   const getThreadList = id => {
@@ -223,12 +221,12 @@ function RenderHomePage(props) {
                             />
                           )}
                         </div>
+                        {responseID != 0 ? (
+                          <ThreadsList />
+                        ) : (
+                          <SurveyRequest page={page} />
+                        )}
                       </div>
-                      {responseID != 0 ? (
-                        <ThreadsList />
-                      ) : (
-                        <SurveyRequest page={page} />
-                      )}
                     </SurveyContextContext.Provider>
                   </SurveyRequestsContext.Provider>
                 </ThreadsContext.Provider>

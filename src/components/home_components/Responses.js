@@ -1,18 +1,14 @@
 import React, { useContext, useState, useEffect } from "react";
 import axios from "axios";
 import { ResponsesContext } from "../../state/contexts/ResponsesContext";
-import { getToken } from "../../api/index";
+import { getToken, getAllRequestQuestions } from "../../api/index";
 
 const Responses = props => {
-  const { responsesList } = useContext(ResponsesContext);
-
-  useEffect(() => {
-    console.log("Responses component, ", responsesList);
-  });
+  const { responseList } = useContext(ResponsesContext);
+  console.log("Responses component, ", responseList);
 
   const getQuestionByID = id => {
-    axios
-      .get(`https://apollo-a-api.herokuapp.com/contextquestion/${id}`, getToken)
+    getAllRequestQuestions
       .then(res => {
         console.log("GET /question/:id", res);
         console.log("getQuestionByID", res.data);
@@ -27,14 +23,14 @@ const Responses = props => {
     <>
       <h2>Responses</h2>
 
-      {responsesList ? (
-        responsesList.map(item => (
+      {responseList ? (
+        responseList.map(item => (
           <div
             onClick={() => {
               props.getThreadList(item.id);
             }}
           >
-            <h4>{getQuestionByID(item.contextquestionid)}</h4>
+            {/* <h4>{getQuestionByID(item.requestquestionid)}</h4> */}
             <p>{item.response}</p>
           </div>
         ))

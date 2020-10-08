@@ -24,6 +24,17 @@ const surveyRequest = `${process.env.REACT_APP_API_URI}/surveyrequest/`;
 const requestResponse = `${process.env.REACT_APP_API_URI}/requestresponse/`;
 const topicContextQuestion = `${process.env.REACT_APP_API_URI}/topiccontextquestion/`;
 const topicRequestQuestion = `${process.env.REACT_APP_API_URI}/topicrequestquestion/`;
+const requestQuestions = `${process.env.REACT_APP_API_URI}/requestquestion/`;
+
+const getAllRequestQuestions = () => {
+  return axios
+    .get(requestQuestions, getToken())
+    .then(res => {
+      console.log("GET /requestquestions", res);
+      return res.data;
+    })
+    .catch(err => console.log("GET /requestquestions", err));
+};
 
 const getAllTopicRequestQuestions = () => {
   return axios
@@ -342,5 +353,6 @@ export {
   getAllTopicMembers,
   getToken,
   getAllTopicContextQuestions,
-  getAllTopicRequestQuestions
+  getAllTopicRequestQuestions,
+  getAllRequestQuestions
 };
