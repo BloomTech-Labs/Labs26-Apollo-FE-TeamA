@@ -1,1 +1,1 @@
-export { default as RequestSurvey } from "./SurveyRequestContainer";
+export { default as SurveyRequest } from "./SurveyRequestContainer";
