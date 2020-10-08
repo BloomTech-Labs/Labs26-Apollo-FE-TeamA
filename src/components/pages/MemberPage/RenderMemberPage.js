@@ -18,12 +18,15 @@ import {
   getAllThreads,
   getAllQuestions,
   getQuestions,
-  getAllTopicMembers
+  getAllTopicMembers,
+  getTopic,
+  getToken
 } from "../../../api";
 
 function RenderMemberPage(props) {
   // state handlers
   const { userInfo, authService } = props;
+  const [memberTopics, setMemberTopics] = useState([]);
   const [topics, setTopics] = useState([]);
   const [topicID, setTopicID] = useState(0);
   const [questions, setQuestions] = useState([]);
@@ -33,10 +36,26 @@ function RenderMemberPage(props) {
   const [requestsList, setRequestsList] = useState([]);
 
   useEffect(() => {
-    getAllTopicMembers().then(res => {
-      let userTopicsID = res.filter(member => member.memberid == userInfo.sub);
+    getAllTopicMembers()
+      .then(res => {
+        let userTopicsID = res.filter(
+          member => member.memberid == userInfo.sub
+        );
+        setMemberTopics(userTopicsID);
 
-      console.log("userTopicsID: ", userTopicsID);
+        console.log("userTopicsID: ", userTopicsID);
+        console.log("getAllTopicMembers -> memberTopics", memberTopics);
+      })
+      .catch(err => console.log("getAllTopicMembers", err));
+
+    memberTopics.map(item => {
+      getTopic(item.topicid)
+        .then(res => {
+          console.log("getTopic", res);
+
+          setTopics(...TopicsList, res);
+        })
+        .catch(err => console.log("getTopic", err));
     });
   }, []);
   // for selecting a specific topic
