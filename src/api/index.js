@@ -22,6 +22,28 @@ const responses = `${process.env.REACT_APP_API_URI}/response/`;
 const threads = `${process.env.REACT_APP_API_URI}/thread/`;
 const surveyRequest = `${process.env.REACT_APP_API_URI}/surveyrequest/`;
 const requestResponse = `${process.env.REACT_APP_API_URI}/requestresponse/`;
+const topicContextQuestion = `${process.env.REACT_APP_API_URI}/topiccontextquestion/`;
+const topicRequestQuestion = `${process.env.REACT_APP_API_URI}/topicrequestquestion/`;
+
+const getAllTopicRequestQuestions = () => {
+  return axios
+    .get(topicRequestQuestion, getToken())
+    .then(res => {
+      console.log("GET /topicRequestQuestion", res);
+      return res.data;
+    })
+    .catch(err => console.log(err));
+};
+
+const getAllTopicContextQuestions = () => {
+  return axios
+    .get(topicContextQuestion, getToken())
+    .then(res => {
+      console.log("GET /topicContextQuestion", res);
+      return res.data;
+    })
+    .catch(err => console.log(err));
+};
 
 // get all topics
 const getAllTopics = () => {
@@ -318,5 +340,7 @@ export {
   deleteTopicQuestion,
   deleteResponse,
   getAllTopicMembers,
-  getToken
+  getToken,
+  getAllTopicContextQuestions,
+  getAllTopicRequestQuestions
 };
