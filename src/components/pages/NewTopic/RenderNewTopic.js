@@ -6,8 +6,14 @@ import ContextType from "./TopicComponents/ContextType";
 import ContextQuestions from "./TopicComponents/ContextQuestions";
 import RequestQuestions from "./TopicComponents/RequestQuestions";
 import generator from "generate-password";
-import { createTopic } from "../../../api/index";
 import axios from "axios";
+import {
+  createCQ,
+  createRQ,
+  createTopic,
+  createTopicCQ,
+  createTopicRQ
+} from "../../../api/index";
 
 const RenderNewTopic = props => {
   // state variables
@@ -32,29 +38,65 @@ const RenderNewTopic = props => {
     });
   };
 
+  const handleCQ = (topic, values) => {
+    let newCQ = [];
+    let addedCQ = Object.values(values.customCQ);
+    addedCQ.map(q => {
+      newCQ.push(q);
+    });
+    console.log(newCQ);
+    return axios.all(
+      newCQ.map(q => {
+        createCQ(q)
+          .then(res => {
+            console.log("RES", res);
+            let newTopicCQ = {
+              topicid: topic.id,
+              contextquestionid: res.question.id
+            };
+            console.log("T, nTCQ", topic, newTopicCQ);
+            createTopicCQ(newTopicCQ);
+          })
+          .catch(err => console.log(err));
+      })
+    );
+  };
+
+  const handleRQ = (topic, values) => {
+    let newRQ = [];
+    let addedRQ = Object.values(values.customRQ);
+    addedRQ.map(q => {
+      newRQ.push(q);
+    });
+    console.log(newRQ);
+    return axios.all(
+      newRQ.map(q => {
+        createRQ(q)
+          .then(res => {
+            let newTopicRQ = {
+              topicid: topic.id,
+              requestquestionid: res.question.id
+            };
+            createTopicRQ(newTopicRQ);
+          })
+          .catch(err => console.log(err));
+      })
+    );
+  };
+
   // create topic
   const onCreate = () => {
     form
       .validateFields()
       .then(values => {
         console.log(values);
-      })
-      .catch(err => {
-        console.log(err);
-        err.errorFields.map(err => {
-          return message.error(`${err.errors[0]}`, 10);
-        });
-      });
-  };
-
-  // IN PROGRESS: needs to post presetCQ/RQ & custom CQ/RQ
-  const create = () => {
-    form
-      .validateFields()
-      .then(values => {
-        createTopic(values.topic).then(topic => {
-          console.log(topic);
-        });
+        createTopic(values.topic)
+          .then(res => {
+            let newTopic = res.topic;
+            handleCQ(newTopic, values);
+            handleRQ(newTopic, values);
+          })
+          .catch(err => console.log(err));
       })
       .catch(err => {
         console.log(err);

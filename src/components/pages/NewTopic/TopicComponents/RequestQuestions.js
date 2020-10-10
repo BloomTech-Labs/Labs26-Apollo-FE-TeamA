@@ -66,12 +66,6 @@ const RequestQuestions = () => {
 
                   <Form.Item
                     className="closed"
-                    name={[index, "type"]}
-                    initialValue={"Request Questions"}
-                  ></Form.Item>
-
-                  <Form.Item
-                    className="closed"
                     name={[index, "style"]}
                     initialValue={"Text"}
                   ></Form.Item>

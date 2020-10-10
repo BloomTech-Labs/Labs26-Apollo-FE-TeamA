@@ -66,12 +66,6 @@ const ContextQuestions = () => {
 
                   <Form.Item
                     className="closed"
-                    name={[index, "type"]}
-                    initialValue={"Context Questions"}
-                  ></Form.Item>
-
-                  <Form.Item
-                    className="closed"
                     name={[index, "style"]}
                     initialValue={"Text"}
                   ></Form.Item>

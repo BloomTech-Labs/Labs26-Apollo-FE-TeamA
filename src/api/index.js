@@ -17,19 +17,69 @@ const getToken = () => {
 const profile = `${process.env.REACT_APP_API_URI}/profile/`;
 const topics = `${process.env.REACT_APP_API_URI}/topic/`;
 const contexts = `${process.env.REACT_APP_API_URI}/context/`;
-const surveyRequests = `${process.env.REACT_APP_API_URI}/surveyrequest/`;
 const threads = `${process.env.REACT_APP_API_URI}/thread/`;
 const topicMembers = `${process.env.REACT_APP_API_URI}/topicmember/`;
 // CONTEXT QUESTIONS
 const contextQuestions = `${process.env.REACT_APP_API_URI}/contextquestion/`;
 const defaultCQ = `${process.env.REACT_APP_API_URI}/contextquestion/getdefaultcontextquestion/`;
-const topicCQ = `${process.env.REACT_APP_API_URI}/topiccontextquestion/`;
 const contextResponses = `${process.env.REACT_APP_API_URI}/contextresponse/`;
 // REQUEST QUESTIONS
-const requestQuestions = `${process.env.REACT_APP_API_URI}/requestquestion/`;
 const defaultRQ = `${process.env.REACT_APP_API_URI}/requestquestion/getdefaultrequestquestion/`;
-const topicRQ = `${process.env.REACT_APP_API_URI}/topicrequestquestion/`;
-const requestResponses = `${process.env.REACT_APP_API_URI}/requestresponse/`;
+const surveyRequests = `${process.env.REACT_APP_API_URI}/surveyrequest/`;
+const requestResponse = `${process.env.REACT_APP_API_URI}/requestresponse/`;
+const topicContextQuestion = `${process.env.REACT_APP_API_URI}/topiccontextquestion/`;
+const topicRequestQuestion = `${process.env.REACT_APP_API_URI}/topicrequestquestion/`;
+const requestQuestions = `${process.env.REACT_APP_API_URI}/requestquestion/`;
+
+const getAllRequestQuestions = () => {
+  return axios
+    .get(requestQuestions, getToken())
+    .then(res => {
+      console.log("GET /requestquestions", res);
+      return res.data;
+    })
+    .catch(err => console.log("GET /requestquestions", err));
+};
+
+const getAllTopicRequestQuestions = () => {
+  return axios
+    .get(topicRequestQuestion, getToken())
+    .then(res => {
+      console.log("GET /topicRequestQuestion", res);
+      return res.data;
+    })
+    .catch(err => console.log(err));
+};
+
+const getAllTopicContextQuestions = () => {
+  return axios
+    .get(topicContextQuestion, getToken())
+    .then(res => {
+      console.log("GET /topicContextQuestion", res);
+      return res.data;
+    })
+    .catch(err => console.log(err));
+};
+
+const createTopicCQ = question => {
+  return axios
+    .post(topicContextQuestion, question, getToken())
+    .then(res => {
+      console.log("POST /topicContextQuestion", res);
+      return res.data;
+    })
+    .catch(err => console.log("POST /topicContextQuestion", err));
+};
+
+const createTopicRQ = question => {
+  return axios
+    .post(topicRequestQuestion, question, getToken())
+    .then(res => {
+      console.log("POST /requestContextQuestion", res);
+      return res.data;
+    })
+    .catch(err => console.log("POST /requestContextQuestion", err));
+};
 
 // get all topics
 const getAllTopics = () => {
@@ -40,6 +90,26 @@ const getAllTopics = () => {
       return res.data;
     })
     .catch(err => console.log("GET /topic", err));
+};
+
+const getAllSurveyRequest = () => {
+  return axios
+    .get(surveyRequests, getToken())
+    .then(res => {
+      console.log("GET /surveyrequest", res);
+      return res.data;
+    })
+    .catch(err => console.log("GET /surveyrequest", err));
+};
+
+const getAllTopicMembers = () => {
+  return axios
+    .get(topicMembers, getToken())
+    .then(res => {
+      console.log("GET /topicmember", res);
+      return res.data;
+    })
+    .catch(err => console.log("GET /topicmember", err));
 };
 
 // get topic by topic id
@@ -263,12 +333,22 @@ const addMember = member => {
     .catch(err => console.log("POST to /topicmember", err));
 };
 
+const getAllRequestResponses = () => {
+  return axios
+    .get(requestResponse, getToken())
+    .then(res => {
+      console.log("GET /requestresponse", res);
+      return res.data;
+    })
+    .catch(err => console.log("GET /requestresponse", err));
+};
+
 export {
+  getAllRequestResponses,
   getAllTopics,
+  getAllSurveyRequest,
   getTopic,
   createTopic,
-  editTopic,
-  deleteTopic,
   getAllRequests,
   getRequestByID,
   createRequest,
@@ -284,5 +364,14 @@ export {
   editRQ,
   getAllThreads,
   getTopicMembers,
-  addMember
+  addMember,
+  editTopic,
+  deleteTopic,
+  getAllTopicMembers,
+  getToken,
+  getAllTopicContextQuestions,
+  getAllTopicRequestQuestions,
+  getAllRequestQuestions,
+  createTopicCQ,
+  createTopicRQ
 };

@@ -7,6 +7,9 @@ function MainTopicContainer(props) {
       topicID={props.topicID}
       user={props.user}
       reset={props.reset}
+      getResponseList={props.getResponseList}
+      requestID={props.requestID}
+      getThreadList={props.getThreadList}
     />
   );
 }
