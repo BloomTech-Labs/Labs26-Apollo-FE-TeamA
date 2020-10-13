@@ -1,12 +1,13 @@
 import React, { useState, useEffect } from "react";
 import { Form, Input, Button, Select, Divider } from "antd";
-import { MinusCircleOutlined, PlusOutlined } from "@ant-design/icons";
+import { DeleteFilled } from "@ant-design/icons";
 import { getRQ } from "../../../../api/index";
 
 const RequestQuestions = () => {
   const [presets, setPresets] = useState([]);
   const { Option } = Select;
 
+  // fetch default request questions
   useEffect(() => {
     getRQ()
       .then(res => {
@@ -16,95 +17,58 @@ const RequestQuestions = () => {
       .catch(err => console.log(err));
   }, []);
 
-  // load all three preset questions
-  const loadPresets = () => {
-    const children = [];
-    for (let i = 0; i < presets.length; i++) {
-      children.push(
-        <Form.Item
-          name={["presetRQ", `${presets[i].id}`]}
-          initialValue={presets[i].question}
-        >
-          <Input disabled={true} placeholder={presets[i].question} />
-        </Form.Item>
-      );
-    }
-    return children;
+  const addQuestion = () => {
+    const newQuestion = {
+      default: "False",
+      style: "Text",
+      question: ""
+    };
+
+    setPresets([...presets, newQuestion]);
   };
 
-  // creating an Option for each question in state
-  const loadQuestions = () => {
-    const count = presets.length;
-    const children = [];
-    for (let i = 0; i < count; i++) {
-      children.push(
-        <Option key={i} value={presets[i].question}>
-          {presets[i].question}
-        </Option>
-      );
-    }
-    return children;
+  const removeQuestion = question => {
+    const newQuestions = presets.filter(preset => preset.question !== question);
+    setPresets(newQuestions);
   };
 
   return (
     <div>
       <Divider>Request Questions</Divider>
+      {presets.map(q => {
+        return (
+          <div key={q.question}>
+            <Form.Item
+              className="closed"
+              name={["rQ", q.question, "default"]}
+              initialValue={"False"}
+            ></Form.Item>
 
-      {loadPresets()}
+            <Form.Item
+              className="closed"
+              name={["rQ", q.question, "style"]}
+              initialValue={q.style}
+            ></Form.Item>
 
-      <Form.List name="customRQ">
-        {(fields, { add, remove }) => {
-          return (
-            <div>
-              {fields.map((field, index) => (
-                <div key={field.key}>
-                  <Form.Item
-                    className="closed"
-                    name={[index, "default"]}
-                    initialValue={"False"}
-                  ></Form.Item>
+            <Form.Item
+              name={["rQ", q.question, "question"]}
+              rules={[{ required: true }]}
+              initialValue={q.question}
+            >
+              <Input placeholder={q.question} />
+            </Form.Item>
 
-                  <Form.Item
-                    className="closed"
-                    name={[index, "style"]}
-                    initialValue={"Text"}
-                  ></Form.Item>
-
-                  <Form.Item
-                    name={[index, "question"]}
-                    rules={[{ required: true }]}
-                  >
-                    <Input />
-                  </Form.Item>
-
-                  {fields.length >= 1 ? (
-                    <Button
-                      type="danger"
-                      className="dynamic-delete-button"
-                      onClick={() => remove(field.name)}
-                      icon={<MinusCircleOutlined />}
-                    >
-                      Remove Question
-                    </Button>
-                  ) : null}
-                </div>
-              ))}
-
-              <Divider />
-
-              <Form.Item>
-                <Button
-                  type="dashed"
-                  onClick={() => add()}
-                  style={{ width: "60%" }}
-                >
-                  <PlusOutlined /> Add Question
-                </Button>
-              </Form.Item>
-            </div>
-          );
-        }}
-      </Form.List>
+            <Button
+              onClick={() => {
+                removeQuestion(q.question);
+              }}
+            >
+              <DeleteFilled />
+            </Button>
+          </div>
+        );
+      })}
+      <Button onClick={addQuestion}>Add Question</Button>
     </div>
   );
 };

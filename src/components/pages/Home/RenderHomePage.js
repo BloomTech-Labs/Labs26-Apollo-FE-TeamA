@@ -80,7 +80,7 @@ function RenderHomePage(props) {
     setRequestID(0);
   };
 
-  const getSurveryContextForm = id => {
+  const getSurveyContextForm = id => {
     getAllTopicContextQuestions()
       .then(res => {
         const TopicCont = res.filter(question => question.topicid === id);
@@ -98,7 +98,7 @@ function RenderHomePage(props) {
       );
   };
 
-  const getSurveryRequestForm = id => {
+  const getSurveyRequestForm = id => {
     getAllTopicRequestQuestions()
       .then(res => {
         const TopicReq = res.filter(question => question.topicid === id);
@@ -189,8 +189,8 @@ function RenderHomePage(props) {
                             topicID={getTopicID}
                             getSurveyList={getSurveyRequests}
                             resetReqAndResID={resetReqAndResID}
-                            getSurveyRequestForm={getSurveryRequestForm}
-                            getSurveryContextForm={getSurveryContextForm}
+                            getSurveyRequestForm={getSurveyRequestForm}
+                            getSurveyContextForm={getSurveyContextForm}
                           />
                         </div>
                         <div className="main-topic-container">

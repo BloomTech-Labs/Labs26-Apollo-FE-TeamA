@@ -39,11 +39,7 @@ const RenderNewTopic = props => {
   };
 
   const handleCQ = (topic, values) => {
-    let newCQ = [];
-    let addedCQ = Object.values(values.customCQ);
-    addedCQ.map(q => {
-      newCQ.push(q);
-    });
+    let newCQ = Object.values(values.cQ);
     console.log(newCQ);
     return axios.all(
       newCQ.map(q => {
@@ -54,7 +50,6 @@ const RenderNewTopic = props => {
               topicid: topic.id,
               contextquestionid: res.question.id
             };
-            console.log("T, nTCQ", topic, newTopicCQ);
             createTopicCQ(newTopicCQ);
           })
           .catch(err => console.log(err));
@@ -63,11 +58,7 @@ const RenderNewTopic = props => {
   };
 
   const handleRQ = (topic, values) => {
-    let newRQ = [];
-    let addedRQ = Object.values(values.customRQ);
-    addedRQ.map(q => {
-      newRQ.push(q);
-    });
+    let newRQ = Object.values(values.rQ);
     console.log(newRQ);
     return axios.all(
       newRQ.map(q => {
@@ -95,6 +86,8 @@ const RenderNewTopic = props => {
             let newTopic = res.topic;
             handleCQ(newTopic, values);
             handleRQ(newTopic, values);
+            showJoinCode();
+            form.resetFields();
           })
           .catch(err => console.log(err));
       })

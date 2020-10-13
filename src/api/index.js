@@ -19,17 +19,17 @@ const topics = `${process.env.REACT_APP_API_URI}/topic/`;
 const contexts = `${process.env.REACT_APP_API_URI}/context/`;
 const threads = `${process.env.REACT_APP_API_URI}/thread/`;
 const topicMembers = `${process.env.REACT_APP_API_URI}/topicmember/`;
+const surveyRequests = `${process.env.REACT_APP_API_URI}/surveyrequest/`;
 // CONTEXT QUESTIONS
 const contextQuestions = `${process.env.REACT_APP_API_URI}/contextquestion/`;
 const defaultCQ = `${process.env.REACT_APP_API_URI}/contextquestion/getdefaultcontextquestion/`;
+const topicContextQuestion = `${process.env.REACT_APP_API_URI}/topiccontextquestion/`;
 const contextResponses = `${process.env.REACT_APP_API_URI}/contextresponse/`;
 // REQUEST QUESTIONS
-const defaultRQ = `${process.env.REACT_APP_API_URI}/requestquestion/getdefaultrequestquestion/`;
-const surveyRequests = `${process.env.REACT_APP_API_URI}/surveyrequest/`;
-const requestResponse = `${process.env.REACT_APP_API_URI}/requestresponse/`;
-const topicContextQuestion = `${process.env.REACT_APP_API_URI}/topiccontextquestion/`;
-const topicRequestQuestion = `${process.env.REACT_APP_API_URI}/topicrequestquestion/`;
 const requestQuestions = `${process.env.REACT_APP_API_URI}/requestquestion/`;
+const defaultRQ = `${process.env.REACT_APP_API_URI}/requestquestion/getdefaultrequestquestion/`;
+const requestResponse = `${process.env.REACT_APP_API_URI}/requestresponse/`;
+const topicRequestQuestion = `${process.env.REACT_APP_API_URI}/topicrequestquestion/`;
 
 const getAllRequestQuestions = () => {
   return axios
@@ -270,7 +270,7 @@ const editCQ = question => {
 // get all request questions
 const getRQ = () => {
   return axios
-    .get(defaultRQ, getToken())
+    .get(requestQuestions, getToken())
     .then(res => {
       console.log("GET /getdefaultrequestquestion", res);
       return res.data;

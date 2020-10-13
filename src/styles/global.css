@@ -62,14 +62,16 @@ h1 {
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  padding-top: 2rem;
 }
 
 .nav {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  width: 95%;
+  width: 100%;
+  padding: 2rem .5rem;
+  background: white;
+  /* border-bottom: 5px solid #7F64FF; */
 }
 
 .logo {
@@ -84,7 +86,6 @@ h1 {
   justify-content: space-between;
   align-items: flex-start;
   width: 100%;
-  padding: 2rem 0 2rem 4rem;
 }
 
 .topics-list {
@@ -93,9 +94,8 @@ h1 {
   justify-content: flex-start;
   align-items: center;
   width: 30%;
-  padding: .1rem 0 1rem 0;
-  /* background: #7F64FF; */
-  border-radius: 20px;
+  padding: 1rem 1rem;
+  background: rgb(255, 255, 255);
 }
 
 .topics-list-title {
@@ -131,14 +131,14 @@ h1 {
 /* TOPICS LIST STYLES */
 .topic-list-item {
   width: 300px;
-  background: #FFFFFF;
-  border: 4px solid #7F64FF;
+  background: #7F64FF;
   margin: 1rem 0;
   padding: 1rem;
   border-radius: 20px;
 }
 
-.topic-list-item h3 {
+.topic-list-item h3, h4 {
+  color: white;
   font-weight: bold;
 }
 
@@ -164,6 +164,10 @@ h1 {
   resize: none;
   color: #7F64FF;
   background: none;
+}
+
+.join-code textarea:hover {
+  cursor: pointer;
 }
 
 .join-code span {
