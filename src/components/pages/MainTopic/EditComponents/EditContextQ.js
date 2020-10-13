@@ -1,7 +1,6 @@
 import React, { useState, useEffect, useContext } from "react";
 import { Form, Button, Select, Divider } from "antd";
 import { MinusCircleOutlined, PlusOutlined } from "@ant-design/icons";
-import { getQuestions } from "../../../../api/index";
 import PresetCQ from "./PresetCQ";
 import { QuestionsContext } from "../../../../state/contexts/QuestionsContext";
 

@@ -1,13 +1,19 @@
 import React, { useState } from "react";
-import { Button, Modal, Form, Steps } from "antd";
+import { Button, Modal, Form, Steps, message } from "antd";
 import { InfoCircleTwoTone } from "@ant-design/icons";
 import TopicDetails from "./TopicComponents/TopicDetails";
 import ContextType from "./TopicComponents/ContextType";
 import ContextQuestions from "./TopicComponents/ContextQuestions";
 import RequestQuestions from "./TopicComponents/RequestQuestions";
 import generator from "generate-password";
-import { createTopic, createTopicQuestion } from "../../../api/index";
 import axios from "axios";
+import {
+  createCQ,
+  createRQ,
+  createTopic,
+  createTopicCQ,
+  createTopicRQ
+} from "../../../api/index";
 
 const RenderNewTopic = props => {
   // state variables
@@ -32,20 +38,65 @@ const RenderNewTopic = props => {
     });
   };
 
-  // create topic
-  const onCreate = () => {
-    form.validateFields().then(values => {
-      console.log(values);
-    });
+  const handleCQ = (topic, values) => {
+    let newCQ = Object.values(values.cQ);
+    console.log(newCQ);
+    return axios.all(
+      newCQ.map(q => {
+        createCQ(q)
+          .then(res => {
+            console.log("RES", res);
+            let newTopicCQ = {
+              topicid: topic.id,
+              contextquestionid: res.question.id
+            };
+            createTopicCQ(newTopicCQ);
+          })
+          .catch(err => console.log(err));
+      })
+    );
   };
 
-  // IN PROGRESS: needs to post presetCQ/RQ & custom CQ/RQ
-  const create = () => {
-    form.validateFields().then(values => {
-      createTopic(values.topic).then(topic => {
-        console.log(topic);
+  const handleRQ = (topic, values) => {
+    let newRQ = Object.values(values.rQ);
+    console.log(newRQ);
+    return axios.all(
+      newRQ.map(q => {
+        createRQ(q)
+          .then(res => {
+            let newTopicRQ = {
+              topicid: topic.id,
+              requestquestionid: res.question.id
+            };
+            createTopicRQ(newTopicRQ);
+          })
+          .catch(err => console.log(err));
+      })
+    );
+  };
+
+  // create topic
+  const onCreate = () => {
+    form
+      .validateFields()
+      .then(values => {
+        console.log(values);
+        createTopic(values.topic)
+          .then(res => {
+            let newTopic = res.topic;
+            handleCQ(newTopic, values);
+            handleRQ(newTopic, values);
+            showJoinCode();
+            form.resetFields();
+          })
+          .catch(err => console.log(err));
+      })
+      .catch(err => {
+        console.log(err);
+        err.errorFields.map(err => {
+          return message.error(`${err.errors[0]}`, 10);
+        });
       });
-    });
   };
 
   // cancel topic creation

@@ -21,13 +21,11 @@ import {
   getAllRequestResponses,
   getAllTopics,
   getAllThreads,
-  getAllQuestions,
-  getQuestions,
   getAllSurveyRequest,
   getToken,
   getAllTopicRequestQuestions,
   getAllTopicContextQuestions
-} from "../../../api";
+} from "../../../api/index";
 import { RequestSurvey } from "../SurveyRequest";
 
 function RenderHomePage(props) {
@@ -49,20 +47,8 @@ function RenderHomePage(props) {
   useEffect(() => {
     getAllTopics()
       .then(res => {
-        let userTopics = res.filter(topic => topic.leaderid == userInfo.sub);
+        let userTopics = res.filter(topic => topic.leaderid === userInfo.sub);
         setTopics(userTopics);
-      })
-      .catch(err => console.log(err));
-
-    getQuestions()
-      .then(res => {
-        setQuestions(res);
-      })
-      .catch(err => console.log(err));
-
-    getAllQuestions()
-      .then(res => {
-        setTopicQuestions(res);
       })
       .catch(err => console.log(err));
   }, [topicID]);
@@ -81,7 +67,7 @@ function RenderHomePage(props) {
   const getSurveyRequests = id => {
     getAllSurveyRequest()
       .then(res => {
-        let TopicRequest = res.filter(req => req.topicid == id);
+        let TopicRequest = res.filter(req => req.topicid === id);
         setRequestsList(TopicRequest);
         console.log("getAllSurveyRequests", res);
         console.log("getAllSurveyRequests -> requestsList", requestsList);
@@ -94,10 +80,10 @@ function RenderHomePage(props) {
     setRequestID(0);
   };
 
-  const getSurveryContextForm = id => {
+  const getSurveyContextForm = id => {
     getAllTopicContextQuestions()
       .then(res => {
-        const TopicCont = res.filter(question => question.topicid == id);
+        const TopicCont = res.filter(question => question.topicid === id);
         setSurveyContextForm(TopicCont);
 
         console.log("getSurveyContextForm -> TopicReq", TopicCont);
@@ -112,10 +98,10 @@ function RenderHomePage(props) {
       );
   };
 
-  const getSurveryRequestForm = id => {
+  const getSurveyRequestForm = id => {
     getAllTopicRequestQuestions()
       .then(res => {
-        const TopicReq = res.filter(question => question.topicid == id);
+        const TopicReq = res.filter(question => question.topicid === id);
         setSurveyRequestForm(TopicReq);
 
         console.log("getSurveyRequestForm -> TopicReq", TopicReq);
@@ -135,7 +121,7 @@ function RenderHomePage(props) {
     getAllRequestResponses()
       .then(res => {
         let RequestResponses = res.filter(
-          response => response.surveyrequestid == id
+          response => response.surveyrequestid === id
         );
         setRequestID(id);
         setResponses(RequestResponses);
@@ -150,7 +136,7 @@ function RenderHomePage(props) {
     getAllThreads()
       .then(res => {
         setResponseID(id);
-        let ResponseThread = res.filter(thrd => thrd.responseid == id);
+        let ResponseThread = res.filter(thrd => thrd.responseid === id);
         setThreads(ResponseThread);
 
         console.log("getThreadList -> ResponseID", responseID);
@@ -203,8 +189,8 @@ function RenderHomePage(props) {
                             topicID={getTopicID}
                             getSurveyList={getSurveyRequests}
                             resetReqAndResID={resetReqAndResID}
-                            getSurveyRequestForm={getSurveryRequestForm}
-                            getSurveryContextForm={getSurveryContextForm}
+                            getSurveyRequestForm={getSurveyRequestForm}
+                            getSurveyContextForm={getSurveyContextForm}
                           />
                         </div>
                         <div className="main-topic-container">

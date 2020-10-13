@@ -7,17 +7,17 @@ const Responses = props => {
   const { responseList } = useContext(ResponsesContext);
   console.log("Responses component, ", responseList);
 
-  const getQuestionByID = id => {
-    getAllRequestQuestions
-      .then(res => {
-        console.log("GET /question/:id", res);
-        console.log("getQuestionByID", res.data);
-        return res.data.question;
-      })
-      .catch(err => {
-        console.log("getQuestionByID ", err);
-      });
-  };
+  // const getQuestionByID = id => {
+  //   getAllRequestQuestions
+  //     .then(res => {
+  //       console.log("GET /question/:id", res);
+  //       console.log("getQuestionByID", res.data);
+  //       return res.data.question;
+  //     })
+  //     .catch(err => {
+  //       console.log("getQuestionByID ", err);
+  //     });
+  // };
 
   return (
     <>

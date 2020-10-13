@@ -13,14 +13,9 @@ import { TopicQuestionsContext } from "../../../state/contexts/TopicQuestionsCon
 import { RequestsContext } from "../../../state/contexts/RequestsContext";
 
 import {
-  getAllResponses,
-  getAllTopics,
-  getAllThreads,
-  getAllQuestions,
-  getQuestions,
+  getAllRequestResponses,
   getAllTopicMembers,
-  getTopic,
-  getToken
+  getTopic
 } from "../../../api";
 
 function RenderMemberPage(props) {
@@ -69,7 +64,7 @@ function RenderMemberPage(props) {
   };
 
   const getSurveyRequests = id => {
-    getAllResponses()
+    getAllRequestResponses()
       .then(res => {
         let TopicRequest = res.filter(req => req.topicid === id);
         setRequestsList(TopicRequest);
