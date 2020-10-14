@@ -26,7 +26,9 @@ import {
   getAllSurveyRequest,
   getToken,
   getAllTopicRequestQuestions,
-  getAllTopicContextQuestions
+  getAllTopicContextQuestions,
+  getContextQuestionByID,
+  getRequestQuestionByID
 } from "../../../api";
 import { RequestSurvey } from "../SurveyRequest";
 
@@ -110,6 +112,23 @@ function RenderHomePage(props) {
       .catch(err =>
         console.log("getSurveyContextForm -> getAllTopicRequestQuestions", err)
       );
+
+    let newQuestion = surveyContextForm.map(item => {
+      console.log(
+        "getSurveyContextForm -> newQuestion(item.contextquestionid)",
+        item.contextquestionid
+      );
+      item.contextquestionid = getContextQuestionByID(item.contextquestionid);
+      console.log(
+        "getSurveyContextForm -> newQuestion(item.contextquestionid",
+        item.contextquestionid
+      );
+    });
+    console.log("getContextForm -> newQuestions ", newQuestion);
+
+    setSurveyContextForm(newQuestion);
+
+    console.log("getContextForm -> surveyContextForm", surveyContextForm);
   };
 
   const getSurveryRequestForm = id => {
@@ -128,6 +147,24 @@ function RenderHomePage(props) {
       .catch(err =>
         console.log("getSurveyRequestForm -> getAllTopicRequestQuestion", err)
       );
+
+    let newQuestions = surveyRequestForm.map(item => {
+      console.log(
+        "getSurveyRequestForm -> newquestions(item.requestquestionid) before",
+        item.requestquestionid
+      );
+      item.requestquestionid = getRequestQuestionByID(item.requestquestionid);
+      console.log(
+        "getSurveyRequestForm -> newquestions(item.requestquestionid) after",
+        item.requestquestionid
+      );
+    });
+
+    console.log("getSurveyRequestForm -> newQuestions ", newQuestions);
+
+    setSurveyRequestForm(newQuestions);
+
+    console.log("getSurveyRequestForm -> surveyRequestForm", surveyRequestForm);
   };
 
   const getResponseList = id => {

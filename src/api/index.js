@@ -25,6 +25,17 @@ const requestResponse = `${process.env.REACT_APP_API_URI}/requestresponse/`;
 const topicContextQuestion = `${process.env.REACT_APP_API_URI}/topiccontextquestion/`;
 const topicRequestQuestion = `${process.env.REACT_APP_API_URI}/topicrequestquestion/`;
 const requestQuestions = `${process.env.REACT_APP_API_URI}/requestquestion/`;
+const contextQuestions = `${process.env.REACT_APP_API_URI}/contextquestion/`;
+
+const getAllContextQuestions = () => {
+  return axios
+    .get(contextQuestions, getToken())
+    .then(res => {
+      console.log("GET /contextquestion", res);
+      return res.data;
+    })
+    .catch(err => console.log("GET /contextquestion", err));
+};
 
 const getAllRequestQuestions = () => {
   return axios
@@ -34,6 +45,23 @@ const getAllRequestQuestions = () => {
       return res.data;
     })
     .catch(err => console.log("GET /requestquestions", err));
+};
+
+const getRequestQuestionByID = id => {
+  return getAllRequestQuestions()
+    .then(res => {
+      const filterQuestion = res.filter(item => item.id == id);
+      console.log("getRequestQuestionByID -> id", id);
+      console.log("getRequestQuestionByID -> res", res);
+      console.log(
+        "getRequestQuestionByID -> filterQuestion",
+        filterQuestion[0].question
+      );
+      return filterQuestion[0];
+    })
+    .catch(err =>
+      console.log("getRequestQuestionByID -> getAllRequestQuestion", err)
+    );
 };
 
 const getAllTopicRequestQuestions = () => {
@@ -117,6 +145,17 @@ const getContextByID = contextID => {
       return res.data;
     })
     .catch(err => console.log("GET /context/:id", err));
+};
+
+const getContextQuestionByID = id => {
+  console.log("GET /contextquestion/:id -> id ", id);
+  return axios
+    .get(`${process.env.REACT_APP_API_URI}/contextquestion/${id}`, getToken())
+    .then(res => {
+      console.log("GET /contextquestion/:id", res);
+      return res.data;
+    })
+    .catch(err => console.log("GET /contextquestion/:id", err));
 };
 
 // get all preset questions
@@ -326,7 +365,20 @@ const getAllRequestResponses = () => {
     .catch(err => console.log("GET /requestresponse", err));
 };
 
+const getProfile = id => {
+  return axios
+    .get(`${process.env.REACT_APP_API_URI}/profile/${id}`, getToken())
+    .then(res => {
+      console.log("GET /profile/:id", res);
+      return res.data;
+    })
+    .catch(err => console.log("GET /profile/:id", err));
+};
+
 export {
+  getRequestQuestionByID,
+  getContextQuestionByID,
+  getProfile,
   getAllRequestResponses,
   getAllTopics,
   getAllSurveyRequest,

@@ -14,6 +14,8 @@ const Requests = props => {
     return res;
   };
 
+  const getUserProfile = id => {};
+
   return (
     <>
       {requestsList.length != 0 ? (
@@ -24,8 +26,9 @@ const Requests = props => {
               // props.resetThreadList();
             }}
           >
-            <h3>Created: {displayDate(item.created_at)}</h3>
-            {/* <h3>{getUserProfile(item.id)}</h3> */}
+            <h3>
+              {item.id} Created: {displayDate(item.created_at)}
+            </h3>
           </div>
         ))
       ) : (

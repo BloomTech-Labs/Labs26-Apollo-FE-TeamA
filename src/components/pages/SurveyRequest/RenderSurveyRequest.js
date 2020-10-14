@@ -20,9 +20,10 @@ const RenderSurveyRequest = ({ page }) => {
         console.log("getContextQuestion -> GET /contextQuestion/:id", res);
         return res.data.question;
       })
-      .catch(err =>
-        console.log("getContextQuestion -> GET /contextQuestion/:id", err)
-      );
+      .catch(err => {
+        console.log("getContextQuestion -> GET /contextQuestion/:id", err);
+        return err.response;
+      });
   };
 
   const getRequestQuestion = id => {
@@ -35,9 +36,10 @@ const RenderSurveyRequest = ({ page }) => {
         console.log("getContextQuestion -> GET /requestQuestion/:id", res);
         return res.data.question;
       })
-      .catch(err =>
-        console.log("getContextQuestion -> GET /requestQuestion/:id", err)
-      );
+      .catch(err => {
+        console.log("getContextQuestion -> GET /requestQuestion/:id", err);
+        return err.response;
+      });
   };
 
   if (page === 1) {
@@ -57,8 +59,7 @@ const RenderSurveyRequest = ({ page }) => {
 
             {surveyRequestForm ? 
             (surveyRequestForm.map(item=> (
-                <Form.item
-                label={getRequestQuestion(item.requestquestionid)}>
+                <Form.item>
                     <input/>
                 </Form.item>
             ))):
