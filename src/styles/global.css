@@ -232,25 +232,26 @@ h1 {
   display: none;
 }
 
-.requests-container {
-  margin-top: 2rem;
+.ant-form-item {
+  padding: 0;
+  margin-bottom: 0;
 }
 
-.requests-list-title {
-  color: #7F64FF;
-  font-weight: bold;
+.remove-question-button {
+  border: none;
+  margin-bottom: 1rem;
+  padding: 4px 2px;
 }
 
-.context-questions-container {
-  margin-top: 2rem;
-  width: 50%;
+.remove-question-button p {
+  border: none;
+  text-decoration: underline;
 }
 
-.context-questions-container h2 {
-  color: #7F64FF;
-  font-weight: bold;
+.remove-question-button p:hover {
+  text-decoration: underline;
 }
 
-.context-question {
-  margin: 1rem 0;
+.add-question-button {
+  margin-top: 1rem;
 }

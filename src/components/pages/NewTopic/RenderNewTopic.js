@@ -150,7 +150,7 @@ const RenderNewTopic = props => {
 
       <Modal
         visible={visible}
-        width={700}
+        width={900}
         title="Create a new topic"
         okText="Create"
         cancelText="Cancel"
@@ -186,7 +186,12 @@ const RenderNewTopic = props => {
           </>
         }
       >
-        <Steps progressDot size="small" current={page}>
+        <Steps
+          type="navigation"
+          size="small"
+          current={page}
+          style={{ marginBottom: "1rem" }}
+        >
           <Steps.Step title="Topic Info" />
           <Steps.Step title="Context" />
           <Steps.Step title="Context Questions" />
