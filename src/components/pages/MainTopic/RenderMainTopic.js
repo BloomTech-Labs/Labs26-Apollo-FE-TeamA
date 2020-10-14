@@ -13,7 +13,7 @@ import Responses from "../../home_components/Responses";
 import {
   getTopic,
   getContextByID,
-  getTopicMembers,
+  getAllTopicMembers,
   editTopic,
   deleteTopic
 } from "../../../api/index";
@@ -170,7 +170,7 @@ const RenderMainTopic = ({
               questions.filter(q => q.type == "Request Questions")
             );
             setRequestQ(rQ);
-            getTopicMembers().then(res => {
+            getAllTopicMembers().then(res => {
               let tM = res.filter(m => m.topicid == topicID);
               setMembers(tM);
             });
