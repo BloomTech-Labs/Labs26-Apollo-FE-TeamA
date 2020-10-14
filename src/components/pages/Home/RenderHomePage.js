@@ -64,6 +64,7 @@ function RenderHomePage(props) {
     setRequestID(0);
     setResponseID(0);
   };
+
   const getSurveyRequests = id => {
     getAllSurveyRequest()
       .then(res => {
