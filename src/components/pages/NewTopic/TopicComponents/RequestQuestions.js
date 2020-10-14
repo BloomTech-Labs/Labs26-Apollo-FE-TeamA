@@ -5,7 +5,6 @@ import { getRQ } from "../../../../api/index";
 
 const RequestQuestions = () => {
   const [presets, setPresets] = useState([]);
-  const { Option } = Select;
 
   // fetch default request questions
   useEffect(() => {

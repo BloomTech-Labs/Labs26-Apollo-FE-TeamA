@@ -247,7 +247,7 @@ const getRQ = () => {
     .get(defaultRQ, getToken())
     .then(res => {
       console.log("GET /getdefaultrequestquestion", res);
-      return res.data;
+      return res.data.questions;
     })
     .catch(err => console.log("GET /getdefaultrequestquestion", err));
 };

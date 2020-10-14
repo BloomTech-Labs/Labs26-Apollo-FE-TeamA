@@ -5,7 +5,6 @@ import { getCQ } from "../../../../api/index";
 
 const ContextQuestions = () => {
   const [presets, setPresets] = useState([]);
-  const { Option } = Select;
 
   // fetch default context questions
   useEffect(() => {
