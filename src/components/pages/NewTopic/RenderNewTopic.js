@@ -21,6 +21,16 @@ const RenderNewTopic = props => {
   const [visible, setVisible] = useState(false);
   const [page, setPage] = useState(0);
 
+  // preset context/request questions and their ids'
+  const presets = {
+    "What is your current priority?": 1,
+    "Do you have any key learnings to share with the team from stakeholders or customers?": 2,
+    "What upcoming demos or events should the team be aware of?": 3,
+    "What are you working on today?": 1,
+    "Are there any monsters in your path?": 2,
+    "What is your favorite dessert?": 3
+  };
+
   // set the JOIN CODE
   const joinCode = generator.generate({
     length: 6,
@@ -38,39 +48,60 @@ const RenderNewTopic = props => {
     });
   };
 
+  // create context questions and topic context questions
   const handleCQ = (topic, values) => {
     let newCQ = Object.values(values.cQ);
     console.log(newCQ);
     return axios.all(
       newCQ.map(q => {
-        createCQ(q)
-          .then(res => {
-            console.log("RES", res);
-            let newTopicCQ = {
-              topicid: topic.id,
-              contextquestionid: res.question.id
-            };
-            createTopicCQ(newTopicCQ);
-          })
-          .catch(err => console.log(err));
+        // if the question is a preset, don't POST it again
+        if (presets[q.question]) {
+          let newTopicCQ = {
+            topicid: topic.id,
+            contextquestionid: presets[q.question]
+          };
+          createTopicCQ(newTopicCQ);
+        } else {
+          // else if the question is new, POST it to /contextquestion
+          createCQ(q)
+            .then(res => {
+              let newTopicCQ = {
+                topicid: topic.id,
+                contextquestionid: res.question.id
+              };
+              createTopicCQ(newTopicCQ);
+            })
+            .catch(err => console.log(err));
+        }
       })
     );
   };
 
+  // create request questions and topic request questions
   const handleRQ = (topic, values) => {
     let newRQ = Object.values(values.rQ);
     console.log(newRQ);
     return axios.all(
       newRQ.map(q => {
-        createRQ(q)
-          .then(res => {
-            let newTopicRQ = {
-              topicid: topic.id,
-              requestquestionid: res.question.id
-            };
-            createTopicRQ(newTopicRQ);
-          })
-          .catch(err => console.log(err));
+        // if the question is a preset, don't POST it again
+        if (presets[q.question]) {
+          let newTopicRQ = {
+            topicid: topic.id,
+            requestquestionid: presets[q.question]
+          };
+          createTopicRQ(newTopicRQ);
+        } else {
+          // else if the question is new, POST it to /requestquestion
+          createRQ(q)
+            .then(res => {
+              let newTopicRQ = {
+                topicid: topic.id,
+                requestquestionid: res.question.id
+              };
+              createTopicRQ(newTopicRQ);
+            })
+            .catch(err => console.log(err));
+        }
       })
     );
   };
@@ -86,7 +117,7 @@ const RenderNewTopic = props => {
             let newTopic = res.topic;
             handleCQ(newTopic, values);
             handleRQ(newTopic, values);
-            showJoinCode();
+            showJoinCode(values);
             form.resetFields();
           })
           .catch(err => console.log(err));
