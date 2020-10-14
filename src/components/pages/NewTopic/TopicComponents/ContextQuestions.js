@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from "react";
 import { Form, Input, Button, Select, Divider } from "antd";
-import { DeleteFilled } from "@ant-design/icons";
 import { getCQ } from "../../../../api/index";
 
 const ContextQuestions = () => {
@@ -34,7 +33,7 @@ const ContextQuestions = () => {
   return (
     <div>
       <Divider>Context Questions</Divider>
-      {presets.map(q => {
+      {presets.map((q, index) => {
         return (
           <div key={q.question}>
             <Form.Item
@@ -51,6 +50,7 @@ const ContextQuestions = () => {
 
             <Form.Item
               name={["cQ", q.question, "question"]}
+              label={`Context Question ${index + 1}`}
               rules={[{ required: true }]}
               initialValue={q.question}
             >
@@ -58,16 +58,23 @@ const ContextQuestions = () => {
             </Form.Item>
 
             <Button
+              className="remove-question-button"
               onClick={() => {
                 removeQuestion(q.question);
               }}
             >
-              <DeleteFilled />
+              <p>Remove Question</p>
             </Button>
           </div>
         );
       })}
-      <Button onClick={addQuestion}>Add Question</Button>
+      <Button
+        type="primary"
+        className="add-question-button"
+        onClick={addQuestion}
+      >
+        Add Question
+      </Button>
     </div>
   );
 };

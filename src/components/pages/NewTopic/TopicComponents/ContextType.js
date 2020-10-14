@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import { Form, Select } from "antd";
 import { getAllContexts } from "../../../../api";
 
-const ContextType = props => {
+const ContextType = () => {
   const [contexts, setContexts] = useState([]); // load in contexts from API
   const { Option } = Select;
 
