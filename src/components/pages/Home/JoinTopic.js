@@ -28,7 +28,7 @@ const JoinTopic = props => {
           };
           addMember(member)
             .then(res => {
-              message.info("Success!");
+              message.info(`Success! Joined Topic: ${topics[i].topicname}`);
               setVisible(false);
             })
             .catch(err => {

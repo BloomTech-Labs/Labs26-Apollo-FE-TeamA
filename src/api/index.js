@@ -4,11 +4,9 @@ import axios from "axios";
 const getToken = () => {
   const idToken = JSON.parse(localStorage.getItem("okta-token-storage")).idToken
     .idToken;
-
   const authHeader = {
     headers: { Authorization: `Bearer ${idToken}` }
   };
-
   return authHeader;
 };
 
@@ -28,8 +26,8 @@ const contextResponses = `${process.env.REACT_APP_API_URI}/contextresponse/`;
 // REQUEST QUESTIONS
 const requestQuestions = `${process.env.REACT_APP_API_URI}/requestquestion/`;
 const defaultRQ = `${process.env.REACT_APP_API_URI}/requestquestion/getdefaultrequestquestion/`;
-const requestResponse = `${process.env.REACT_APP_API_URI}/requestresponse/`;
 const topicRequestQuestion = `${process.env.REACT_APP_API_URI}/topicrequestquestion/`;
+const requestResponse = `${process.env.REACT_APP_API_URI}/requestresponse/`;
 
 // get all topics
 const getAllTopics = () => {
@@ -140,6 +138,28 @@ const deleteRequest = id => {
       return res.data;
     })
     .catch(err => console.log("DELETE /surveyrequest/:id", err));
+};
+
+// get all context responses
+const getAllContextResponses = () => {
+  return axios
+    .get(contextResponses, getToken())
+    .then(res => {
+      console.log("GET /contextresponse", res);
+      return res.data;
+    })
+    .catch(err => console.log("GET /contextresponse", err));
+};
+
+// create a context response
+const createContextResponse = response => {
+  return axios
+    .post(contextResponses, response, getToken())
+    .then(res => {
+      console.log("POST /contextresponse", res);
+      return res.data;
+    })
+    .catch(err => console.log("POST /contextresponse", err));
 };
 
 // get all survey request responses
@@ -342,6 +362,8 @@ export {
   createRequest,
   editRequest,
   deleteRequest,
+  getAllContextResponses,
+  createContextResponse,
   getAllRequestResponses,
   // context handlers
   getAllContexts,
