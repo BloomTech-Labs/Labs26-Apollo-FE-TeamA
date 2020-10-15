@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { Form, Select } from "antd";
+import { Form, Select, Divider } from "antd";
 import { getAllContexts } from "../../../../api";
 
 const ContextType = () => {
@@ -17,7 +17,7 @@ const ContextType = () => {
 
   return (
     <div>
-      <h2>Topic Context</h2>
+      <Divider>Topic Context</Divider>
 
       <Form.Item
         name={["topic", "contextid"]}
