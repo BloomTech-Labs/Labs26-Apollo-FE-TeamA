@@ -22,7 +22,7 @@ import {
   getAllTopics,
   getAllThreads,
   getAllSurveyRequest,
-  getToken,
+  getAllTopicMembers,
   getAllTopicRequestQuestions,
   getAllTopicContextQuestions
 } from "../../../api/index";
@@ -45,10 +45,24 @@ function RenderHomePage(props) {
   const page = 1;
 
   useEffect(() => {
-    getAllTopics()
+    getAllTopicMembers()
       .then(res => {
-        let userTopics = res.filter(topic => topic.leaderid === userInfo.sub);
-        setTopics(userTopics);
+        let memberOf = res.filter(topic => topic.memberid === userInfo.sub);
+        getAllTopics()
+          .then(t => {
+            let memberTopics = [];
+            for (let i = 0; i < memberOf.length; i++) {
+              for (let j = 0; j < t.length; j++) {
+                if (memberOf[i].topicid === t[j].id) {
+                  memberTopics.push(t[j]);
+                } else if (t[j].leaderid === userInfo.sub) {
+                  memberTopics.push(t[j]);
+                }
+              }
+            }
+            setTopics(memberTopics);
+          })
+          .catch(err => console.log(err));
       })
       .catch(err => console.log(err));
   }, [topicID]);
@@ -56,6 +70,7 @@ function RenderHomePage(props) {
   // for selecting a specific topic
   const getTopicID = id => {
     setTopicID(id);
+    console.log(topics);
   };
 
   // used when deleting a topic
@@ -187,6 +202,7 @@ function RenderHomePage(props) {
                         <div className="topics-list">
                           <h2 className="topics-list-title">Your Topics</h2>
                           <TopicsList
+                            leader={userInfo.sub}
                             topicID={getTopicID}
                             getSurveyList={getSurveyRequests}
                             resetReqAndResID={resetReqAndResID}

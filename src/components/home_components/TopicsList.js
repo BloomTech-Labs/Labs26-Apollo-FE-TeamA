@@ -1,7 +1,7 @@
 import React, { useContext, useState } from "react";
 import { TopicListContext } from "../../state/contexts/TopicListContext";
 import Moment from "react-moment";
-import axios from "axios";
+import { CrownFilled } from "@ant-design/icons";
 
 const TopicsList = props => {
   const { topics } = useContext(TopicListContext);
@@ -24,8 +24,14 @@ const TopicsList = props => {
             props.resetReqAndResID();
           }}
         >
-          <h3>{item.topicname}</h3>
-          <h4>
+          {props.leader === item.leaderid ? (
+            <h3>
+              {item.topicname} <CrownFilled />{" "}
+            </h3>
+          ) : (
+            <h3>{item.topicname}</h3>
+          )}
+          <h4 className="topic-date">
             <Moment format="MM/DD/YYYY">{item.updated_at}</Moment>
           </h4>
         </div>
