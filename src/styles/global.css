@@ -236,6 +236,12 @@ h1 {
 }
 
 /* NEW TOPIC STYLES */
+@media screen and (max-width: 1600px) {
+  .progress-bar {
+    display: none;
+  }
+}
+
 .closed {
   display: none;
 }
@@ -253,11 +259,12 @@ h1 {
 
 .remove-question-button p {
   border: none;
-  text-decoration: underline;
+  opacity: 80%;
 }
 
 .remove-question-button p:hover {
   text-decoration: underline;
+  opacity: 100%;
 }
 
 .add-question-button {

@@ -15,7 +15,6 @@ import { SurveyRequestsContext } from "../../../state/contexts/SurveyRequestsCon
 import SurveyRequest from "../SurveyRequest/SurveyRequestContainer";
 import { SurveyContextContext } from "../../../state/contexts/SurveyContextContext";
 import JoinTopic from "./JoinTopic";
-import axios from "axios";
 
 import {
   getAllRequestResponses,
@@ -224,7 +223,7 @@ function RenderHomePage(props) {
                             />
                           )}
                         </div>
-                        {responseID != 0 ? (
+                        {responseID !== 0 ? (
                           <ThreadsList />
                         ) : (
                           <SurveyRequest page={page} />

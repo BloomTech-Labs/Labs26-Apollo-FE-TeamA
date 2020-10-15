@@ -1,10 +1,12 @@
 import React from "react";
-import { Form, Input, Select } from "antd";
+import { Form, Input, Select, Divider } from "antd";
 const { Option } = Select;
 
 const TopicDetails = () => {
   return (
     <div>
+      <Divider>Topic Details</Divider>
+
       <Form.Item
         name={["topic", "topicname"]}
         label="Topic Title"
