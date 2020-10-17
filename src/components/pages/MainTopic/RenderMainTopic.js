@@ -89,11 +89,7 @@ const RenderMainTopic = ({
 
         <Requests getResponseList={getResponseList} />
 
-        {requestID !== 0 ? (
-          <Responses getThreadList={getThreadList} />
-        ) : (
-          <p>Select a Survey Request </p>
-        )}
+        {requestID !== 0 ? <Responses getThreadList={getThreadList} /> : null}
       </div>
     </div>
   );

@@ -199,7 +199,6 @@ function RenderHomePage(props) {
 
                       <div className="topics-container">
                         <div className="topics-list">
-                          <h2 className="topics-list-title">Your Topics</h2>
                           <TopicsList
                             leader={userInfo.sub}
                             topicID={getTopicID}

@@ -93,9 +93,10 @@ h1 {
   flex-direction: column;
   justify-content: flex-start;
   align-items: center;
-  width: 30%;
-  padding: 1rem 1rem;
-  background: rgb(255, 255, 255);
+  width: 10%;
+  padding: 1rem 0;
+  background: #7F64FF;
+  border-radius: 0 20px 20px 0;
 }
 
 .topics-list-title {
@@ -107,7 +108,7 @@ h1 {
   display: table-column;
   justify-items: center;
   align-items: flex-start;
-  width: 65%;
+  width: 85%;
 }
 
 .context_options {
@@ -130,11 +131,11 @@ h1 {
 
 /* TOPICS LIST STYLES */
 .topic-list-item {
-  width: 300px;
-  background: #7F64FF;
+  width: 55%;
+  background: #FFFFFF;
   margin: 1rem 0;
-  padding: 1rem;
-  border-radius: 20px;
+  padding: 1rem 0;
+  border-radius: 50%;
 }
 
 .topic-list-item:hover {
@@ -142,12 +143,13 @@ h1 {
 }
 
 .topic-list-item h3, h4 {
-  color: white;
+  color: #7F64FF;
   font-weight: bold;
+  text-align: center;
 }
 
 .anticon-crown {
-  padding-left: 1rem;
+  padding-left: .5rem;
 }
 
 .topic-date {
