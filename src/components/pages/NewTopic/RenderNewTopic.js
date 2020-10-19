@@ -1,19 +1,35 @@
 import React, { useState } from "react";
-import { Button, Modal, Form, Steps } from "antd";
+import { Button, Modal, Form, Steps, message } from "antd";
 import { InfoCircleTwoTone } from "@ant-design/icons";
 import TopicDetails from "./TopicComponents/TopicDetails";
 import ContextType from "./TopicComponents/ContextType";
 import ContextQuestions from "./TopicComponents/ContextQuestions";
 import RequestQuestions from "./TopicComponents/RequestQuestions";
 import generator from "generate-password";
-import { createTopic, createTopicQuestion } from "../../../api/index";
 import axios from "axios";
+import {
+  createCQ,
+  createRQ,
+  createTopic,
+  createTopicCQ,
+  createTopicRQ
+} from "../../../api/index";
 
 const RenderNewTopic = props => {
   // state variables
   const [form] = Form.useForm();
   const [visible, setVisible] = useState(false);
   const [page, setPage] = useState(0);
+
+  // preset context/request questions and their ids'
+  const presets = {
+    "What is your current priority?": 1,
+    "Do you have any key learnings to share with the team from stakeholders or customers?": 2,
+    "What upcoming demos or events should the team be aware of?": 3,
+    "What are you working on today?": 1,
+    "Are there any monsters in your path?": 2,
+    "What is your favorite dessert?": 3
+  };
 
   // set the JOIN CODE
   const joinCode = generator.generate({
@@ -32,20 +48,86 @@ const RenderNewTopic = props => {
     });
   };
 
-  // create topic
-  const onCreate = () => {
-    form.validateFields().then(values => {
-      console.log(values);
-    });
+  // create context questions and topic context questions
+  const handleCQ = (topic, values) => {
+    let newCQ = Object.values(values.cQ);
+    console.log(newCQ);
+    return axios.all(
+      newCQ.map(q => {
+        // if the question is a preset, don't POST it again
+        if (presets[q.question]) {
+          let newTopicCQ = {
+            topicid: topic.id,
+            contextquestionid: presets[q.question]
+          };
+          createTopicCQ(newTopicCQ);
+        } else {
+          // else if the question is new, POST it to /contextquestion
+          createCQ(q)
+            .then(res => {
+              let newTopicCQ = {
+                topicid: topic.id,
+                contextquestionid: res.question.id
+              };
+              createTopicCQ(newTopicCQ);
+            })
+            .catch(err => console.log(err));
+        }
+      })
+    );
   };
 
-  // IN PROGRESS: needs to post presetCQ/RQ & custom CQ/RQ
-  const create = () => {
-    form.validateFields().then(values => {
-      createTopic(values.topic).then(topic => {
-        console.log(topic);
+  // create request questions and topic request questions
+  const handleRQ = (topic, values) => {
+    let newRQ = Object.values(values.rQ);
+    console.log(newRQ);
+    return axios.all(
+      newRQ.map(q => {
+        // if the question is a preset, don't POST it again
+        if (presets[q.question]) {
+          let newTopicRQ = {
+            topicid: topic.id,
+            requestquestionid: presets[q.question]
+          };
+          createTopicRQ(newTopicRQ);
+        } else {
+          // else if the question is new, POST it to /requestquestion
+          createRQ(q)
+            .then(res => {
+              let newTopicRQ = {
+                topicid: topic.id,
+                requestquestionid: res.question.id
+              };
+              createTopicRQ(newTopicRQ);
+            })
+            .catch(err => console.log(err));
+        }
+      })
+    );
+  };
+
+  // create topic
+  const onCreate = () => {
+    form
+      .validateFields()
+      .then(values => {
+        console.log(values);
+        createTopic(values.topic)
+          .then(res => {
+            let newTopic = res.topic;
+            handleCQ(newTopic, values);
+            handleRQ(newTopic, values);
+            showJoinCode(values);
+            form.resetFields();
+          })
+          .catch(err => console.log(err));
+      })
+      .catch(err => {
+        console.log(err);
+        err.errorFields.map(err => {
+          return message.error(`${err.errors[0]}`, 10);
+        });
       });
-    });
   };
 
   // cancel topic creation
@@ -68,7 +150,7 @@ const RenderNewTopic = props => {
 
       <Modal
         visible={visible}
-        width={700}
+        width={900}
         title="Create a new topic"
         okText="Create"
         cancelText="Cancel"
@@ -104,7 +186,12 @@ const RenderNewTopic = props => {
           </>
         }
       >
-        <Steps progressDot size="small" current={page}>
+        <Steps
+          type="navigation"
+          size="small"
+          current={page}
+          style={{ marginBottom: "1rem" }}
+        >
           <Steps.Step title="Topic Info" />
           <Steps.Step title="Context" />
           <Steps.Step title="Context Questions" />

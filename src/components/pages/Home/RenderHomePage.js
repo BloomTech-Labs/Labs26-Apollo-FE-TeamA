@@ -16,20 +16,18 @@ import SurveyRequest from "../SurveyRequest/SurveyRequestContainer";
 import { SurveyContextContext } from "../../../state/contexts/SurveyContextContext";
 import JoinTopic from "./JoinTopic";
 import axios from "axios";
-
 import {
   getAllRequestResponses,
   getAllTopics,
   getAllThreads,
-  getAllQuestions,
-  getQuestions,
   getAllSurveyRequest,
   getToken,
   getAllTopicRequestQuestions,
   getAllTopicContextQuestions,
   getContextQuestionByID,
-  getRequestQuestionByID
-} from "../../../api";
+  getRequestQuestionByID,
+  getProfile
+} from "../../../api/index";
 import { RequestSurvey } from "../SurveyRequest";
 
 function RenderHomePage(props) {
@@ -51,20 +49,8 @@ function RenderHomePage(props) {
   useEffect(() => {
     getAllTopics()
       .then(res => {
-        let userTopics = res.filter(topic => topic.leaderid == userInfo.sub);
+        let userTopics = res.filter(topic => topic.leaderid === userInfo.sub);
         setTopics(userTopics);
-      })
-      .catch(err => console.log(err));
-
-    getQuestions()
-      .then(res => {
-        setQuestions(res);
-      })
-      .catch(err => console.log(err));
-
-    getAllQuestions()
-      .then(res => {
-        setTopicQuestions(res);
       })
       .catch(err => console.log(err));
   }, [topicID]);
@@ -80,13 +66,14 @@ function RenderHomePage(props) {
     setRequestID(0);
     setResponseID(0);
   };
+
   const getSurveyRequests = id => {
     getAllSurveyRequest()
       .then(res => {
-        let TopicRequest = res.filter(req => req.topicid == id);
+        let TopicRequest = res.filter(req => req.topicid === id);
         setRequestsList(TopicRequest);
-        console.log("getAllSurveyRequests", res);
-        console.log("getAllSurveyRequests -> requestsList", requestsList);
+        // console.log("getAllSurveyRequests", res);
+        // console.log("getAllSurveyRequests -> requestsList", requestsList);
       })
       .catch(err => console.log("getAllResponses", err));
   };
@@ -96,88 +83,123 @@ function RenderHomePage(props) {
     setRequestID(0);
   };
 
-  const getSurveryContextForm = id => {
+  const getSurveyContextForm = id => {
     getAllTopicContextQuestions()
       .then(res => {
-        const TopicCont = res.filter(question => question.topicid == id);
+        const TopicCont = res.filter(question => question.topicid === id);
         setSurveyContextForm(TopicCont);
 
-        console.log("getSurveyContextForm -> TopicReq", TopicCont);
-        console.log("getSurveyContextForm -> getAllTopicRequestQuestions", res);
-        console.log(
-          "getSurveyContextForm -> surveyContextForm",
-          surveyContextForm
-        );
+        // console.log("getSurveyContextForm -> TopicReq", TopicCont);
+        // console.log("getSurveyContextForm -> getAllTopicContextQuestions", res);
+        // console.log(
+        //   "getSurveyContextForm -> surveyContextForm",
+        //   surveyContextForm
+        // );
       })
       .catch(err =>
-        console.log("getSurveyContextForm -> getAllTopicRequestQuestions", err)
+        console.log("getSurveyContextForm -> getAllTopicContextQuestions", err)
       );
 
-    let newQuestion = surveyContextForm.map(item => {
-      console.log(
-        "getSurveyContextForm -> newQuestion(item.contextquestionid)",
-        item.contextquestionid
-      );
-      item.contextquestionid = getContextQuestionByID(item.contextquestionid);
-      console.log(
-        "getSurveyContextForm -> newQuestion(item.contextquestionid",
-        item.contextquestionid
-      );
-    });
-    console.log("getContextForm -> newQuestions ", newQuestion);
+    axios
+      .all(
+        surveyContextForm.map(item => {
+          getContextQuestionByID(item.contextquestionid)
+            .then(res => {
+              item.contextquestionid = res;
+            })
+            .catch(err => console.log("getContextQuestionByID", err));
+        })
+      )
+      .then(res => {
+        setSurveyContextForm(res);
+      })
+      .catch(err => console.log("getSurveyContextForm -> axios.all()", err));
 
-    setSurveyContextForm(newQuestion);
-
-    console.log("getContextForm -> surveyContextForm", surveyContextForm);
+    // console.log("getSurveyContextForm -> setSurveyContextForm(newQuestion)", surveyContextForm);
   };
-
-  const getSurveryRequestForm = id => {
+  const getSurveyRequestForm = id => {
     getAllTopicRequestQuestions()
       .then(res => {
-        const TopicReq = res.filter(question => question.topicid == id);
+        const TopicReq = res.filter(question => question.topicid === id);
         setSurveyRequestForm(TopicReq);
 
-        console.log("getSurveyRequestForm -> TopicReq", TopicReq);
-        console.log("getSurveyRequestForm -> getAllTopicRequestQuestions", res);
-        console.log(
-          "getSurveyRequestForm -> surveyRequestForm",
-          surveyRequestForm
-        );
+        // console.log("getSurveyRequestForm -> TopicReq", TopicReq);
+        // console.log("getSurveyRequestForm -> getAllTopicRequestQuestions", res);
+        // console.log(
+        //   "getSurveyRequestForm -> surveyRequestForm",
+        //   surveyRequestForm
+        // );
       })
       .catch(err =>
         console.log("getSurveyRequestForm -> getAllTopicRequestQuestion", err)
       );
 
-    let newQuestions = surveyRequestForm.map(item => {
-      console.log(
-        "getSurveyRequestForm -> newquestions(item.requestquestionid) before",
-        item.requestquestionid
-      );
-      item.requestquestionid = getRequestQuestionByID(item.requestquestionid);
-      console.log(
-        "getSurveyRequestForm -> newquestions(item.requestquestionid) after",
-        item.requestquestionid
-      );
-    });
+    axios
+      .all(
+        surveyRequestForm.map(item => {
+          getRequestQuestionByID(item.requestquestionid)
+            .then(res => {
+              item.requestquestionid = res;
+            })
+            .catch(err => console.log("getRequestQuestionByID", err));
+        })
+      )
+      .then(res => {
+        setSurveyRequestForm(res);
+      })
+      .catch(err => console.log("getSurveyRequestForm -> axios.all()", err));
 
-    console.log("getSurveyRequestForm -> newQuestions ", newQuestions);
-
-    setSurveyRequestForm(newQuestions);
-
-    console.log("getSurveyRequestForm -> surveyRequestForm", surveyRequestForm);
+    // console.log("getSurveyRequestForm -> axios.all(surveyRequestForm)", surveyRequestForm);
   };
 
   const getResponseList = id => {
     setResponseID(id);
     getAllRequestResponses()
       .then(res => {
-        let RequestResponses = res.filter(
-          response => response.surveyrequestid == id
+        //RequestResponses takes
+        let RequestResponses = new Promise(
+          res.filter(response => response.surveyrequestid === id)
         );
         setRequestID(id);
-        setResponses(RequestResponses);
         console.log("getAllRequestResponses -> requestID", requestID);
-        console.log("getResponseList", res);
+        console.log("getResponseList -> res", res);
+        console.log("getResponseList -> RequestResponses", RequestResponses);
+
+        axios
+          .all(
+            RequestResponses.map(item => {
+              getRequestQuestionByID(item.requestquestionid)
+                .then(res => {
+                  // console.log("getRequestQuestionByID -> item (before reasigning values)", item)
+                  item.requestquestionid = res;
+
+                  getProfile(item.respondedby)
+                    .then(res => {
+                      item.respondedby = res;
+                      // console.log("getProfile -> item (after reasigning values)", item);
+                    })
+                    .catch(err =>
+                      console.log(
+                        "axios.all() -> getProfile -> responseList",
+                        err.response
+                      )
+                    );
+                })
+                .catch(err =>
+                  console.log(
+                    "axios.all() -> getRequestQuestionByID -> responseList",
+                    err.response
+                  )
+                );
+            })
+          )
+          .then(res => {
+            console.log("axios.all(RequestResponses) -> res", res);
+          })
+          .catch(err => console.log("axios.all(RequestResponses)", err));
+
+        setResponses(RequestResponses);
+
         console.log("getResponseList -> RequestReponses", responseList);
       })
       .catch(err => console.log("getResponseList", err));
@@ -187,12 +209,12 @@ function RenderHomePage(props) {
     getAllThreads()
       .then(res => {
         setResponseID(id);
-        let ResponseThread = res.filter(thrd => thrd.responseid == id);
+        let ResponseThread = res.filter(thrd => thrd.responseid === id);
         setThreads(ResponseThread);
 
-        console.log("getThreadList -> ResponseID", responseID);
-        console.log("getThreadList", res);
-        console.log("getThreadList -> threads", threads);
+        // console.log("getThreadList -> ResponseID", responseID);
+        // console.log("getThreadList", res);
+        // console.log("getThreadList -> threads", threads);
       })
       .catch(err => console.log(err));
   };
@@ -240,8 +262,8 @@ function RenderHomePage(props) {
                             topicID={getTopicID}
                             getSurveyList={getSurveyRequests}
                             resetReqAndResID={resetReqAndResID}
-                            getSurveyRequestForm={getSurveryRequestForm}
-                            getSurveryContextForm={getSurveryContextForm}
+                            getSurveyRequestForm={getSurveyRequestForm}
+                            getSurveyContextForm={getSurveyContextForm}
                           />
                         </div>
                         <div className="main-topic-container">
@@ -254,10 +276,12 @@ function RenderHomePage(props) {
                               reset={resetTopicID}
                               getResponseList={getResponseList}
                               requestID={requestID}
-                              getThreadList={getThreadList}
                             />
                           )}
                         </div>
+                        {requestID != 0 ? (
+                          <Responses getThreadList={getThreadList} />
+                        ) : null}
                         {responseID != 0 ? (
                           <ThreadsList />
                         ) : (

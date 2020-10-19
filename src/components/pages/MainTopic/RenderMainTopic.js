@@ -13,10 +13,8 @@ import Responses from "../../home_components/Responses";
 import {
   getTopic,
   getContextByID,
-  getTopicMembers,
-  createTopicQuestion,
+  getAllTopicMembers,
   editTopic,
-  editTopicQuestion,
   deleteTopic
 } from "../../../api/index";
 import Requests from "../../home_components/Requests";
@@ -82,12 +80,6 @@ const RenderMainTopic = ({
       temp.id = contextQ[index][1].id;
       allContextQ.push(temp);
     });
-
-    return axios.all(
-      allContextQ.map(q => {
-        editTopicQuestion(q);
-      })
-    );
   };
 
   const submitNewCQuestion = values => {
@@ -98,37 +90,10 @@ const RenderMainTopic = ({
       temp.questionid = q.question[1];
       newCQuestions.push(temp);
     });
-
-    return axios.all(
-      newCQuestions.map(q => {
-        createTopicQuestion(q);
-      })
-    );
   };
 
   const handleRequestQuestions = async values => {
-    let allRequestQ = [];
-    Object.values(values.oldRQ).map((q, index) => {
-      let temp = Object.assign({}, requestQ[0][1]);
-      temp.topicid = topicID;
-      temp.questionid = q[1];
-      temp.id = requestQ[index][1].id;
-      allRequestQ.push(temp);
-    });
-
-    return axios
-      .all(
-        allRequestQ.map(q => {
-          editTopicQuestion(q);
-        })
-      )
-      .then(res => {
-        rQ = handleQuestions(
-          questions.filter(q => q.type == "Request Questions")
-        );
-        setRequestQ(rQ);
-      })
-      .catch(err => console.log(err));
+    console.log("FIX");
   };
 
   const submitNewRQuestion = values => {
@@ -139,12 +104,6 @@ const RenderMainTopic = ({
       temp.questionid = q.question[1];
       newRQuestions.push(temp);
     });
-
-    return axios.all(
-      newRQuestions.map(q => {
-        createTopicQuestion(q);
-      })
-    );
   };
 
   const deleteMainTopic = () => {
@@ -211,7 +170,7 @@ const RenderMainTopic = ({
               questions.filter(q => q.type == "Request Questions")
             );
             setRequestQ(rQ);
-            getTopicMembers().then(res => {
+            getAllTopicMembers().then(res => {
               let tM = res.filter(m => m.topicid == topicID);
               setMembers(tM);
             });
@@ -265,11 +224,11 @@ const RenderMainTopic = ({
       <div>
         <h3>Survey Requests</h3>
         <Requests getResponseList={getResponseList} />
-        {requestID != 0 ? (
+        {/* {requestID != 0 ? (
           <Responses getThreadList={getThreadList} />
         ) : (
           <p>Select a Survey Request </p>
-        )}
+        )} */}
       </div>
       <Modal
         visible={visible}

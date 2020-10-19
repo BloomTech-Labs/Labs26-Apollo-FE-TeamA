@@ -24,12 +24,11 @@ const JoinTopic = props => {
         if (values.joinCode === topics[i].joincode) {
           let member = {
             topicid: topics[i].id,
-            leaderid: topics[i].leaderid,
             memberid: props.user.sub
           };
           addMember(member)
             .then(res => {
-              message.info("Success!");
+              message.info(`Success! Joined Topic: ${topics[i].topicname}`);
               setVisible(false);
             })
             .catch(err => {

@@ -13,9 +13,6 @@ const Requests = props => {
     let res = date.slice(0, 10);
     return res;
   };
-
-  const getUserProfile = id => {};
-
   return (
     <>
       {requestsList.length != 0 ? (

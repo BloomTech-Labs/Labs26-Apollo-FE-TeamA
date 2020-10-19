@@ -2,12 +2,12 @@ import React from "react";
 import { Form, Input, Select } from "antd";
 const { Option } = Select;
 
-const TopicDetails = props => {
+const TopicDetails = () => {
   return (
     <div>
       <Form.Item
         name={["topic", "topicname"]}
-        label="Give your topic a title."
+        label="Topic Title"
         required
         rules={[{ required: true, message: "Please provide a topic title." }]}
       >
@@ -15,6 +15,7 @@ const TopicDetails = props => {
       </Form.Item>
 
       <Form.Item
+        style={{ marginTop: "1rem" }}
         name={["topic", "topicfrequency"]}
         label="How often should the topic surveys occur?"
         required

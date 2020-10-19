@@ -20,7 +20,7 @@ const TopicsList = props => {
             setTopicID(item.id);
             props.getSurveyList(item.id);
             props.getSurveyRequestForm(item.id);
-            props.getSurveryContextForm(item.id);
+            props.getSurveyContextForm(item.id);
             props.resetReqAndResID();
           }}
         >

@@ -1,87 +1,42 @@
 import axios from "axios";
 
-// axios auth
+// axios authentication
 const getToken = () => {
   const idToken = JSON.parse(localStorage.getItem("okta-token-storage")).idToken
     .idToken;
-
   const authHeader = {
     headers: { Authorization: `Bearer ${idToken}` }
   };
-
   return authHeader;
 };
 
-const apiUrl = `${process.env.REACT_APP_API_URI}/profile/`;
+// -------------------------API ENDPOINTS-----------------------------------
+// GENERAL
+const profile = `${process.env.REACT_APP_API_URI}/profile/`;
 const topics = `${process.env.REACT_APP_API_URI}/topic/`;
 const contexts = `${process.env.REACT_APP_API_URI}/context/`;
-const topicQuestions = `${process.env.REACT_APP_API_URI}/topicquestion/`;
-const topicMembers = `${process.env.REACT_APP_API_URI}/topicmember/`;
-const questions = `${process.env.REACT_APP_API_URI}/question/`;
-const responses = `${process.env.REACT_APP_API_URI}/response/`;
 const threads = `${process.env.REACT_APP_API_URI}/thread/`;
-const surveyRequest = `${process.env.REACT_APP_API_URI}/surveyrequest/`;
-const requestResponse = `${process.env.REACT_APP_API_URI}/requestresponse/`;
-const topicContextQuestion = `${process.env.REACT_APP_API_URI}/topiccontextquestion/`;
-const topicRequestQuestion = `${process.env.REACT_APP_API_URI}/topicrequestquestion/`;
-const requestQuestions = `${process.env.REACT_APP_API_URI}/requestquestion/`;
+const topicMembers = `${process.env.REACT_APP_API_URI}/topicmember/`;
+const surveyRequests = `${process.env.REACT_APP_API_URI}/surveyrequest/`;
+// CONTEXT QUESTIONS
 const contextQuestions = `${process.env.REACT_APP_API_URI}/contextquestion/`;
+const defaultCQ = `${process.env.REACT_APP_API_URI}/contextquestion/getdefaultcontextquestion/`;
+const topicContextQuestion = `${process.env.REACT_APP_API_URI}/topiccontextquestion/`;
+const contextResponses = `${process.env.REACT_APP_API_URI}/contextresponse/`;
+// REQUEST QUESTIONS
+const requestQuestions = `${process.env.REACT_APP_API_URI}/requestquestion/`;
+const defaultRQ = `${process.env.REACT_APP_API_URI}/requestquestion/getdefaultrequestquestion/`;
+const topicRequestQuestion = `${process.env.REACT_APP_API_URI}/topicrequestquestion/`;
+const requestResponse = `${process.env.REACT_APP_API_URI}/requestresponse/`;
 
 const getAllContextQuestions = () => {
   return axios
     .get(contextQuestions, getToken())
     .then(res => {
-      console.log("GET /contextquestion", res);
+      // console.log("GET /contextquestion", res);
       return res.data;
     })
     .catch(err => console.log("GET /contextquestion", err));
-};
-
-const getAllRequestQuestions = () => {
-  return axios
-    .get(requestQuestions, getToken())
-    .then(res => {
-      console.log("GET /requestquestions", res);
-      return res.data;
-    })
-    .catch(err => console.log("GET /requestquestions", err));
-};
-
-const getRequestQuestionByID = id => {
-  return getAllRequestQuestions()
-    .then(res => {
-      const filterQuestion = res.filter(item => item.id == id);
-      console.log("getRequestQuestionByID -> id", id);
-      console.log("getRequestQuestionByID -> res", res);
-      console.log(
-        "getRequestQuestionByID -> filterQuestion",
-        filterQuestion[0].question
-      );
-      return filterQuestion[0];
-    })
-    .catch(err =>
-      console.log("getRequestQuestionByID -> getAllRequestQuestion", err)
-    );
-};
-
-const getAllTopicRequestQuestions = () => {
-  return axios
-    .get(topicRequestQuestion, getToken())
-    .then(res => {
-      console.log("GET /topicRequestQuestion", res);
-      return res.data;
-    })
-    .catch(err => console.log(err));
-};
-
-const getAllTopicContextQuestions = () => {
-  return axios
-    .get(topicContextQuestion, getToken())
-    .then(res => {
-      console.log("GET /topicContextQuestion", res);
-      return res.data;
-    })
-    .catch(err => console.log(err));
 };
 
 // get all topics
@@ -89,48 +44,180 @@ const getAllTopics = () => {
   return axios
     .get(topics, getToken())
     .then(res => {
-      console.log("GET /topic", res);
+      // console.log("GET /topic", res);
       return res.data;
     })
     .catch(err => console.log("GET /topic", err));
 };
 
-const getAllSurveyRequest = () => {
-  return axios
-    .get(surveyRequest, getToken())
+const getRequestQuestionByID = id => {
+  return getAllRequestQuestions()
     .then(res => {
-      console.log("GET /surveyrequest", res);
-      return res.data;
+      const filterQuestion = res.filter(item => item.id == id);
+      // console.log("getRequestQuestionByID -> id", id);
+      // console.log("getRequestQuestionByID -> res", res);
+      // console.log(
+      //   "getRequestQuestionByID -> filterQuestion",
+      //   filterQuestion[0]
+      // );
+      return filterQuestion[0];
     })
-    .catch(err => console.log("GET /surveyrequest", err));
+    .catch(err =>
+      console.log("getRequestQuestionByID -> getAllRequestQuestion", err)
+    );
 };
 
-const getAllTopicMembers = () => {
-  return axios
-    .get(topicMembers, getToken())
-    .then(res => {
-      console.log("GET /topicmember", res);
-      return res.data;
-    })
-    .catch(err => console.log("GET /topicmember", err));
-};
-
+// const getAllTopicRequestQuestions = () => {
 // get topic by topic id
 const getTopic = topicID => {
   return axios
     .get(`${process.env.REACT_APP_API_URI}/topic/${topicID}`, getToken())
     .then(res => {
-      console.log("GET /topic/:id", res);
+      // console.log("GET /topic/:id", res);
       return res.data;
     })
     .catch(err => console.log("GET /topic/:id", err));
 };
 
+// create a topic
+const createTopic = topic => {
+  // console.log(topic);
+  return axios
+    .post(topics, topic, getToken())
+    .then(res => {
+      // console.log("POST /topic", res);
+      return res.data;
+    })
+    .catch(err => console.log("POST /topic", err));
+};
+
+// edit topic
+const editTopic = topic => {
+  return axios
+    .put(topics, topic, getToken())
+    .then(res => {
+      // console.log("PUT /topic/", res);
+      return res.data;
+    })
+    .catch(err => console.log("PUT /topic/", err));
+};
+
+// delete topic by id
+const deleteTopic = topicID => {
+  return axios
+    .delete(`${process.env.REACT_APP_API_URI}/topic/${topicID}`, getToken())
+    .then(res => {
+      // console.log("DELETE /topic/:id", res);
+      return res.data;
+    })
+    .catch(err => console.log("DELETE /topic/:id", err));
+};
+
+// get all survey requests
+const getAllSurveyRequest = () => {
+  return axios
+    .get(surveyRequests, getToken())
+    .then(res => {
+      // console.log("GET /surveyrequest", res);
+      return res.data;
+    })
+    .catch(err => console.log("GET /surveyrequest", err));
+};
+
+// get a survey request by ID
+const getRequestByID = id => {
+  return axios
+    .get(`${process.env.REACT_APP_API_URI}/surveyrequest/${id}`, getToken())
+    .then(res => {
+      // console.log("GET /surveyrequest/:id", res);
+      return res.data;
+    })
+    .catch(err => console.log("GET /surveyrequest/:id", err));
+};
+
+// create a survey request
+const createRequest = request => {
+  return axios
+    .post(surveyRequests, request, getToken())
+    .then(res => {
+      // console.log("POST /surveyrequest", res);
+      return res.data;
+    })
+    .catch(err => console.log("POST /surveyrequest", err));
+};
+
+// edit a survey request
+const editRequest = request => {
+  return axios
+    .put(surveyRequests, request, getToken())
+    .then(res => {
+      // console.log("PUT /surveyrequest", res);
+      return res.data;
+    })
+    .catch(err => console.log("PUT /surveyrequest", err));
+};
+
+// delete a survey request by id
+const deleteRequest = id => {
+  return axios
+    .delete(`${process.env.REACT_APP_API_URI}/surveyrequest/${id}`, getToken())
+    .then(res => {
+      // console.log("DELETE /surveyrequest/:id", res);
+      return res.data;
+    })
+    .catch(err => console.log("DELETE /surveyrequest/:id", err));
+};
+
+const getContextQuestionByID = id => {
+  // console.log("GET /contextquestion/:id -> id ", id);
+  return axios
+    .get(`${process.env.REACT_APP_API_URI}/contextquestion/${id}`, getToken())
+    .then(res => {
+      // console.log("GET /contextquestion/:id", res);
+      return res.data;
+    })
+    .catch(err => console.log("GET /contextquestion/:id", err));
+};
+
+// get all context responses
+const getAllContextResponses = () => {
+  return axios
+    .get(contextResponses, getToken())
+    .then(res => {
+      // console.log("GET /contextresponse", res);
+      return res.data;
+    })
+    .catch(err => console.log("GET /contextresponse", err));
+};
+
+// create a context response
+const createContextResponse = response => {
+  return axios
+    .post(contextResponses, response, getToken())
+    .then(res => {
+      // console.log("POST /contextresponse", res);
+      return res.data;
+    })
+    .catch(err => console.log("POST /contextresponse", err));
+};
+
+// get all survey request responses
+const getAllRequestResponses = () => {
+  return axios
+    .get(requestResponse, getToken())
+    .then(res => {
+      // console.log("GET /requestresponse", res);
+      return res.data;
+    })
+    .catch(err => console.log("GET /requestresponse", err));
+};
+
+// get all contexts
 const getAllContexts = () => {
   return axios
     .get(contexts, getToken())
     .then(res => {
-      console.log("GET /context/", res);
+      // console.log("GET /context/", res);
       return res.data;
     })
     .catch(err => console.log("GET /context/", err));
@@ -141,72 +228,131 @@ const getContextByID = contextID => {
   return axios
     .get(`${process.env.REACT_APP_API_URI}/context/${contextID}`, getToken())
     .then(res => {
-      console.log("GET /context/:id", res);
+      // console.log("GET /context/:id", res);
       return res.data;
     })
     .catch(err => console.log("GET /context/:id", err));
 };
 
-const getContextQuestionByID = id => {
-  console.log("GET /contextquestion/:id -> id ", id);
+// get all default context questions
+const getCQ = () => {
   return axios
-    .get(`${process.env.REACT_APP_API_URI}/contextquestion/${id}`, getToken())
+    .get(defaultCQ, getToken())
     .then(res => {
-      console.log("GET /contextquestion/:id", res);
+      // console.log("GET /getdefaultcontextquestion", res);
       return res.data;
     })
-    .catch(err => console.log("GET /contextquestion/:id", err));
+    .catch(err => console.log("GET /getdefaultcontextquestion", err));
 };
 
-// get all preset questions
-const getQuestions = () => {
+// create a context question
+const createCQ = question => {
   return axios
-    .get(questions, getToken())
+    .post(contextQuestions, question, getToken())
     .then(res => {
-      console.log("GET /question", res);
+      // console.log("POST /contextquestion", res);
       return res.data;
     })
-    .catch(err => console.log("GET /question", err));
+    .catch(err => console.log("POST /contextquestion", err));
 };
 
-// get all topic questions
-const getAllQuestions = () => {
+// edit a context question
+const editCQ = question => {
   return axios
-    .get(topicQuestions, getToken())
+    .put(contextQuestions, question, getToken())
     .then(res => {
-      console.log("GET /topicquestions", res);
+      // console.log("PUT /contextquestion", res);
       return res.data;
     })
-    .catch(err => console.log("GET /topicquestions", err));
+    .catch(err => console.log("PUT /contextquestion", err));
 };
 
-// get all questions by topic id
-const getAllTopicQuestions = questions => {
+// get all topic context questions
+const getAllTopicContextQuestions = () => {
   return axios
-    .all(
-      questions.map(q =>
-        axios.get(
-          `https://apollo-a-api.herokuapp.com/question/${q.questionid}`,
-          getToken()
-        )
-      )
-    )
+    .get(topicContextQuestion, getToken())
     .then(res => {
-      console.log("GET /question/:id", res);
-      return res;
-    })
-    .catch(err => console.log("GET question/:id", err));
-};
-
-// get all responses
-const getAllResponses = () => {
-  return axios
-    .get(requestResponse, getToken())
-    .then(res => {
-      console.log("GET /requestrespose", res);
+      // console.log("GET /topicContextQuestion", res);
       return res.data;
     })
-    .catch(err => console.log("GET /requestresponse", err));
+    .catch(err => console.log(err));
+};
+
+// create a topic context question
+const createTopicCQ = question => {
+  return axios
+    .post(topicContextQuestion, question, getToken())
+    .then(res => {
+      // console.log("POST /topicContextQuestion", res);
+      return res.data;
+    })
+    .catch(err => console.log("POST /topicContextQuestion", err));
+};
+
+// get all request questions
+const getAllRequestQuestions = () => {
+  return axios
+    .get(requestQuestions, getToken())
+    .then(res => {
+      // console.log("GET /requestquestions", res);
+      return res.data;
+    })
+    .catch(err => console.log("GET /requestquestions", err));
+};
+
+// get all default request questions
+const getRQ = () => {
+  return axios
+    .get(defaultRQ, getToken())
+    .then(res => {
+      // console.log("GET /getdefaultrequestquestion", res);
+      return res.data.questions;
+    })
+    .catch(err => console.log("GET /getdefaultrequestquestion", err));
+};
+
+// create a request question
+const createRQ = question => {
+  return axios
+    .post(requestQuestions, question, getToken())
+    .then(res => {
+      // console.log("POST /requestquestion", res);
+      return res.data;
+    })
+    .catch(err => console.log("POST /requestquestion", err));
+};
+
+// edit a request question
+const editRQ = question => {
+  return axios
+    .put(requestQuestions, question, getToken())
+    .then(res => {
+      // console.log("PUT /requestquestion", res);
+      return res.data;
+    })
+    .catch(err => console.log("PUT /requestquestion", err));
+};
+
+// get all topic request questions
+const getAllTopicRequestQuestions = () => {
+  return axios
+    .get(topicRequestQuestion, getToken())
+    .then(res => {
+      // console.log("GET /topicRequestQuestion", res);
+      return res.data;
+    })
+    .catch(err => console.log(err));
+};
+
+// create a topic request question
+const createTopicRQ = question => {
+  return axios
+    .post(topicRequestQuestion, question, getToken())
+    .then(res => {
+      // console.log("POST /requestContextQuestion", res);
+      return res.data;
+    })
+    .catch(err => console.log("POST /requestContextQuestion", err));
 };
 
 // get all threads
@@ -214,62 +360,21 @@ const getAllThreads = () => {
   return axios
     .get(threads, getToken())
     .then(res => {
-      console.log("GET /thread", res);
+      // console.log("GET /thread", res);
       return res.data;
     })
     .catch(err => console.log("GET /thread", err));
 };
 
-const getTopicMembers = () => {
+// get topic members
+const getAllTopicMembers = () => {
   return axios
     .get(topicMembers, getToken())
     .then(res => {
-      console.log("GET /topicmembers", res);
+      // console.log("GET /topicmember", res);
       return res.data;
     })
-    .catch(err => console.log("GET /topicmembers", err));
-};
-
-// create a topic
-const createTopic = topic => {
-  console.log(topic);
-  return axios
-    .post(topics, topic, getToken())
-    .then(res => {
-      console.log("POST to /topic", res);
-      return res.data;
-    })
-    .catch(err => console.log("POST to /topic", err));
-};
-
-const createQuestion = question => {
-  return axios
-    .post(questions, question, getToken())
-    .then(res => {
-      console.log("POST to /question", res);
-      return res.data;
-    })
-    .catch(err => console.log("POST to /question", err));
-};
-
-const createTopicQuestion = question => {
-  return axios
-    .post(topicQuestions, question, getToken())
-    .then(res => {
-      console.log("POST to /topicquestion", res);
-      return res.data;
-    })
-    .catch(err => console.log("POST to /topicquestion", err));
-};
-
-const createResponse = response => {
-  return axios
-    .post(responses, response, getToken())
-    .then(res => {
-      console.log("POST to /response", res);
-      return res.data;
-    })
-    .catch(err => console.log("POST to /response", err));
+    .catch(err => console.log("GET /topicmember", err));
 };
 
 // add topic member
@@ -277,99 +382,17 @@ const addMember = member => {
   return axios
     .post(topicMembers, member, getToken())
     .then(res => {
-      console.log("POST to /topicmember", res);
+      // console.log("POST to /topicmember", res);
       return res.data;
     })
     .catch(err => console.log("POST to /topicmember", err));
-};
-
-// edit topic
-const editTopic = topic => {
-  return axios
-    .put(topics, topic, getToken())
-    .then(res => {
-      console.log("PUT to /topic/", res);
-      return res.data;
-    })
-    .catch(err => console.log("PUT to /topic/", err));
-};
-
-// edit topic question
-const editTopicQuestion = topicquestion => {
-  return axios
-    .put(topicQuestions, topicquestion, getToken())
-    .then(res => {
-      console.log("PUT to /topicquestion/", res);
-      return res.data;
-    })
-    .catch(err => console.log("PUT to /topicquestion/", err));
-};
-
-// edit topic response
-const editResponse = response => {
-  return axios
-    .put(responses, response, getToken())
-    .then(res => {
-      console.log("PUT to /response/", res);
-      return res.data;
-    })
-    .catch(err => console.log("PUT to /response/", err));
-};
-
-// delete topic by topic id
-const deleteTopic = topicID => {
-  return axios
-    .delete(`${process.env.REACT_APP_API_URI}/topic/${topicID}`, getToken())
-    .then(res => {
-      console.log("DELETE /topic/:id", res);
-      return res.data;
-    })
-    .catch(err => console.log("DELETE /topic/:id", err));
-};
-
-// delete topic by topic id
-const deleteTopicQuestion = question => {
-  return axios
-    .delete(
-      `${process.env.REACT_APP_API_URI}/topicquestion/${question.id}`,
-      getToken()
-    )
-    .then(res => {
-      console.log("DELETE /topicquestion/:id", res);
-      return res.data;
-    })
-    .catch(err => console.log("DELETE /topicquestion/:id", err));
-};
-
-// delete topic by topic id
-const deleteResponse = response => {
-  return axios
-    .delete(
-      `${process.env.REACT_APP_API_URI}/response/${response.id}`,
-      getToken()
-    )
-    .then(res => {
-      console.log("DELETE /response/:id", res);
-      return res.data;
-    })
-    .catch(err => console.log("DELETE /response/:id", err));
-};
-
-const getAllRequestResponses = () => {
-  return axios
-    .get(requestResponse, getToken())
-    .then(res => {
-      console.log("GET /requestresponse", res);
-      return res.data;
-    })
-    .catch(err => console.log("GET /requestresponse", err));
 };
 
 const getProfile = id => {
   return axios
     .get(`${process.env.REACT_APP_API_URI}/profile/${id}`, getToken())
     .then(res => {
-      console.log("GET /profile/:id", res);
+      // console.log("GET /profile/:id", res);
       return res.data;
     })
     .catch(err => console.log("GET /profile/:id", err));
@@ -379,32 +402,42 @@ export {
   getRequestQuestionByID,
   getContextQuestionByID,
   getProfile,
-  getAllRequestResponses,
+  // topic handlers
   getAllTopics,
-  getAllSurveyRequest,
   getTopic,
+  createTopic,
+  editTopic,
+  deleteTopic,
+  // survey request handlers
+  getAllSurveyRequest,
+  getRequestByID,
+  createRequest,
+  editRequest,
+  deleteRequest,
+  getAllContextResponses,
+  createContextResponse,
+  getAllRequestResponses,
+  // context handlers
   getAllContexts,
   getContextByID,
-  getQuestions,
-  getAllQuestions,
-  getAllTopicQuestions,
-  getAllResponses,
-  getAllThreads,
-  getTopicMembers,
-  createTopic,
-  createQuestion,
-  createTopicQuestion,
-  createResponse,
-  addMember,
-  editTopic,
-  editTopicQuestion,
-  editResponse,
-  deleteTopic,
-  deleteTopicQuestion,
-  deleteResponse,
-  getAllTopicMembers,
-  getToken,
+  // context question handlers
+  getCQ,
+  createCQ,
+  editCQ,
   getAllTopicContextQuestions,
+  createTopicCQ,
+  // request question handlers
+  getAllRequestQuestions,
+  getRQ,
+  createRQ,
+  editRQ,
   getAllTopicRequestQuestions,
-  getAllRequestQuestions
+  createTopicRQ,
+  // thread handlers
+  getAllThreads,
+  // topic member handlers
+  getAllTopicMembers,
+  addMember,
+  // token handler
+  getToken
 };

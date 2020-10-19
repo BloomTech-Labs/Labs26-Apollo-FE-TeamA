@@ -7,13 +7,7 @@ const PresetCQ = props => {
   const { Option } = Select;
 
   // retrieve all context questions from the API /question
-  useEffect(() => {
-    getQuestions()
-      .then(res => {
-        getFields(res);
-      })
-      .catch(err => console.log(err));
-  }, [props.contextQ]);
+  useEffect(() => {}, [props.contextQ]);
 
   // loading questions from API /question into state
   const handleContextQuestions = cq => {

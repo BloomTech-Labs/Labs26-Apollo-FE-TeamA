@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { Form, Button, Select, Divider } from "antd";
 import { MinusCircleOutlined, PlusOutlined } from "@ant-design/icons";
-import { getQuestions } from "../../../../api/index";
 import PresetRQ from "./PresetRQ";
 
 const EditRequestQ = props => {
@@ -9,13 +8,7 @@ const EditRequestQ = props => {
   const { Option } = Select;
 
   // retrieve all questions from the API /question
-  useEffect(() => {
-    getQuestions()
-      .then(res => {
-        handleRequestQuestions(res);
-      })
-      .catch(err => console.log(err));
-  }, []);
+  useEffect(() => {}, []);
 
   // filter questions to display on questions of type: "request"
   const handleRequestQuestions = cq => {
