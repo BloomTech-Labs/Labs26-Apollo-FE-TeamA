@@ -75,7 +75,7 @@ h1 {
   align-items: center;
   width: 5rem;
   height: 100%;
-  padding: 1rem 0;
+  padding: 1rem;
   background: #7F64FF;
   border-radius: 0 20px 20px 0;
   margin-right: 2rem;
@@ -259,6 +259,10 @@ h1 {
 /* SURVEY REQUEST STYLES */
 .survey-requests {
   margin-top: 2rem;
+}
+
+.ant-select {
+  width: 305px;
 }
 
 /* NEW TOPIC STYLES */
