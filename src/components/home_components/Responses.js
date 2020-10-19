@@ -13,17 +13,23 @@ const Responses = props => {
 
       {responseList ? (
         responseList.map(item => {
-          // console.log("Responses Component -> item", item)
+          console.log(
+            "Responses Component -> item.requestquestionid.question: ",
+            item.requestquestionid.question
+          );
+          console.log(
+            "Responses Component -> item.respondedby.firstname",
+            item.respondedby.firstname
+          );
           return (
             <div
-              className="response-list"
               onClick={() => {
                 props.getThreadList(item.id);
               }}
             >
-              {/* <h4>Question: {item.requestquestionid.question}</h4>
-            <p>{item.response}</p>
-            <h5>Responded by: {item.respondedby}</h5> */}
+              <p>Question: {item.requestquestionid.question}</p>
+              <p>{item.response}</p>
+              <p>Responded by: {item.respondedby.firstname}</p>
             </div>
           );
         })

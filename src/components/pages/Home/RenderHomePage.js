@@ -157,8 +157,8 @@ function RenderHomePage(props) {
     getAllRequestResponses()
       .then(res => {
         //RequestResponses takes
-        let RequestResponses = new Promise(
-          res.filter(response => response.surveyrequestid === id)
+        let RequestResponses = res.filter(
+          response => response.surveyrequestid === id
         );
         setRequestID(id);
         console.log("getAllRequestResponses -> requestID", requestID);
@@ -279,9 +279,11 @@ function RenderHomePage(props) {
                             />
                           )}
                         </div>
-                        {requestID != 0 ? (
-                          <Responses getThreadList={getThreadList} />
-                        ) : null}
+                        <div className="response-list">
+                          {requestID != 0 ? (
+                            <Responses getThreadList={getThreadList} />
+                          ) : null}
+                        </div>
                         {responseID != 0 ? (
                           <ThreadsList />
                         ) : (

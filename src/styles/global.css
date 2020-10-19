@@ -234,6 +234,9 @@ h1 {
 
 .response-list{
   display: table-column;
+  justify-items: center;
+  align-items: flex-start;
+  width: 65%;
 }
 
 .ant-form-item {
