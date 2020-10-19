@@ -1,8 +1,13 @@
 import React, { useState, useEffect, useRef } from "react";
 import { Button, message, Dropdown, Menu } from "antd";
-import { SettingFilled } from "@ant-design/icons";
+import { SettingFilled, UserOutlined } from "@ant-design/icons";
 import Responses from "../../home_components/Responses";
-import { getTopic, getContextByID, deleteTopic } from "../../../api/index";
+import {
+  getTopic,
+  getContextByID,
+  deleteTopic,
+  getAllTopicMembers
+} from "../../../api/index";
 import Requests from "../../home_components/Requests";
 
 const RenderMainTopic = ({
@@ -27,7 +32,7 @@ const RenderMainTopic = ({
     textAreaRef.current.select();
     document.execCommand("copy");
     e.target.focus();
-    message.info("Copied Join Code!");
+    message.info("Copied Join Code");
   };
 
   const settingsMenu = (
@@ -45,6 +50,10 @@ const RenderMainTopic = ({
         getContextByID(res.contextid)
           .then(res => {
             setContext(res);
+            getAllTopicMembers().then(res => {
+              let topicMembers = res.filter(m => m.topicid === topicID);
+              setMembers(topicMembers);
+            });
           })
           .catch(err => console.log(err));
       })
@@ -66,11 +75,19 @@ const RenderMainTopic = ({
         </Dropdown>
       </div>
 
-      <h2>{context.contextoption}</h2>
+      <div className="main-topic-extra-details">
+        <h2>{context.contextoption}</h2>
 
-      <h3>
-        {members.length > 1 ? `${members.length + 1} Members` : `1 Member`}
-      </h3>
+        {members.length > 1 ? (
+          <h3>
+            {members.length + 1} <UserOutlined />
+          </h3>
+        ) : (
+          <h3>
+            1 <UserOutlined />
+          </h3>
+        )}
+      </div>
 
       <Button
         className={user.sub === topic.leaderid ? "join-code" : "hidden-edit"}

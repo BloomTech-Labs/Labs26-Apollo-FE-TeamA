@@ -195,7 +195,7 @@ const RenderNewTopic = props => {
           <>
             {page === 0 ? null : (
               <Button
-                style={{ width: "10%" }}
+                style={{ width: "15%" }}
                 type="secondary"
                 onClick={() => {
                   setPage(page - 1);
@@ -207,14 +207,14 @@ const RenderNewTopic = props => {
             {page === 3 ? (
               <Button
                 type="primary"
-                style={{ width: "10%" }}
+                style={{ width: "30%" }}
                 onClick={onCreate}
               >
                 Create Topic
               </Button>
             ) : (
               <Button
-                style={{ width: "10%" }}
+                style={{ width: "15%" }}
                 type="primary"
                 onClick={() => {
                   setPage(page + 1);

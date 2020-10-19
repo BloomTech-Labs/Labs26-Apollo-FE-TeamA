@@ -41,6 +41,7 @@ function RenderHomePage(props) {
   const [responseID, setResponseID] = useState(0);
   const [surveyContextForm, setSurveyContextForm] = useState([]);
   const [surveyRequestForm, setSurveyRequestForm] = useState([]);
+  const [joined, setJoined] = useState(false);
   const page = 1;
 
   useEffect(() => {
@@ -64,7 +65,7 @@ function RenderHomePage(props) {
           .catch(err => console.log(err));
       })
       .catch(err => console.log(err));
-  }, [topicID]);
+  }, [topicID, joined]);
 
   // for selecting a specific topic
   const getTopicID = id => {
@@ -77,6 +78,10 @@ function RenderHomePage(props) {
     setTopicID(0);
     setRequestID(0);
     setResponseID(0);
+  };
+
+  const refreshTopics = () => {
+    setJoined(true);
   };
 
   const getSurveyRequests = id => {
@@ -173,30 +178,6 @@ function RenderHomePage(props) {
                     <SurveyContextContext.Provider
                       value={{ surveyContextForm }}
                     >
-                      <div className="nav">
-                        <h2 className="logo">Apollo</h2>
-
-                        <Button type="primary" href="/">
-                          Owner
-                        </Button>
-                        <Button type="secondary" href="/member">
-                          Member
-                        </Button>
-
-                        <NewTopicContainer
-                          reset={resetTopicID}
-                          userInfo={userInfo}
-                        />
-                        <JoinTopic user={userInfo} topicID={topicID} />
-
-                        <Button
-                          type="secondary"
-                          onClick={() => authService.logout()}
-                        >
-                          Log Out
-                        </Button>
-                      </div>
-
                       <div className="topics-container">
                         <div className="topics-list">
                           <TopicsList
@@ -208,25 +189,66 @@ function RenderHomePage(props) {
                             getSurveyContextForm={getSurveyContextForm}
                           />
                         </div>
-                        <div className="main-topic-container">
-                          {topicID === 0 ? (
-                            <h2>Select a topic from the topics list.</h2>
+
+                        <div className="topics-list-bg"></div>
+
+                        <div className="topic-content-container">
+                          <div className="nav">
+                            <h2 className="logo">Apollo</h2>
+
+                            {/* <Button type="primary" href="/">
+                              Owner
+                            </Button>
+                            <Button type="secondary" href="/member">
+                              Member
+                            </Button> */}
+
+                            <div className="nav-buttons">
+                              <NewTopicContainer
+                                reset={resetTopicID}
+                                userInfo={userInfo}
+                              />
+                              <JoinTopic
+                                user={userInfo}
+                                topicID={topicID}
+                                joined={refreshTopics}
+                              />
+                            </div>
+
+                            <Button
+                              type="secondary"
+                              onClick={() => authService.logout()}
+                            >
+                              Log Out
+                            </Button>
+                          </div>
+
+                          <div className="main-topic-container">
+                            {topicID === 0 ? (
+                              <div>
+                                <h2>Welcome, {userInfo.name}.</h2>
+                                <h2 style={{ opacity: "60%" }}>
+                                  Select a topic from the topics list.
+                                </h2>
+                              </div>
+                            ) : (
+                              <MainTopic
+                                topicID={topicID}
+                                user={userInfo}
+                                reset={resetTopicID}
+                                getResponseList={getResponseList}
+                                requestID={requestID}
+                                getThreadList={getThreadList}
+                              />
+                            )}
+                          </div>
+
+                          {responseID !== 0 ? (
+                            <ThreadsList />
                           ) : (
-                            <MainTopic
-                              topicID={topicID}
-                              user={userInfo}
-                              reset={resetTopicID}
-                              getResponseList={getResponseList}
-                              requestID={requestID}
-                              getThreadList={getThreadList}
-                            />
+                            <SurveyRequest page={page} />
                           )}
                         </div>
-                        {responseID !== 0 ? (
-                          <ThreadsList />
-                        ) : (
-                          <SurveyRequest page={page} />
-                        )}
                       </div>
                     </SurveyContextContext.Provider>
                   </SurveyRequestsContext.Provider>
