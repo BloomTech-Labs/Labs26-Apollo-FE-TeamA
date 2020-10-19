@@ -196,12 +196,12 @@ function RenderHomePage(props) {
                           <div className="nav">
                             <h2 className="logo">Apollo</h2>
 
-                            <Button type="primary" href="/">
+                            {/* <Button type="primary" href="/">
                               Owner
                             </Button>
                             <Button type="secondary" href="/member">
                               Member
-                            </Button>
+                            </Button> */}
 
                             <div className="nav-buttons">
                               <NewTopicContainer

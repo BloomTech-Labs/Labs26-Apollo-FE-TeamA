@@ -1,6 +1,6 @@
 import React, { useContext, useState } from "react";
 import { TopicListContext } from "../../state/contexts/TopicListContext";
-import { CrownFilled } from "@ant-design/icons";
+import { StarFilled } from "@ant-design/icons";
 
 const TopicsList = props => {
   const { topics } = useContext(TopicListContext);
@@ -25,7 +25,7 @@ const TopicsList = props => {
         >
           {props.leader === item.leaderid ? (
             <h3>
-              {item.topicname.slice(0, 1)} <CrownFilled />{" "}
+              {item.topicname.slice(0, 1)} <StarFilled />
             </h3>
           ) : (
             <h3>{item.topicname.slice(0, 1)}</h3>
