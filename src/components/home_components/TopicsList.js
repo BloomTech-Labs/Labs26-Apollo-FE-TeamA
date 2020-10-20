@@ -1,7 +1,6 @@
 import React, { useContext, useState } from "react";
 import { TopicListContext } from "../../state/contexts/TopicListContext";
-import Moment from "react-moment";
-import axios from "axios";
+import { StarFilled } from "@ant-design/icons";
 
 const TopicsList = props => {
   const { topics } = useContext(TopicListContext);
@@ -24,10 +23,13 @@ const TopicsList = props => {
             props.resetReqAndResID();
           }}
         >
-          <h3>{item.topicname}</h3>
-          <h4>
-            <Moment format="MM/DD/YYYY">{item.updated_at}</Moment>
-          </h4>
+          {props.leader === item.leaderid ? (
+            <h3>
+              {item.topicname.slice(0, 1)} <StarFilled />
+            </h3>
+          ) : (
+            <h3>{item.topicname.slice(0, 1)}</h3>
+          )}
         </div>
       ))}
     </>

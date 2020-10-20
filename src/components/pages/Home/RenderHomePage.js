@@ -16,12 +16,13 @@ import SurveyRequest from "../SurveyRequest/SurveyRequestContainer";
 import { SurveyContextContext } from "../../../state/contexts/SurveyContextContext";
 import JoinTopic from "./JoinTopic";
 import axios from "axios";
+
 import {
   getAllRequestResponses,
   getAllTopics,
   getAllThreads,
   getAllSurveyRequest,
-  getToken,
+  getAllTopicMembers,
   getAllTopicRequestQuestions,
   getAllTopicContextQuestions,
   getContextQuestionByID,
@@ -44,20 +45,36 @@ function RenderHomePage(props) {
   const [responseID, setResponseID] = useState(0);
   const [surveyContextForm, setSurveyContextForm] = useState([]);
   const [surveyRequestForm, setSurveyRequestForm] = useState([]);
+  const [joined, setJoined] = useState(false);
   const page = 1;
 
   useEffect(() => {
-    getAllTopics()
+    getAllTopicMembers()
       .then(res => {
-        let userTopics = res.filter(topic => topic.leaderid === userInfo.sub);
-        setTopics(userTopics);
+        let memberOf = res.filter(topic => topic.memberid === userInfo.sub);
+        getAllTopics()
+          .then(t => {
+            let memberTopics = [];
+            for (let i = 0; i < memberOf.length; i++) {
+              for (let j = 0; j < t.length; j++) {
+                if (memberOf[i].topicid === t[j].id) {
+                  memberTopics.push(t[j]);
+                } else if (t[j].leaderid === userInfo.sub) {
+                  memberTopics.push(t[j]);
+                }
+              }
+            }
+            setTopics(memberTopics);
+          })
+          .catch(err => console.log(err));
       })
       .catch(err => console.log(err));
-  }, [topicID]);
+  }, [topicID, joined]);
 
   // for selecting a specific topic
   const getTopicID = id => {
     setTopicID(id);
+    console.log(topics);
   };
 
   // used when deleting a topic
@@ -65,6 +82,10 @@ function RenderHomePage(props) {
     setTopicID(0);
     setRequestID(0);
     setResponseID(0);
+  };
+
+  const refreshTopics = () => {
+    setJoined(true);
   };
 
   const getSurveyRequests = id => {
@@ -243,34 +264,10 @@ function RenderHomePage(props) {
                     <SurveyContextContext.Provider
                       value={{ surveyContextForm }}
                     >
-                      <div className="nav">
-                        <h2 className="logo">Apollo</h2>
-
-                        <Button type="primary" href="/">
-                          Owner
-                        </Button>
-                        <Button type="secondary" href="/member">
-                          Member
-                        </Button>
-
-                        <NewTopicContainer
-                          reset={resetTopicID}
-                          userInfo={userInfo}
-                        />
-                        <JoinTopic user={userInfo} topicID={topicID} />
-
-                        <Button
-                          type="secondary"
-                          onClick={() => authService.logout()}
-                        >
-                          Log Out
-                        </Button>
-                      </div>
-
                       <div className="topics-container">
                         <div className="topics-list">
-                          <h2 className="topics-list-title">Your Topics</h2>
                           <TopicsList
+                            leader={userInfo.sub}
                             topicID={getTopicID}
                             getSurveyList={getSurveyRequests}
                             resetReqAndResID={resetReqAndResID}
@@ -278,9 +275,62 @@ function RenderHomePage(props) {
                             getSurveyContextForm={getSurveyContextForm}
                           />
                         </div>
-                        <div className="main-topic-container">
-                          {topicID === 0 ? (
-                            <h2>Select a topic from the topics list.</h2>
+
+                        <div className="topics-list-bg"></div>
+
+                        <div className="topic-content-container">
+                          <div className="nav">
+                            <h2 className="logo">Apollo</h2>
+
+                            {/* <Button type="primary" href="/">
+                              Owner
+                            </Button>
+                            <Button type="secondary" href="/member">
+                              Member
+                            </Button> */}
+
+                            <div className="nav-buttons">
+                              <NewTopicContainer
+                                reset={resetTopicID}
+                                userInfo={userInfo}
+                              />
+                              <JoinTopic
+                                user={userInfo}
+                                topicID={topicID}
+                                joined={refreshTopics}
+                              />
+                            </div>
+
+                            <Button
+                              type="secondary"
+                              onClick={() => authService.logout()}
+                            >
+                              Log Out
+                            </Button>
+                          </div>
+
+                          <div className="main-topic-container">
+                            {topicID === 0 ? (
+                              <div>
+                                <h2>Welcome, {userInfo.name}.</h2>
+                                <h2 style={{ opacity: "60%" }}>
+                                  Select a topic from the topics list.
+                                </h2>
+                              </div>
+                            ) : (
+                              <MainTopic
+                                topicID={topicID}
+                                user={userInfo}
+                                reset={resetTopicID}
+                                getResponseList={getResponseList}
+                                requestID={requestID}
+                                getThreadList={getThreadList}
+                              />
+                            )}
+                          </div>
+
+                          {responseID !== 0 ? (
+                            <ThreadsList />
                           ) : (
                             <MainTopic
                               topicID={topicID}

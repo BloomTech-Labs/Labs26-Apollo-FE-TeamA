@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Button, Modal, Form, Steps, message } from "antd";
 import { InfoCircleTwoTone } from "@ant-design/icons";
 import TopicDetails from "./TopicComponents/TopicDetails";
@@ -8,6 +8,8 @@ import RequestQuestions from "./TopicComponents/RequestQuestions";
 import generator from "generate-password";
 import axios from "axios";
 import {
+  getCQ,
+  getRQ,
   createCQ,
   createRQ,
   createTopic,
@@ -20,9 +22,33 @@ const RenderNewTopic = props => {
   const [form] = Form.useForm();
   const [visible, setVisible] = useState(false);
   const [page, setPage] = useState(0);
+  const [presetCQ, setPresetCQ] = useState([]);
+  const [presetRQ, setPresetRQ] = useState([]);
+
+  // fetch default context questions
+  useEffect(() => {
+    getCQ()
+      .then(res => {
+        console.log("CQ:", res);
+        const cleanCQ = res.map(({ id, ...attributes }) => attributes);
+        setPresetCQ(cleanCQ);
+      })
+      .catch(err => console.log(err));
+  }, []);
+
+  // fetch default request questions
+  useEffect(() => {
+    getRQ()
+      .then(res => {
+        console.log("RQ:", res);
+        const cleanRQ = res.map(({ id, ...attributes }) => attributes);
+        setPresetRQ(cleanRQ);
+      })
+      .catch(err => console.log(err));
+  }, []);
 
   // preset context/request questions and their ids'
-  const presets = {
+  const presetID = {
     "What is your current priority?": 1,
     "Do you have any key learnings to share with the team from stakeholders or customers?": 2,
     "What upcoming demos or events should the team be aware of?": 3,
@@ -55,10 +81,10 @@ const RenderNewTopic = props => {
     return axios.all(
       newCQ.map(q => {
         // if the question is a preset, don't POST it again
-        if (presets[q.question]) {
+        if (presetID[q.question]) {
           let newTopicCQ = {
             topicid: topic.id,
-            contextquestionid: presets[q.question]
+            contextquestionid: presetID[q.question]
           };
           createTopicCQ(newTopicCQ);
         } else {
@@ -84,10 +110,10 @@ const RenderNewTopic = props => {
     return axios.all(
       newRQ.map(q => {
         // if the question is a preset, don't POST it again
-        if (presets[q.question]) {
+        if (presetID[q.question]) {
           let newTopicRQ = {
             topicid: topic.id,
-            requestquestionid: presets[q.question]
+            requestquestionid: presetID[q.question]
           };
           createTopicRQ(newTopicRQ);
         } else {
@@ -150,8 +176,16 @@ const RenderNewTopic = props => {
 
       <Modal
         visible={visible}
-        width={900}
-        title="Create a new topic"
+        centered
+        width="50%"
+        bodyStyle={{
+          width: "60%",
+          height: "60vh",
+          overflow: "auto",
+          overflowX: "hidden",
+          margin: "0 auto"
+        }}
+        title="New Topic"
         okText="Create"
         cancelText="Cancel"
         onCancel={onCancel}
@@ -161,6 +195,7 @@ const RenderNewTopic = props => {
           <>
             {page === 0 ? null : (
               <Button
+                style={{ width: "15%" }}
                 type="secondary"
                 onClick={() => {
                   setPage(page - 1);
@@ -170,11 +205,16 @@ const RenderNewTopic = props => {
               </Button>
             )}
             {page === 3 ? (
-              <Button type="primary" onClick={onCreate}>
+              <Button
+                type="primary"
+                style={{ width: "30%" }}
+                onClick={onCreate}
+              >
                 Create Topic
               </Button>
             ) : (
               <Button
+                style={{ width: "15%" }}
                 type="primary"
                 onClick={() => {
                   setPage(page + 1);
@@ -187,18 +227,24 @@ const RenderNewTopic = props => {
         }
       >
         <Steps
-          type="navigation"
+          className="progress-bar"
+          progressDot
           size="small"
           current={page}
           style={{ marginBottom: "1rem" }}
         >
-          <Steps.Step title="Topic Info" />
-          <Steps.Step title="Context" />
-          <Steps.Step title="Context Questions" />
-          <Steps.Step title="Request Questions" />
+          <Steps.Step />
+          <Steps.Step />
+          <Steps.Step />
+          <Steps.Step />
         </Steps>
 
-        <Form form={form} layout="vertical" name="form_in_modal">
+        <Form
+          form={form}
+          layout="vertical"
+          name="form_in_modal"
+          initialValues={{ cQ: presetCQ, rQ: presetRQ }}
+        >
           <Form.Item
             className="closed"
             name={["topic", "joincode"]}

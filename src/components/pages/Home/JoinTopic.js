@@ -29,9 +29,11 @@ const JoinTopic = props => {
           addMember(member)
             .then(res => {
               message.info(`Success! Joined Topic: ${topics[i].topicname}`);
+              props.joined();
               setVisible(false);
             })
             .catch(err => {
+              console.log(err);
               message.info("Join code invalid.");
             });
         }
