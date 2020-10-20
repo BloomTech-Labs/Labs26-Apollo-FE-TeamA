@@ -15,11 +15,11 @@ const Responses = props => {
         responseList.map(item => {
           console.log(
             "Responses Component -> item.requestquestionid.question: ",
-            item.requestquestionid.question
+            item.requestquestionid
           );
           console.log(
             "Responses Component -> item.respondedby.firstname",
-            item.respondedby.firstname
+            item.respondedby
           );
           return (
             <div
