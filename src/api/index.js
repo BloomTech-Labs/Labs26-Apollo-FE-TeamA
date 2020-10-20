@@ -29,23 +29,51 @@ const defaultRQ = `${process.env.REACT_APP_API_URI}/requestquestion/getdefaultre
 const topicRequestQuestion = `${process.env.REACT_APP_API_URI}/topicrequestquestion/`;
 const requestResponse = `${process.env.REACT_APP_API_URI}/requestresponse/`;
 
+const getAllContextQuestions = () => {
+  return axios
+    .get(contextQuestions, getToken())
+    .then(res => {
+      // console.log("GET /contextquestion", res);
+      return res.data;
+    })
+    .catch(err => console.log("GET /contextquestion", err));
+};
+
 // get all topics
 const getAllTopics = () => {
   return axios
     .get(topics, getToken())
     .then(res => {
-      console.log("GET /topic", res);
+      // console.log("GET /topic", res);
       return res.data;
     })
     .catch(err => console.log("GET /topic", err));
 };
 
+const getRequestQuestionByID = id => {
+  return getAllRequestQuestions()
+    .then(res => {
+      const filterQuestion = res.filter(item => item.id == id);
+      // console.log("getRequestQuestionByID -> id", id);
+      // console.log("getRequestQuestionByID -> res", res);
+      // console.log(
+      //   "getRequestQuestionByID -> filterQuestion",
+      //   filterQuestion[0]
+      // );
+      return filterQuestion[0];
+    })
+    .catch(err =>
+      console.log("getRequestQuestionByID -> getAllRequestQuestion", err)
+    );
+};
+
+// const getAllTopicRequestQuestions = () => {
 // get topic by topic id
 const getTopic = topicID => {
   return axios
     .get(`${process.env.REACT_APP_API_URI}/topic/${topicID}`, getToken())
     .then(res => {
-      console.log("GET /topic/:id", res);
+      // console.log("GET /topic/:id", res);
       return res.data;
     })
     .catch(err => console.log("GET /topic/:id", err));
@@ -53,11 +81,11 @@ const getTopic = topicID => {
 
 // create a topic
 const createTopic = topic => {
-  console.log(topic);
+  // console.log(topic);
   return axios
     .post(topics, topic, getToken())
     .then(res => {
-      console.log("POST /topic", res);
+      // console.log("POST /topic", res);
       return res.data;
     })
     .catch(err => console.log("POST /topic", err));
@@ -68,7 +96,7 @@ const editTopic = topic => {
   return axios
     .put(topics, topic, getToken())
     .then(res => {
-      console.log("PUT /topic/", res);
+      // console.log("PUT /topic/", res);
       return res.data;
     })
     .catch(err => console.log("PUT /topic/", err));
@@ -79,7 +107,7 @@ const deleteTopic = topicID => {
   return axios
     .delete(`${process.env.REACT_APP_API_URI}/topic/${topicID}`, getToken())
     .then(res => {
-      console.log("DELETE /topic/:id", res);
+      // console.log("DELETE /topic/:id", res);
       return res.data;
     })
     .catch(err => console.log("DELETE /topic/:id", err));
@@ -90,7 +118,7 @@ const getAllSurveyRequest = () => {
   return axios
     .get(surveyRequests, getToken())
     .then(res => {
-      console.log("GET /surveyrequest", res);
+      // console.log("GET /surveyrequest", res);
       return res.data;
     })
     .catch(err => console.log("GET /surveyrequest", err));
@@ -101,7 +129,7 @@ const getRequestByID = id => {
   return axios
     .get(`${process.env.REACT_APP_API_URI}/surveyrequest/${id}`, getToken())
     .then(res => {
-      console.log("GET /surveyrequest/:id", res);
+      // console.log("GET /surveyrequest/:id", res);
       return res.data;
     })
     .catch(err => console.log("GET /surveyrequest/:id", err));
@@ -112,7 +140,7 @@ const createRequest = request => {
   return axios
     .post(surveyRequests, request, getToken())
     .then(res => {
-      console.log("POST /surveyrequest", res);
+      // console.log("POST /surveyrequest", res);
       return res.data;
     })
     .catch(err => console.log("POST /surveyrequest", err));
@@ -123,7 +151,7 @@ const editRequest = request => {
   return axios
     .put(surveyRequests, request, getToken())
     .then(res => {
-      console.log("PUT /surveyrequest", res);
+      // console.log("PUT /surveyrequest", res);
       return res.data;
     })
     .catch(err => console.log("PUT /surveyrequest", err));
@@ -134,10 +162,21 @@ const deleteRequest = id => {
   return axios
     .delete(`${process.env.REACT_APP_API_URI}/surveyrequest/${id}`, getToken())
     .then(res => {
-      console.log("DELETE /surveyrequest/:id", res);
+      // console.log("DELETE /surveyrequest/:id", res);
       return res.data;
     })
     .catch(err => console.log("DELETE /surveyrequest/:id", err));
+};
+
+const getContextQuestionByID = id => {
+  // console.log("GET /contextquestion/:id -> id ", id);
+  return axios
+    .get(`${process.env.REACT_APP_API_URI}/contextquestion/${id}`, getToken())
+    .then(res => {
+      // console.log("GET /contextquestion/:id", res);
+      return res.data;
+    })
+    .catch(err => console.log("GET /contextquestion/:id", err));
 };
 
 // get all context responses
@@ -145,7 +184,7 @@ const getAllContextResponses = () => {
   return axios
     .get(contextResponses, getToken())
     .then(res => {
-      console.log("GET /contextresponse", res);
+      // console.log("GET /contextresponse", res);
       return res.data;
     })
     .catch(err => console.log("GET /contextresponse", err));
@@ -156,7 +195,7 @@ const createContextResponse = response => {
   return axios
     .post(contextResponses, response, getToken())
     .then(res => {
-      console.log("POST /contextresponse", res);
+      // console.log("POST /contextresponse", res);
       return res.data;
     })
     .catch(err => console.log("POST /contextresponse", err));
@@ -167,7 +206,7 @@ const getAllRequestResponses = () => {
   return axios
     .get(requestResponse, getToken())
     .then(res => {
-      console.log("GET /requestresponse", res);
+      // console.log("GET /requestresponse", res);
       return res.data;
     })
     .catch(err => console.log("GET /requestresponse", err));
@@ -178,7 +217,7 @@ const getAllContexts = () => {
   return axios
     .get(contexts, getToken())
     .then(res => {
-      console.log("GET /context/", res);
+      // console.log("GET /context/", res);
       return res.data;
     })
     .catch(err => console.log("GET /context/", err));
@@ -189,7 +228,7 @@ const getContextByID = contextID => {
   return axios
     .get(`${process.env.REACT_APP_API_URI}/context/${contextID}`, getToken())
     .then(res => {
-      console.log("GET /context/:id", res);
+      // console.log("GET /context/:id", res);
       return res.data;
     })
     .catch(err => console.log("GET /context/:id", err));
@@ -200,7 +239,7 @@ const getCQ = () => {
   return axios
     .get(defaultCQ, getToken())
     .then(res => {
-      console.log("GET /getdefaultcontextquestion", res);
+      // console.log("GET /getdefaultcontextquestion", res);
       return res.data;
     })
     .catch(err => console.log("GET /getdefaultcontextquestion", err));
@@ -211,7 +250,7 @@ const createCQ = question => {
   return axios
     .post(contextQuestions, question, getToken())
     .then(res => {
-      console.log("POST /contextquestion", res);
+      // console.log("POST /contextquestion", res);
       return res.data;
     })
     .catch(err => console.log("POST /contextquestion", err));
@@ -222,7 +261,7 @@ const editCQ = question => {
   return axios
     .put(contextQuestions, question, getToken())
     .then(res => {
-      console.log("PUT /contextquestion", res);
+      // console.log("PUT /contextquestion", res);
       return res.data;
     })
     .catch(err => console.log("PUT /contextquestion", err));
@@ -233,7 +272,7 @@ const getAllTopicContextQuestions = () => {
   return axios
     .get(topicContextQuestion, getToken())
     .then(res => {
-      console.log("GET /topicContextQuestion", res);
+      // console.log("GET /topicContextQuestion", res);
       return res.data;
     })
     .catch(err => console.log(err));
@@ -244,7 +283,7 @@ const createTopicCQ = question => {
   return axios
     .post(topicContextQuestion, question, getToken())
     .then(res => {
-      console.log("POST /topicContextQuestion", res);
+      // console.log("POST /topicContextQuestion", res);
       return res.data;
     })
     .catch(err => console.log("POST /topicContextQuestion", err));
@@ -255,7 +294,7 @@ const getAllRequestQuestions = () => {
   return axios
     .get(requestQuestions, getToken())
     .then(res => {
-      console.log("GET /requestquestions", res);
+      // console.log("GET /requestquestions", res);
       return res.data;
     })
     .catch(err => console.log("GET /requestquestions", err));
@@ -266,7 +305,7 @@ const getRQ = () => {
   return axios
     .get(defaultRQ, getToken())
     .then(res => {
-      console.log("GET /getdefaultrequestquestion", res);
+      // console.log("GET /getdefaultrequestquestion", res);
       return res.data.questions;
     })
     .catch(err => console.log("GET /getdefaultrequestquestion", err));
@@ -277,7 +316,7 @@ const createRQ = question => {
   return axios
     .post(requestQuestions, question, getToken())
     .then(res => {
-      console.log("POST /requestquestion", res);
+      // console.log("POST /requestquestion", res);
       return res.data;
     })
     .catch(err => console.log("POST /requestquestion", err));
@@ -288,7 +327,7 @@ const editRQ = question => {
   return axios
     .put(requestQuestions, question, getToken())
     .then(res => {
-      console.log("PUT /requestquestion", res);
+      // console.log("PUT /requestquestion", res);
       return res.data;
     })
     .catch(err => console.log("PUT /requestquestion", err));
@@ -299,7 +338,7 @@ const getAllTopicRequestQuestions = () => {
   return axios
     .get(topicRequestQuestion, getToken())
     .then(res => {
-      console.log("GET /topicRequestQuestion", res);
+      // console.log("GET /topicRequestQuestion", res);
       return res.data;
     })
     .catch(err => console.log(err));
@@ -310,7 +349,7 @@ const createTopicRQ = question => {
   return axios
     .post(topicRequestQuestion, question, getToken())
     .then(res => {
-      console.log("POST /requestContextQuestion", res);
+      // console.log("POST /requestContextQuestion", res);
       return res.data;
     })
     .catch(err => console.log("POST /requestContextQuestion", err));
@@ -321,7 +360,7 @@ const getAllThreads = () => {
   return axios
     .get(threads, getToken())
     .then(res => {
-      console.log("GET /thread", res);
+      // console.log("GET /thread", res);
       return res.data;
     })
     .catch(err => console.log("GET /thread", err));
@@ -332,7 +371,7 @@ const getAllTopicMembers = () => {
   return axios
     .get(topicMembers, getToken())
     .then(res => {
-      console.log("GET /topicmember", res);
+      // console.log("GET /topicmember", res);
       return res.data;
     })
     .catch(err => console.log("GET /topicmember", err));
@@ -343,13 +382,26 @@ const addMember = member => {
   return axios
     .post(topicMembers, member, getToken())
     .then(res => {
-      console.log("POST to /topicmember", res);
+      // console.log("POST to /topicmember", res);
       return res.data;
     })
     .catch(err => console.log("POST to /topicmember", err));
 };
 
+const getProfile = id => {
+  return axios
+    .get(`${process.env.REACT_APP_API_URI}/profile/${id}`, getToken())
+    .then(res => {
+      // console.log("GET /profile/:id", res);
+      return res.data;
+    })
+    .catch(err => console.log("GET /profile/:id", err));
+};
+
 export {
+  getRequestQuestionByID,
+  getContextQuestionByID,
+  getProfile,
   // topic handlers
   getAllTopics,
   getTopic,

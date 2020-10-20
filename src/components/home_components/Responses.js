@@ -1,39 +1,38 @@
 import React, { useContext, useState, useEffect } from "react";
 import axios from "axios";
 import { ResponsesContext } from "../../state/contexts/ResponsesContext";
-import { getToken, getAllRequestQuestions } from "../../api/index";
+import { getToken } from "../../api/index";
 
 const Responses = props => {
   const { responseList } = useContext(ResponsesContext);
   console.log("Responses component, ", responseList);
-
-  // const getQuestionByID = id => {
-  //   getAllRequestQuestions
-  //     .then(res => {
-  //       console.log("GET /question/:id", res);
-  //       console.log("getQuestionByID", res.data);
-  //       return res.data.question;
-  //     })
-  //     .catch(err => {
-  //       console.log("getQuestionByID ", err);
-  //     });
-  // };
 
   return (
     <>
       <h2>Responses</h2>
 
       {responseList ? (
-        responseList.map(item => (
-          <div
-            onClick={() => {
-              props.getThreadList(item.id);
-            }}
-          >
-            {/* <h4>{getQuestionByID(item.requestquestionid)}</h4> */}
-            <p>{item.response}</p>
-          </div>
-        ))
+        responseList.map(item => {
+          console.log(
+            "Responses Component -> item.requestquestionid.question: ",
+            item.requestquestionid
+          );
+          console.log(
+            "Responses Component -> item.respondedby.firstname",
+            item.respondedby
+          );
+          return (
+            <div
+              onClick={() => {
+                props.getThreadList(item.id);
+              }}
+            >
+              <p>Question: {item.requestquestionid.question}</p>
+              <p>{item.response}</p>
+              <p>Responded by: {item.respondedby.firstname}</p>
+            </div>
+          );
+        })
       ) : (
         <p>No responses for this Survey Request</p>
       )}

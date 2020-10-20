@@ -10,7 +10,6 @@ const Requests = props => {
   const handleChange = id => {
     props.getResponseList(id);
   };
-
   return (
     <>
       <Select defaultValue="Select a request" onChange={handleChange}>
