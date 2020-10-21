@@ -11,6 +11,10 @@ h1 {
   font-weight: bold;
 }
 
+h2 {
+  font-size: 24px;
+}
+
 /* LOGIN STYLES */
 .landing {
   display: flex;
@@ -180,6 +184,10 @@ h1 {
   font-size: 1.4rem;
 }
 
+.settings-button:hover {
+  cursor: pointer;
+}
+
 :focus {
   outline: none;
 }
@@ -227,7 +235,7 @@ h1 {
 
 .main-topic-extra-details h3 {
   color: #7F64FF;
-  margin-left: 3.8rem;
+  margin-left: 2.4rem;
   border: 1px solid #7F64FF;
   border-radius: 20px;
   text-align: center;
@@ -256,9 +264,19 @@ h1 {
   font-weight: bold;
 }
 
+.new-request-button {
+  margin-bottom: 1rem;
+  width: 305px;
+}
+
 /* SURVEY REQUEST STYLES */
 .survey-requests {
   margin-top: 2rem;
+}
+
+.survey-requests h3 {
+  font-weight: bold;
+  color: #7F64FF;
 }
 
 .ant-select {
@@ -280,7 +298,13 @@ h1 {
   display: table-column;
   justify-items: center;
   align-items: flex-start;
-  width: 65%;
+  width: 50%;
+  margin-left: 4rem;
+}
+
+.response-list h2 {
+  font-weight: bold;
+  color: #7F64FF;
 }
 
 .ant-form-item {

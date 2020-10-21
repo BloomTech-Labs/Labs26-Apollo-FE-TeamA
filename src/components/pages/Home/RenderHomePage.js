@@ -222,31 +222,35 @@ function RenderHomePage(props) {
                           </div>
 
                           <div className="main-topic-container">
-                            {topicID === 0 ? (
-                              <div>
-                                <h2>Welcome, {userInfo.name}.</h2>
-                                <h2 style={{ opacity: "60%" }}>
-                                  Select a topic from the topics list.
-                                </h2>
-                              </div>
-                            ) : (
-                              <MainTopic
-                                topicID={topicID}
-                                user={userInfo}
-                                reset={resetTopicID}
-                                getResponseList={getResponseList}
-                                requestID={requestID}
-                                getThreadList={getThreadList}
-                              />
-                            )}
+                            <div className="main-topic">
+                              {topicID === 0 ? (
+                                <div>
+                                  <h2>Welcome, {userInfo.name}.</h2>
+                                  <h2 style={{ opacity: "60%" }}>
+                                    Select a topic from the topics list.
+                                  </h2>
+                                </div>
+                              ) : (
+                                <MainTopic
+                                  topicID={topicID}
+                                  user={userInfo}
+                                  reset={resetTopicID}
+                                  getResponseList={getResponseList}
+                                  requestID={requestID}
+                                  getThreadList={getThreadList}
+                                />
+                              )}
+                            </div>
+
+                            <div className="response-list">
+                              {requestID != 0 ? (
+                                <Responses getThreadList={getThreadList} />
+                              ) : null}
+
+                              {responseID != 0 ? <ThreadsList /> : null}
+                            </div>
                           </div>
                         </div>
-                        <div className="response-list">
-                          {requestID != 0 ? (
-                            <Responses getThreadList={getThreadList} />
-                          ) : null}
-                        </div>
-                        {responseID != 0 ? <ThreadsList /> : null}
                       </div>
                     </SurveyContextContext.Provider>
                   </SurveyRequestsContext.Provider>
