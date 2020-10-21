@@ -31,7 +31,7 @@ const ContextQuestions = () => {
                     {...field}
                     validateTrigger={["onChange", "onBlur"]}
                     name={[field.name, "question"]}
-                    label={`Context Question Question ${index + 1}`}
+                    label={`Context Question ${index + 1}`}
                     rules={[{ required: true }]}
                     initialValue={""}
                   >

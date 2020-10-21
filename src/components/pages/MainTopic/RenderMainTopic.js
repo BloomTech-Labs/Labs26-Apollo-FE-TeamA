@@ -9,6 +9,7 @@ import {
   getAllTopicMembers
 } from "../../../api/index";
 import Requests from "../../home_components/Requests";
+import SurveyRequest from "../SurveyRequest/SurveyRequestContainer";
 
 const RenderMainTopic = ({
   topicID,
@@ -100,6 +101,8 @@ const RenderMainTopic = ({
           {topic.joincode}
         </textarea>
       </Button>
+
+      <SurveyRequest user={user} topicID={topicID} />
 
       <div className="survey-requests">
         <h3>Survey Requests</h3>

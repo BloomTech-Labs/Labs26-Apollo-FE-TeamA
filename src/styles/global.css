@@ -139,9 +139,9 @@ h1 {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  background: white;
-  width: 95%;
-  margin-top: 1rem;
+  width: 90%;
+  margin: 1rem 0;
+  position: absolute;
 }
 
 .logo {
@@ -163,7 +163,7 @@ h1 {
   justify-items: center;
   align-items: flex-start;
   width: 90%;
-  margin-top: 2rem;
+  margin-top: 6rem;
 }
 
 .topic-title-content {
