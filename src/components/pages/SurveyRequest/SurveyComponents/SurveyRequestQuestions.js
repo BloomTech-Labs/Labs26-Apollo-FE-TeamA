@@ -2,7 +2,7 @@ import React from "react";
 import { Form, Input, Button, Divider } from "antd";
 import { DeleteOutlined, PlusOutlined } from "@ant-design/icons";
 
-const RequestQuestions = () => {
+const SurveyRequestQuestions = () => {
   return (
     <div>
       <Divider>Request Questions</Divider>
@@ -13,6 +13,13 @@ const RequestQuestions = () => {
             <div>
               {fields.map((field, index) => (
                 <div key={field.key}>
+                  <Form.Item
+                    {...field}
+                    className="closed"
+                    name={[field.name, "id"]}
+                    initialValue={null}
+                  ></Form.Item>
+
                   <Form.Item
                     {...field}
                     className="closed"
@@ -31,7 +38,7 @@ const RequestQuestions = () => {
                     {...field}
                     validateTrigger={["onChange", "onBlur"]}
                     name={[field.name, "question"]}
-                    label={`Context Question ${index + 1}`}
+                    label={`Request Question ${index + 1}`}
                     rules={[{ required: true }]}
                     initialValue={""}
                   >
@@ -72,4 +79,4 @@ const RequestQuestions = () => {
   );
 };
 
-export default RequestQuestions;
+export default SurveyRequestQuestions;

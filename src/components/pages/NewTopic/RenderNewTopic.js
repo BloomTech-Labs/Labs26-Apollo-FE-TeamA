@@ -179,7 +179,7 @@ const RenderNewTopic = props => {
         centered
         width="50%"
         bodyStyle={{
-          width: "60%",
+          width: "70%",
           height: "60vh",
           overflow: "auto",
           overflowX: "hidden",
