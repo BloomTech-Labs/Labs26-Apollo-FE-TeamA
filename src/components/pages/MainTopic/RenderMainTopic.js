@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from "react";
-import { Button, message, Dropdown, Menu } from "antd";
+import { Button, message, Dropdown, Menu, Modal } from "antd";
 import { SettingFilled, UserOutlined } from "@ant-design/icons";
 import Responses from "../../home_components/Responses";
 import {
@@ -9,6 +9,7 @@ import {
   getAllTopicMembers
 } from "../../../api/index";
 import Requests from "../../home_components/Requests";
+import SurveyRequest from "../SurveyRequest/SurveyRequestContainer";
 
 const RenderMainTopic = ({
   topicID,
@@ -22,6 +23,7 @@ const RenderMainTopic = ({
   const [topic, setTopic] = useState({});
   const [members, setMembers] = useState([]);
   const [context, setContext] = useState({});
+  const [visible, setVisible] = useState(false);
 
   const deleteMainTopic = () => {
     deleteTopic(topicID);
@@ -38,7 +40,28 @@ const RenderMainTopic = ({
   const settingsMenu = (
     <Menu className="settings-menu">
       <Menu.Item>
-        <button onClick={deleteMainTopic}>Delete</button>
+        <Button
+          onClick={() => {
+            setVisible(true);
+          }}
+        >
+          Delete
+        </Button>
+
+        <Modal
+          title="Are you sure you want to delete this topic?"
+          visible={visible}
+          centered
+          onOk={deleteMainTopic}
+          onCancel={() => {
+            setVisible(false);
+          }}
+          okText="Delete"
+        >
+          Deleting this topic will prevent you from accessing any survey
+          requests related to this topic. This cannot be undone. Click "Delete"
+          to confirm.
+        </Modal>
       </Menu.Item>
     </Menu>
   );
@@ -104,9 +127,9 @@ const RenderMainTopic = ({
       <div className="survey-requests">
         <h3>Survey Requests</h3>
 
-        <Requests getResponseList={getResponseList} />
+        <SurveyRequest user={user} topicID={topicID} />
 
-        {requestID !== 0 ? <Responses getThreadList={getThreadList} /> : null}
+        <Requests getResponseList={getResponseList} />
       </div>
     </div>
   );
