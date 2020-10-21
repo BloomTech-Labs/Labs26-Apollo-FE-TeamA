@@ -49,24 +49,10 @@ function RenderHomePage(props) {
   const page = 1;
 
   useEffect(() => {
-    getAllTopicMembers()
-      .then(res => {
-        let memberOf = res.filter(topic => topic.memberid === userInfo.sub);
-        getAllTopics()
-          .then(t => {
-            let memberTopics = [];
-            for (let i = 0; i < memberOf.length; i++) {
-              for (let j = 0; j < t.length; j++) {
-                if (memberOf[i].topicid === t[j].id) {
-                  memberTopics.push(t[j]);
-                } else if (t[j].leaderid === userInfo.sub) {
-                  memberTopics.push(t[j]);
-                }
-              }
-            }
-            setTopics(memberTopics);
-          })
-          .catch(err => console.log(err));
+    getAllTopics()
+      .then(t => {
+        let leaderTopics = t.filter(topic => topic.leaderid === userInfo.sub);
+        setTopics(leaderTopics);
       })
       .catch(err => console.log(err));
   }, [topicID, joined]);
@@ -105,14 +91,14 @@ function RenderHomePage(props) {
   };
 
   const getSurveyContextForm = id => {
-    console.log("getSurveyContextForm FIRED");
+    // console.log("getSurveyContextForm FIRED");
     getAllTopicContextQuestions()
       .then(res => {
         const TopicCont = res.filter(question => question.topicid === id);
         setSurveyContextForm(TopicCont);
 
-        console.log("getSurveyContextForm -> TopicCont", TopicCont);
-        console.log("getSurveyContextForm -> getAllTopicContextQuestions", res);
+        // console.log("getSurveyContextForm -> TopicCont", TopicCont);
+        // console.log("getSurveyContextForm -> getAllTopicContextQuestions", res);
         axios
           .all(
             TopicCont.map(item => {
@@ -124,10 +110,10 @@ function RenderHomePage(props) {
             })
           )
           .then(res => {
-            console.log(
-              "getSurveyContextForm -> axios.all(TopicCont).res: ",
-              res
-            );
+            // console.log(
+            //   "getSurveyContextForm -> axios.all(TopicCont).res: ",
+            //   res
+            // );
           })
           .catch(err =>
             console.log("getSurveyContextForm -> axios.all()", err)
@@ -139,18 +125,18 @@ function RenderHomePage(props) {
         console.log("getSurveyContextForm -> getAllTopicContextQuestions", err)
       );
 
-    console.log(
-      "getSurveyContextForm -> setSurveyContextForm(newQuestion)",
-      surveyContextForm
-    );
+    // console.log(
+    //   "getSurveyContextForm -> setSurveyContextForm(newQuestion)",
+    //   surveyContextForm
+    // );
   };
   const getSurveyRequestForm = id => {
-    console.log("getSurveyRequestForm FIRED");
+    // console.log("getSurveyRequestForm FIRED");
     getAllTopicRequestQuestions()
       .then(res => {
         const TopicReq = res.filter(question => question.topicid === id);
-        console.log("getSurveyRequestForm -> TopicReq", TopicReq);
-        console.log("getSurveyRequestForm -> getAllTopicRequestQuestions", res);
+        // console.log("getSurveyRequestForm -> TopicReq", TopicReq);
+        // console.log("getSurveyRequestForm -> getAllTopicRequestQuestions", res);
         axios
           .all(
             TopicReq.map(item => {
@@ -162,10 +148,10 @@ function RenderHomePage(props) {
             })
           )
           .then(res => {
-            console.log(
-              "getSurveyRequestForm -> axios.all(TopicReq).res: ",
-              res
-            );
+            // console.log(
+            //   "getSurveyRequestForm -> axios.all(TopicReq).res: ",
+            //   res
+            // );
           })
           .catch(err =>
             console.log("getSurveyRequestForm -> axios.all()", err)
@@ -176,20 +162,19 @@ function RenderHomePage(props) {
         console.log("getSurveyRequestForm -> getAllTopicRequestQuestion", err)
       );
 
-    console.log(
-      "getSurveyRequestForm -> axios.all(surveyRequestForm)",
-      surveyRequestForm
-    );
+    // console.log(
+    //   "getSurveyRequestForm -> axios.all(surveyRequestForm)",
+    //   surveyRequestForm
+    // );
   };
 
-  const getResponseList = id => {
+  useEffect(() => {
     getAllRequestResponses()
       .then(res => {
         //RequestResponses takes
         let RequestResponses = res.filter(
-          response => response.surveyrequestid === id
+          response => response.surveyrequestid === requestID
         );
-        setRequestID(id);
         // console.log("getAllRequestResponses -> requestID", requestID);
         // console.log("getResponseList -> res", res);
         // console.log("getResponseList -> RequestResponses", RequestResponses);
@@ -236,7 +221,7 @@ function RenderHomePage(props) {
         console.log("getResponseList -> RequestReponses", responseList);
       })
       .catch(err => console.log("getResponseList", err));
-  };
+  }, []);
 
   const getThreadList = id => {
     getAllThreads()
@@ -282,12 +267,12 @@ function RenderHomePage(props) {
                           <div className="nav">
                             <h2 className="logo">Apollo</h2>
 
-                            {/* <Button type="primary" href="/">
+                            <Button type="primary" href="/">
                               Owner
                             </Button>
                             <Button type="secondary" href="/member">
                               Member
-                            </Button> */}
+                            </Button>
 
                             <div className="nav-buttons">
                               <NewTopicContainer
@@ -310,7 +295,7 @@ function RenderHomePage(props) {
                           </div>
 
                           <div className="main-topic-container">
-                            {topicID === 0 ? (
+                            {topicID == 0 ? (
                               <div>
                                 <h2>Welcome, {userInfo.name}.</h2>
                                 <h2 style={{ opacity: "60%" }}>
@@ -322,24 +307,11 @@ function RenderHomePage(props) {
                                 topicID={topicID}
                                 user={userInfo}
                                 reset={resetTopicID}
-                                getResponseList={getResponseList}
-                                requestID={requestID}
+                                requestID={setRequestID}
                                 getThreadList={getThreadList}
                               />
                             )}
                           </div>
-
-                          {responseID !== 0 ? (
-                            <ThreadsList />
-                          ) : (
-                            <MainTopic
-                              topicID={topicID}
-                              user={userInfo}
-                              reset={resetTopicID}
-                              getResponseList={getResponseList}
-                              requestID={requestID}
-                            />
-                          )}
                         </div>
                         <div className="response-list">
                           {requestID != 0 ? (

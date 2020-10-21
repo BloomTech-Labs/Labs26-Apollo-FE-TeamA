@@ -104,9 +104,7 @@ const RenderMainTopic = ({
       <div className="survey-requests">
         <h3>Survey Requests</h3>
 
-        <Requests getResponseList={getResponseList} />
-
-        {requestID !== 0 ? <Responses getThreadList={getThreadList} /> : null}
+        <Requests requestID={requestID} />
       </div>
     </div>
   );

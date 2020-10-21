@@ -8,7 +8,7 @@ const Requests = props => {
   const { Option } = Select;
 
   const handleChange = id => {
-    props.getResponseList(id);
+    props.requestID(id);
   };
   return (
     <>

@@ -11,7 +11,7 @@ const Responses = props => {
     <>
       <h2>Responses</h2>
 
-      {responseList ? (
+      {responseList.length !== 0 ? (
         responseList.map(item => {
           console.log(
             "Responses Component -> item.requestquestionid.question: ",
