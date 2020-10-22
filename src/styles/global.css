@@ -35,6 +35,14 @@ h2 {
   background-color: rgba(0,0,0, 0.5);
 }
 
+.Thread-List{
+  display: table-column;
+  justify-items: center;
+  align-items: flex-start;
+  width: 50%;
+  margin-left: 4rem;
+}
+
 .welcome {
   text-align: left;
   width: 30%;

@@ -269,8 +269,6 @@ function RenderMemberPage(props) {
                           topicID={getTopicID}
                           getSurveyList={getSurveyRequests}
                           resetReqAndResID={resetReqAndResID}
-                          getSurveyRequestForm={getSurveyRequestForm}
-                          getSurveyContextForm={getSurveyContextForm}
                         />
                       </div>
 

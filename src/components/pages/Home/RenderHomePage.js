@@ -48,10 +48,24 @@ function RenderHomePage(props) {
   const page = 1;
 
   useEffect(() => {
-    getAllTopics()
-      .then(t => {
-        let leaderTopics = t.filter(topic => topic.leaderid === userInfo.sub);
-        setTopics(leaderTopics);
+    getAllTopicMembers()
+      .then(res => {
+        let memberOf = res.filter(topic => topic.memberid === userInfo.sub);
+        getAllTopics()
+          .then(t => {
+            let memberTopics = [];
+            for (let i = 0; i < memberOf.length; i++) {
+              for (let j = 0; j < t.length; j++) {
+                if (memberOf[i].topicid === t[j].id) {
+                  memberTopics.push(t[j]);
+                } else if (t[j].leaderid === userInfo.sub) {
+                  memberTopics.push(t[j]);
+                }
+              }
+            }
+            setTopics(memberTopics);
+          })
+          .catch(err => console.log(err));
       })
       .catch(err => console.log(err));
   }, [topicID, joined]);
@@ -87,58 +101,21 @@ function RenderHomePage(props) {
       .catch(err => console.log("getAllResponses", err));
   };
 
-  useEffect(() => {
+  const getResponseList = rID => {
     getAllRequestResponses()
       .then(res => {
         //RequestResponses takes
         let RequestResponses = res.filter(
-          response => response.surveyrequestid === requestID
+          response => response.surveyrequestid === rID
         );
         // console.log("getAllRequestResponses -> requestID", requestID);
-        // console.log("getResponseList -> res", res);
+        console.log("getResponseList -> res", res);
         // console.log("getResponseList -> RequestResponses", RequestResponses);
-        let temp = [];
-        axios
-          .all(
-            RequestResponses.map(item => {
-              getRequestQuestionByID(item.requestquestionid)
-                .then(res => {
-                  item.requestquestionid = res;
-
-                  getProfile(item.respondedby)
-                    .then(res => {
-                      item.respondedby = res;
-                      temp.push(item);
-                      console.log(
-                        "axios.all(RequestResponse) -> getRequestQuestion -> getProfile -> temp: ",
-                        temp
-                      );
-                    })
-                    .catch(err =>
-                      console.log(
-                        "axios.all() -> getProfile -> responseList",
-                        err.response
-                      )
-                    );
-                })
-                .catch(err =>
-                  console.log(
-                    "axios.all() -> getRequestQuestionByID -> responseList",
-                    err.response
-                  )
-                );
-            })
-          )
-          .then(res => {
-            console.log("axios.all(RequestResponses) -> res", res);
-            setResponses(temp);
-          })
-          .catch(err => console.log("axios.all(RequestResponses)", err));
-
+        setResponses(RequestResponses);
         console.log("getResponseList -> RequestReponses", responseList);
       })
       .catch(err => console.log("getResponseList", err));
-  }, []);
+  };
 
   const getThreadList = id => {
     getAllThreads()
@@ -182,12 +159,12 @@ function RenderHomePage(props) {
                           <div className="nav">
                             <h2 className="logo">Apollo</h2>
 
-                            <Button type="primary" href="/">
+                            {/* <Button type="primary" href="/">
                               Owner
                             </Button>
                             <Button type="secondary" href="/member">
                               Member
-                            </Button>
+                            </Button> */}
 
                             <div className="nav-buttons">
                               <NewTopicContainer
@@ -225,17 +202,22 @@ function RenderHomePage(props) {
                                   reset={resetTopicID}
                                   requestID={setRequestID}
                                   getThreadList={getThreadList}
+                                  getResponseList={getResponseList}
                                 />
                               )}
                             </div>
 
                             <div className="response-list">
                               {requestID != 0 ? (
-                                <Responses getThreadList={getThreadList} />
+                                <Responses
+                                  getThreadList={getThreadList}
+                                  requestID={requestID}
+                                  responseList={setResponses}
+                                  responseListView={responseList}
+                                />
                               ) : null}
-
-                              {responseID != 0 ? <ThreadsList /> : null}
                             </div>
+                            {responseID != 0 ? <ThreadsList /> : null}
                           </div>
                         </div>
                       </div>

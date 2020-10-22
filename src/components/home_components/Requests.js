@@ -9,6 +9,7 @@ const Requests = props => {
 
   const handleChange = id => {
     props.requestID(id);
+    props.getResponseList(id);
   };
   return (
     <>
