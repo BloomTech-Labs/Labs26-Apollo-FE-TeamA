@@ -371,7 +371,7 @@ const getAllTopicMembers = () => {
   return axios
     .get(topicMembers, getToken())
     .then(res => {
-      // console.log("GET /topicmember", res);
+      console.log("GET /topicmember", res);
       return res.data;
     })
     .catch(err => console.log("GET /topicmember", err));
