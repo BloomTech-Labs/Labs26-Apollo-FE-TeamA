@@ -44,6 +44,9 @@ function RenderHomePage(props) {
   const [responseID, setResponseID] = useState(0);
   const [surveyContextForm, setSurveyContextForm] = useState([]);
   const [surveyRequestForm, setSurveyRequestForm] = useState([]);
+  const [responseText, setResponseText] = useState("");
+  const [responseUser, setResponseUser] = useState("");
+  const [responseQuestion, setResponseQuestion] = useState("");
   const [joined, setJoined] = useState(false);
   const page = 1;
 
@@ -117,16 +120,35 @@ function RenderHomePage(props) {
       .catch(err => console.log("getResponseList", err));
   };
 
-  const getThreadList = id => {
+  const getThreadList = response => {
+    console.log("getThreadList -> response: ", response);
+
+    setResponseText(response.response);
+
+    getProfile(response.respondedby)
+      .then(res => {
+        setResponseUser(res.firstname);
+      })
+      .catch(err => {
+        console.log("getThreadList -> getProfile: ", err);
+      });
+
+    getRequestQuestionByID(response.requestquestionid)
+      .then(res => {
+        console.log("getThreadList -> getRequestQuestionById -> res: ", res);
+        setResponseQuestion(res.question);
+      })
+      .catch(err => {
+        console.log("getThreadList -> getRequestQuestionByID: ", err);
+      });
+
     getAllThreads()
       .then(res => {
-        setResponseID(id);
-        let ResponseThread = res.filter(thrd => thrd.responseid === id);
+        setResponseID(response.id);
+        let ResponseThread = res.filter(
+          thrd => thrd.responseid === response.id
+        );
         setThreads(ResponseThread);
-
-        // console.log("getThreadList -> ResponseID", responseID);
-        // console.log("getThreadList", res);
-        // console.log("getThreadList -> threads", threads);
       })
       .catch(err => console.log(err));
   };
@@ -217,7 +239,13 @@ function RenderHomePage(props) {
                                 />
                               ) : null}
                             </div>
-                            {responseID != 0 ? <ThreadsList /> : null}
+                            {responseID != 0 ? (
+                              <ThreadsList
+                                responseUser={responseUser}
+                                responseQuestion={responseQuestion}
+                                responseText={responseText}
+                              />
+                            ) : null}
                           </div>
                         </div>
                       </div>

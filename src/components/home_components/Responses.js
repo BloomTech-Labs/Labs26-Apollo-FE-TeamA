@@ -36,6 +36,9 @@ const Responses = props => {
   return (
     <>
       <h2>Responses</h2>
+      {responseList ? (
+        <p>Click on a response to see the thread and details</p>
+      ) : null}
 
       {responseList ? (
         responseList.map(item => {
@@ -44,7 +47,7 @@ const Responses = props => {
               <Button
                 className="single-response"
                 onClick={() => {
-                  props.getThreadList(item.id);
+                  props.getThreadList(item);
                 }}
               >
                 <h3>{item.response}</h3>

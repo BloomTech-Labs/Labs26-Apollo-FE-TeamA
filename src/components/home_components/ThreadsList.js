@@ -30,6 +30,11 @@ const ThreadsList = props => {
   };
   return (
     <div className="Thread-List">
+      <h4>Question: {props.responseQuestion}</h4>
+      <h5>Response: {props.responseText}</h5>
+      <h5>Responder: {props.responseUser}</h5>
+
+      <p>Commnet Section</p>
       {threads ? (
         threads.map(item => (
           <>
