@@ -11,7 +11,7 @@ const Responses = props => {
     <>
       <h2>Responses</h2>
 
-      {responseList ? (
+      {responseList.length > 0 ? (
         responseList.map(item => {
           console.log(
             "Responses Component -> item.requestquestionid.question: ",
@@ -34,7 +34,7 @@ const Responses = props => {
           );
         })
       ) : (
-        <p>No responses for this Survey Request</p>
+        <p>There are no responses for this survey request.</p>
       )}
     </>
   );

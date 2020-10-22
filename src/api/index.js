@@ -234,6 +234,17 @@ const getContextByID = contextID => {
     .catch(err => console.log("GET /context/:id", err));
 };
 
+// get all context questions
+const getAllCQ = () => {
+  return axios
+    .get(contextQuestions, getToken())
+    .then(res => {
+      // console.log("GET /contextquestion", res);
+      return res.data;
+    })
+    .catch(err => console.log("GET /contextquestion", err));
+};
+
 // get all default context questions
 const getCQ = () => {
   return axios
@@ -422,6 +433,7 @@ export {
   getContextByID,
   // context question handlers
   getCQ,
+  getAllCQ,
   createCQ,
   editCQ,
   getAllTopicContextQuestions,

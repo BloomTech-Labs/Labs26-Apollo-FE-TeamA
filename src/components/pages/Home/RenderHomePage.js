@@ -12,7 +12,6 @@ import { QuestionsContext } from "../../../state/contexts/QuestionsContext";
 import { TopicQuestionsContext } from "../../../state/contexts/TopicQuestionsContext";
 import { RequestsContext } from "../../../state/contexts/RequestsContext";
 import { SurveyRequestsContext } from "../../../state/contexts/SurveyRequestsContext";
-import SurveyRequest from "../SurveyRequest/SurveyRequestContainer";
 import { SurveyContextContext } from "../../../state/contexts/SurveyContextContext";
 import JoinTopic from "./JoinTopic";
 import axios from "axios";
@@ -23,9 +22,6 @@ import {
   getAllThreads,
   getAllSurveyRequest,
   getAllTopicMembers,
-  getAllTopicRequestQuestions,
-  getAllTopicContextQuestions,
-  getContextQuestionByID,
   getRequestQuestionByID,
   getProfile
 } from "../../../api/index";

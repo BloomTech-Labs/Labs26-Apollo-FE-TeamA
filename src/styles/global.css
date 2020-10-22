@@ -247,6 +247,10 @@ h2 {
   align-items: center;
 }
 
+.ant-btn-lg {
+  width: 200px;
+}
+
 .join-code textarea {
   border: none;
   margin-top: 1.5rem;
@@ -267,6 +271,16 @@ h2 {
 .new-request-button {
   margin-bottom: 1rem;
   width: 305px;
+}
+
+.survey-request-context {
+  width: 330px;
+  margin-top: 2rem;
+}
+
+.survey-request-context h2 {
+  text-align: left;
+  font-weight: bold;
 }
 
 /* SURVEY REQUEST STYLES */

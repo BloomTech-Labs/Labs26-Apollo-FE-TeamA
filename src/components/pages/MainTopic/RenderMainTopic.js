@@ -6,10 +6,13 @@ import {
   getTopic,
   getContextByID,
   deleteTopic,
-  getAllTopicMembers
+  getAllTopicMembers,
+  getAllCQ,
+  getAllContextResponses
 } from "../../../api/index";
 import Requests from "../../home_components/Requests";
 import SurveyRequest from "../SurveyRequest/SurveyRequestContainer";
+import RequestQuestions from "../NewTopic/TopicComponents/RequestQuestions";
 
 const RenderMainTopic = ({
   topicID,
@@ -23,6 +26,7 @@ const RenderMainTopic = ({
   const [topic, setTopic] = useState({});
   const [members, setMembers] = useState([]);
   const [context, setContext] = useState({});
+  const [surveyRequestContext, setSurveyRequestContext] = useState([]);
   const [visible, setVisible] = useState(false);
 
   const deleteMainTopic = () => {
@@ -83,6 +87,28 @@ const RenderMainTopic = ({
       .catch(err => console.log(err));
   }, [topicID]);
 
+  useEffect(() => {
+    let tempContext = [];
+    getAllCQ().then(cQ => {
+      console.log(cQ);
+      getAllContextResponses().then(cR => {
+        console.log(cR);
+        for (let i = 0; i < cQ.length; i++) {
+          for (let j = 0; j < cR.length; j++) {
+            if (
+              cR[j].surveyrequestid === requestID &&
+              cR[j].contextquestionid === cQ[i].id
+            ) {
+              cR[j].contextquestionid = cQ[i];
+              tempContext.push(cR[j]);
+            }
+          }
+        }
+        setSurveyRequestContext(tempContext);
+      });
+    });
+  }, [requestID]);
+
   return (
     <div className="main-topic">
       <div className="topic-title-content">
@@ -99,7 +125,17 @@ const RenderMainTopic = ({
       </div>
 
       <div className="main-topic-extra-details">
-        <h2>{context.contextoption}</h2>
+        <Button
+          className={user.sub === topic.leaderid ? "join-code" : "hidden-edit"}
+          type="dashed"
+          size="large"
+          onClick={copyJoinCode}
+        >
+          Join Code:
+          <textarea readonly ref={textAreaRef} value={topic.joincode}>
+            {topic.joincode}
+          </textarea>
+        </Button>
 
         {members.length > 1 ? (
           <h3>
@@ -112,24 +148,31 @@ const RenderMainTopic = ({
         )}
       </div>
 
-      <Button
-        className={user.sub === topic.leaderid ? "join-code" : "hidden-edit"}
-        type="dashed"
-        size="large"
-        onClick={copyJoinCode}
-      >
-        Join Code:
-        <textarea readonly ref={textAreaRef} value={topic.joincode}>
-          {topic.joincode}
-        </textarea>
-      </Button>
-
       <div className="survey-requests">
         <h3>Survey Requests</h3>
 
         <SurveyRequest user={user} topicID={topicID} />
 
         <Requests getResponseList={getResponseList} />
+
+        <div className="survey-request-context">
+          {surveyRequestContext.length > 1 ? (
+            <h2>{context.contextoption}</h2>
+          ) : null}
+
+          {surveyRequestContext
+            ? surveyRequestContext.map(c => {
+                return (
+                  <div>
+                    <h3>{c.contextquestionid.question}</h3>
+                    <h4 style={{ textAlign: "left", color: "black" }}>
+                      {c.response}
+                    </h4>
+                  </div>
+                );
+              })
+            : null}
+        </div>
       </div>
     </div>
   );
