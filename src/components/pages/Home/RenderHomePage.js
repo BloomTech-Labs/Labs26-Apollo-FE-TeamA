@@ -41,7 +41,6 @@ function RenderHomePage(props) {
   const [surveyContextForm, setSurveyContextForm] = useState([]);
   const [surveyRequestForm, setSurveyRequestForm] = useState([]);
   const [joined, setJoined] = useState(false);
-  const page = 1;
 
   useEffect(() => {
     getAllTopicMembers()
@@ -154,10 +153,6 @@ function RenderHomePage(props) {
         setResponseID(id);
         let ResponseThread = res.filter(thrd => thrd.responseid === id);
         setThreads(ResponseThread);
-
-        // console.log("getThreadList -> ResponseID", responseID);
-        // console.log("getThreadList", res);
-        // console.log("getThreadList -> threads", threads);
       })
       .catch(err => console.log(err));
   };
@@ -240,7 +235,12 @@ function RenderHomePage(props) {
 
                             <div className="response-list">
                               {requestID != 0 ? (
-                                <Responses getThreadList={getThreadList} />
+                                <Responses
+                                  topicID={topicID}
+                                  requestID={requestID}
+                                  user={userInfo}
+                                  getThreadList={getThreadList}
+                                />
                               ) : null}
 
                               {responseID != 0 ? <ThreadsList /> : null}

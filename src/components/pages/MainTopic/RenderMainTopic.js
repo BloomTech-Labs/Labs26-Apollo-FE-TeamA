@@ -12,14 +12,12 @@ import {
 } from "../../../api/index";
 import Requests from "../../home_components/Requests";
 import SurveyRequest from "../SurveyRequest/SurveyRequestContainer";
-import RequestQuestions from "../NewTopic/TopicComponents/RequestQuestions";
 
 const RenderMainTopic = ({
   topicID,
   reset,
   getResponseList,
   requestID,
-  getThreadList,
   user
 }) => {
   const textAreaRef = useRef();
@@ -156,15 +154,17 @@ const RenderMainTopic = ({
         <Requests getResponseList={getResponseList} />
 
         <div className="survey-request-context">
-          {surveyRequestContext.length > 1 ? (
+          {surveyRequestContext.length >= 1 ? (
             <h2>{context.contextoption}</h2>
           ) : null}
 
           {surveyRequestContext
-            ? surveyRequestContext.map(c => {
+            ? surveyRequestContext.map((c, index) => {
                 return (
                   <div>
-                    <h3>{c.contextquestionid.question}</h3>
+                    <h3>
+                      {index + 1}. {c.contextquestionid.question}
+                    </h3>
                     <h4 style={{ textAlign: "left", color: "black" }}>
                       {c.response}
                     </h4>

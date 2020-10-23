@@ -94,32 +94,33 @@ const RenderSurveyRequest = props => {
 
   const handleRQ = (requestID, values) => {
     let rQ = Object.values(values.rQ);
+    console.log(rQ);
 
-    return axios
-      .all(
-        rQ.map(question => {
-          if (question.id === null) {
-            createRQ(question)
-              .then(res => {
-                // REQUIRES A SURVEY REQUEST QUESTION ENDPOINT TO POST TO
-                let tempRQ = {
-                  surveyrequestid: requestID,
-                  requestquestionid: res.id
-                };
-                // createSurveyRequestQuestion(tempRQ);
-              })
-              .catch(err => console.log("Creating new request question:", err));
-          } else {
-            let tempRQ = {
-              surveyrequestid: requestID,
-              requestquestionid: question.id
-            };
-            // createSurveyRequestQuestion(tempRQ);
-          }
-        })
-      )
-      .then(res => console.log("handleRQ:", res))
-      .catch(err => console.log("handleRQ:", err));
+    // return axios
+    //   .all(
+    //     rQ.map(question => {
+    //       if (question.id === null) {
+    //         createRQ(question)
+    //           .then(res => {
+    //             // REQUIRES A SURVEY REQUEST QUESTION ENDPOINT TO POST TO
+    //             let tempRQ = {
+    //               surveyrequestid: requestID,
+    //               requestquestionid: res.id
+    //             };
+    //             // createSurveyRequestQuestion(tempRQ);
+    //           })
+    //           .catch(err => console.log("Creating new request question:", err));
+    //       } else {
+    //         let tempRQ = {
+    //           surveyrequestid: requestID,
+    //           requestquestionid: question.id
+    //         };
+    //         // createSurveyRequestQuestion(tempRQ);
+    //       }
+    //     })
+    //   )
+    //   .then(res => console.log("handleRQ:", res))
+    //   .catch(err => console.log("handleRQ:", err));
   };
 
   const onCreate = () => {

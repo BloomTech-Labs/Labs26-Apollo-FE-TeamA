@@ -212,6 +212,20 @@ const getAllRequestResponses = () => {
     .catch(err => console.log("GET /requestresponse", err));
 };
 
+// delete survey request response
+const deleteRequestResponse = id => {
+  return axios
+    .delete(
+      `${process.env.REACT_APP_API_URI}/requestresponse/${id}`,
+      getToken()
+    )
+    .then(res => {
+      // console.log("DELETE /requestresponse", res);
+      return res.data;
+    })
+    .catch(err => console.log("DELETE /requestresponse", err));
+};
+
 // get all contexts
 const getAllContexts = () => {
   return axios
@@ -428,6 +442,7 @@ export {
   getAllContextResponses,
   createContextResponse,
   getAllRequestResponses,
+  deleteRequestResponse,
   // context handlers
   getAllContexts,
   getContextByID,
