@@ -97,7 +97,13 @@ const Responses = props => {
                     maskStyle={{ opacity: "0.5" }}
                   >
                     {threads.map(t => {
-                      return <p>{t.reply}</p>;
+                      return (
+                        <div>
+                          <p style={{ color: "black" }}>
+                            {props.user.name}: {t.reply}
+                          </p>
+                        </div>
+                      );
                     })}
                   </Drawer>
                 </div>

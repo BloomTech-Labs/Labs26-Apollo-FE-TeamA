@@ -12,11 +12,13 @@ import {
   createRequest,
   createCQ,
   createContextResponse,
-  createRQ
+  createRQ,
+  getTopic
   // createSurveyRequestQuestion,
 } from "../../../api/index";
 
 const RenderSurveyRequest = props => {
+  const [topic, setTopic] = useState({});
   const [topicCQ, setTopicCQ] = useState([]);
   const [topicRQ, setTopicRQ] = useState([]);
   const [visible, setVisible] = useState(false);
@@ -32,6 +34,14 @@ const RenderSurveyRequest = props => {
     "Are there any monsters in your path?": 2,
     "What is your favorite dessert?": 3
   };
+
+  useEffect(() => {
+    getTopic(props.topicID)
+      .then(res => {
+        setTopic(res);
+      })
+      .catch(err => console.log(err));
+  }, [props.topicID]);
 
   useEffect(() => {
     const tempCQ = [];
@@ -144,15 +154,17 @@ const RenderSurveyRequest = props => {
 
   return (
     <div>
-      <Button
-        className="new-request-button"
-        type="primary"
-        onClick={() => {
-          setVisible(true);
-        }}
-      >
-        New Survey Request
-      </Button>
+      {topic.leaderid === props.user.sub ? (
+        <Button
+          className="new-request-button"
+          type="primary"
+          onClick={() => {
+            setVisible(true);
+          }}
+        >
+          New Survey Request
+        </Button>
+      ) : null}
 
       {visible ? (
         <Modal

@@ -149,7 +149,7 @@ const RenderMainTopic = ({
       <div className="survey-requests">
         <h3>Survey Requests</h3>
 
-        <SurveyRequest user={user} topicID={topicID} />
+        <SurveyRequest user={user} topic={topic} topicID={topicID} />
 
         <Requests getResponseList={getResponseList} />
 
